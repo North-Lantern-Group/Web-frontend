@@ -211,7 +211,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">Let's Start Your Journey</h2>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Let&apos;s Start Your Journey</h2>
               <p className="text-nlg-light-gray text-lg">Get a free consultation and discover how we can transform your business</p>
             </div>
 
