@@ -23,11 +23,27 @@ export default function Home() {
         <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-12">
             {/* Logo */}
-            <a href="#" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-md bg-gradient-to-br from-nlg-cyan to-nlg-teal flex items-center justify-center">
-                <span className="text-nlg-navy font-bold text-sm">NL</span>
+            <a href="#" className="flex items-center gap-3">
+              {/* Lantern Icon */}
+              <div className="relative w-8 h-8">
+                <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+                  {/* Lantern Frame */}
+                  <rect x="25" y="15" width="50" height="70" rx="2"
+                        className="stroke-nlg-cyan" strokeWidth="4" fill="none"/>
+                  {/* Inner N */}
+                  <text x="50" y="65" fontSize="48" fontWeight="bold"
+                        className="fill-nlg-cyan" textAnchor="middle" fontFamily="sans-serif">N</text>
+                  {/* Sparkle */}
+                  <circle cx="85" cy="25" r="3" className="fill-nlg-cyan"/>
+                  <path d="M85 18 L85 32 M78 25 L92 25" className="stroke-nlg-cyan" strokeWidth="2"/>
+                </svg>
               </div>
-              <span className="text-base font-semibold text-nlg-white">North Lantern Group</span>
+              <div className="flex flex-col leading-none">
+                <span className="text-lg font-bold bg-gradient-to-r from-nlg-cyan to-nlg-teal bg-clip-text text-transparent">
+                  NORTH LANTERN
+                </span>
+                <span className="text-xs text-nlg-light-gray tracking-wider">GROUP</span>
+              </div>
             </a>
 
             {/* Navigation Links */}
@@ -298,11 +314,19 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-md bg-gradient-to-br from-nlg-cyan to-nlg-teal flex items-center justify-center">
-                  <span className="text-nlg-navy font-bold text-sm">NL</span>
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="relative w-7 h-7">
+                  <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+                    <rect x="25" y="15" width="50" height="70" rx="2"
+                          className="stroke-nlg-cyan" strokeWidth="4" fill="none"/>
+                    <text x="50" y="65" fontSize="48" fontWeight="bold"
+                          className="fill-nlg-cyan" textAnchor="middle" fontFamily="sans-serif">N</text>
+                  </svg>
                 </div>
-                <span className="font-semibold text-nlg-white">North Lantern Group</span>
+                <div className="flex flex-col leading-tight">
+                  <span className="text-sm font-bold text-nlg-white">NORTH LANTERN</span>
+                  <span className="text-xs text-nlg-light-gray">GROUP</span>
+                </div>
               </div>
               <p className="text-sm text-nlg-light-gray">
                 Illuminating your path to digital excellence
