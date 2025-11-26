@@ -3,7 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import ParticleCompass from "@/components/ParticleCompass";
+import FloatingParticles from "@/components/FloatingParticles";
 import InteractiveGlobe from "@/components/Globe";
+import CloudBackground from "@/components/CloudBackground";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import {
@@ -24,6 +26,9 @@ import {
   CheckCircle,
   Layers,
   Settings,
+  Target,
+  Sun,
+  Moon,
 } from "lucide-react";
 import Xarrow from "react-xarrows";
 
@@ -35,13 +40,48 @@ export default function Home() {
     service: "atlassian",
   });
 
-  const [showSolutionsMenu, setShowSolutionsMenu] = useState(false);
-  const [showPricingMenu, setShowPricingMenu] = useState(false);
   const [phoneValue, setPhoneValue] = useState<string | undefined>();
   const [servicesVisible, setServicesVisible] = useState(false);
   const [aboutVisible, setAboutVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const servicesRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Scroll reveal animation observer
+  useEffect(() => {
+    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger, .reveal-stagger-slow');
+
+    const revealOnScroll = () => {
+      reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        const elementVisible = 100;
+
+        if (elementTop < windowHeight - elementVisible) {
+          el.classList.add('active');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+    // Trigger once on mount
+    revealOnScroll();
+
+    return () => {
+      window.removeEventListener('scroll', revealOnScroll);
+      window.removeEventListener('load', revealOnScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -84,145 +124,208 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 font-sans">
+    <div className={`min-h-screen font-sans transition-colors duration-500 ${isDarkMode ? 'dark bg-neutral-950' : 'light bg-white'}`}>
+      {/* Fixed Theme Toggle Button - Bottom Right */}
+      <button
+        onClick={() => setIsDarkMode(!isDarkMode)}
+        className={`fixed bottom-6 right-6 z-[100] p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 ${
+          isDarkMode
+            ? 'bg-neutral-800 hover:bg-neutral-700 text-white border border-white/10'
+            : 'bg-white hover:bg-gray-100 text-neutral-800 border border-gray-200 shadow-xl'
+        }`}
+        aria-label="Toggle theme"
+      >
+        {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+      </button>
+
       {/* Header with Navigation */}
-      <header className="sticky top-0 z-50 bg-neutral-950/90 backdrop-blur-lg">
-        <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-12">
-            {/* Logo */}
-            <a href="#" className="flex items-center gap-3">
-              <div className="h-8 overflow-hidden rounded-lg w-fit">
-                <Image
-                  src="/logo.png"
-                  alt="North Lantern Group"
-                  width={180}
-                  height={50}
-                  className="h-12 w-auto -mt-2"
-                />
-              </div>
-            </a>
+      <header className={`fixed top-0 left-0 right-0 z-50 px-[4%] flex justify-between items-center transition-all duration-400 ${scrolled ? (isDarkMode ? 'py-4 bg-neutral-950/95 backdrop-blur-[20px] border-b border-white/10' : 'py-4 bg-white/95 backdrop-blur-[20px] border-b border-black/10') : 'py-6'}`}>
+        <nav className="w-full flex items-center justify-between">
+          {/* Logo */}
+          <a href="#" className="flex items-center gap-3">
+            <Image
+              src="/logo.png"
+              alt="North Lantern Group"
+              width={500}
+              height={125}
+              className="h-24 w-auto"
+            />
+          </a>
 
-            {/* Navigation Links with Dropdowns */}
-            <div className="hidden md:flex items-center gap-8">
-              {/* Solutions Dropdown */}
-              <div className="relative"
-                   onMouseEnter={() => setShowSolutionsMenu(true)}
-                   onMouseLeave={() => setShowSolutionsMenu(false)}>
-                <button className="text-sm text-neutral-400 hover:text-white transition-colors flex items-center gap-1">
-                  Solutions
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {showSolutionsMenu && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-neutral-900 border border-white/10 rounded-lg shadow-xl py-2">
-                    <a href="#services" className="block px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors">
-                      <div className="font-medium">Atlassian Solutions</div>
-                      <div className="text-xs text-neutral-500">Jira, Confluence & More</div>
-                    </a>
-                    <a href="#services" className="block px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors">
-                      <div className="font-medium">Business Intelligence</div>
-                      <div className="text-xs text-neutral-500">Power BI & Analytics</div>
-                    </a>
-                    <a href="#services" className="block px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors">
-                      <div className="font-medium">Cloud Migration</div>
-                      <div className="text-xs text-neutral-500">AWS & Azure</div>
-                    </a>
-                  </div>
-                )}
-              </div>
+          {/* Navigation Links */}
+          <ul className="hidden md:flex items-center gap-10 list-none">
+            <li>
+              <a href="#about" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                About
+                <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#services" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Services
+                <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#why-us" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Why Us
+                <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#pricing" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Pricing
+                <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#contact" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Contact
+                <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            </li>
+          </ul>
 
-              {/* Pricing Dropdown */}
-              <div className="relative"
-                   onMouseEnter={() => setShowPricingMenu(true)}
-                   onMouseLeave={() => setShowPricingMenu(false)}>
-                <button className="text-sm text-neutral-400 hover:text-white transition-colors flex items-center gap-1">
-                  Pricing
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {showPricingMenu && (
-                  <div className="absolute top-full left-0 mt-2 w-56 bg-neutral-900 border border-white/10 rounded-lg shadow-xl py-2">
-                    <a href="#contact" className="block px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors">
-                      <div className="font-medium">Starter Package</div>
-                      <div className="text-xs text-neutral-500">For small teams</div>
-                    </a>
-                    <a href="#contact" className="block px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors">
-                      <div className="font-medium">Enterprise</div>
-                      <div className="text-xs text-neutral-500">Custom solutions</div>
-                    </a>
-                    <a href="#contact" className="block px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors">
-                      <div className="font-medium">Request Quote</div>
-                      <div className="text-xs text-neutral-500">Get custom pricing</div>
-                    </a>
-                  </div>
-                )}
-              </div>
-
-              <a href="#about" className="text-sm text-neutral-400 hover:text-white transition-colors">About</a>
-            </div>
-          </div>
-
+          {/* CTA Button */}
           <a
             href="#contact"
-            className="px-6 py-2.5 bg-white hover:bg-neutral-200 text-black text-sm font-medium rounded-full transition-all"
+            className="bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-7 py-3 rounded-lg font-semibold text-[0.95rem] transition-all duration-300 hover:-translate-y-0.5 shadow-[0_0_30px_rgba(0,212,255,0.2)] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)]"
           >
-            Get Started
+            Start a Project
           </a>
         </nav>
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 py-8">
-        <div className="relative min-h-[85vh] flex items-center overflow-hidden rounded-3xl bg-black">
-          {/* Particle Compass Background */}
-          <div className="absolute inset-0 rounded-3xl overflow-hidden">
-            <ParticleCompass />
-          </div>
+      <section className={`relative min-h-screen w-full flex items-center ${isDarkMode ? 'bg-black' : 'bg-sky-100'}`}>
+        {/* Background - Dark mode: Particle Compass, Light mode: Clouds */}
+        {isDarkMode ? (
+          <>
+            <div className="absolute inset-0 overflow-hidden">
+              <ParticleCompass />
+            </div>
+            <FloatingParticles />
+          </>
+        ) : (
+          <CloudBackground />
+        )}
 
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[100px]"></div>
-            <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-violet-500/3 rounded-full blur-[100px]"></div>
-          </div>
+        {/* Bottom gradient fade */}
+        <div className={`absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent pointer-events-none ${isDarkMode ? 'to-neutral-950' : 'to-white'}`}></div>
 
-          <div className="relative container mx-auto px-6 py-20">
-            <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium mb-8 leading-[1.1] tracking-tight text-white">
-              <span className="inline-block opacity-0 animate-[fadeInUp_0.6s_ease-out_0.1s_forwards]">Transformative</span>{" "}
-              <span className="inline-block opacity-0 animate-[fadeInUp_0.6s_ease-out_0.3s_forwards]">Solutions</span>{" "}
-              <span className="inline-block opacity-0 animate-[fadeInUp_0.6s_ease-out_0.5s_forwards]">for</span>{" "}
-              <span className="group relative inline-block cursor-pointer opacity-0 animate-[fadeInUp_0.6s_ease-out_0.7s_forwards]" style={{
-                background: 'linear-gradient(135deg, #00D4FF 0%, #8B5CF6 50%, #00D4FF 100%)',
-                backgroundSize: '200% 200%',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}>
-                Modern Businesses
-                <span className="absolute bottom-0 left-1/2 w-0 h-[3px] bg-gradient-to-r from-cyan-400 to-violet-500 transition-all duration-500 ease-out group-hover:w-full group-hover:left-0"></span>
+        <div className="relative container mx-auto px-[4%] pt-24">
+          <div className="max-w-[900px] mx-auto text-center">
+            {/* Badge */}
+            <div className={`inline-flex items-center gap-2 border px-4 py-2 rounded-full text-sm mb-8 opacity-0 animate-[fadeInUp_0.8s_ease-out_forwards] ${isDarkMode ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-cyan-600/10 border-cyan-600/40 text-cyan-700'}`}>
+              <span className={`w-2 h-2 rounded-full animate-pulse ${isDarkMode ? 'bg-cyan-400' : 'bg-cyan-600'}`}></span>
+              Atlassian Cloud & Business Intelligence
+            </div>
+
+            <h1 className={`font-serif text-[clamp(3rem,7vw,5rem)] font-bold leading-[1.15] mb-6 tracking-[-0.01em] opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards] ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+              Transform Your Infrastructure.{" "}
+              <span className="bg-gradient-to-br from-cyan-500 to-teal-600 bg-clip-text text-transparent">
+                Unlock Intelligence.
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-neutral-400 mb-12 max-w-4xl mx-auto opacity-0 animate-[fadeInUp_0.6s_ease-out_0.9s_forwards]">
-              Empower your organization with comprehensive Atlassian solutions and data analytics to drive collaboration and operational excellence.
+
+            <p className={`text-[clamp(1.1rem,2vw,1.35rem)] max-w-[650px] mx-auto mb-10 leading-[1.8] opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards] ${isDarkMode ? 'text-gray-400' : 'text-slate-600'}`}>
+              We architect Atlassian ecosystems and business intelligence solutions that don&apos;t just work—they accelerate decisions, streamline operations, and scale with your ambitions.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeInUp_0.6s_ease-out_1.1s_forwards]">
+            <div className="flex flex-wrap justify-center gap-4 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards]">
               <a
-                href="#contact"
-                className="px-6 py-2.5 bg-white hover:bg-neutral-200 text-black font-medium rounded-full smooth-transition hover:scale-105 text-base"
+                href="#about"
+                className="inline-flex items-center gap-2 bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 hover:-translate-y-[3px] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)]"
               >
-                Get Started
+                Start Discovery
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
               <a
                 href="#services"
-                className="px-6 py-2.5 bg-transparent border border-white/20 hover:border-white/40 hover:bg-white/5 text-white font-medium rounded-full smooth-transition hover:scale-105 text-base"
+                className="inline-flex items-center gap-2 bg-transparent border border-gray-500 text-white px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:bg-cyan-500/5"
               >
-                View Services
+                Explore Solutions
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-28 border-t border-white/10 bg-neutral-950">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-16 reveal-stagger">
+            {/* Stat 1 - Faster Delivery */}
+            <div className="text-center">
+              <div className="text-5xl md:text-6xl font-bold text-cyan-400 mb-3">60%</div>
+              <div className="text-sm md:text-base text-neutral-400 uppercase tracking-widest">Faster Delivery</div>
+            </div>
+            {/* Stat 2 - Team Efficiency */}
+            <div className="text-center">
+              <div className="text-5xl md:text-6xl font-bold text-cyan-400 mb-3">3x</div>
+              <div className="text-sm md:text-base text-neutral-400 uppercase tracking-widest">Team Efficiency</div>
+            </div>
+            {/* Stat 3 - Client Satisfaction */}
+            <div className="text-center">
+              <div className="text-5xl md:text-6xl font-bold text-cyan-400 mb-3">92%</div>
+              <div className="text-sm md:text-base text-neutral-400 uppercase tracking-widest">Client Satisfaction</div>
+            </div>
+            {/* Stat 4 - Implementations */}
+            <div className="text-center">
+              <div className="text-5xl md:text-6xl font-bold text-cyan-400 mb-3">60+</div>
+              <div className="text-sm md:text-base text-neutral-400 uppercase tracking-widest">Implementations</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Company Story & Mission Section */}
+      <section id="about" className="py-32 bg-neutral-950">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-16 lg:gap-24 items-start">
+            {/* Left side - Story Content */}
+            <div className="reveal-left">
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-12 leading-[1.2]">
+                We build the systems<br />
+                that power modern<br />
+                enterprises
+              </h2>
+
+              <div className="space-y-8 text-gray-400 text-lg md:text-xl leading-[1.9]">
+                <p>
+                  North Lantern Group emerged from a simple observation: organizations need more than implementation partners—they need strategic allies who understand both the technical complexities and business imperatives of digital transformation.
+                </p>
+                <p>
+                  We recognized a critical gap in the market. Businesses weren&apos;t just looking for tool deployment. They needed architects who could design solutions that evolve with their organizations, providing both the infrastructure for collaboration and the intelligence layer for decision-making.
+                </p>
+                <p>
+                  Today, we serve clients across diverse verticals, combining deep technical expertise in Atlassian ecosystems with advanced business intelligence capabilities—all delivered with startup speed and enterprise rigor.
+                </p>
+              </div>
+
+              <a
+                href="#services"
+                className="inline-flex items-center gap-3 mt-12 px-8 py-4 bg-neutral-800 border border-white/10 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:bg-neutral-700 hover:border-white/20"
+              >
+                Our Capabilities
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+
+            {/* Right side - Our Mission Card */}
+            <div className="flex justify-end items-start pt-4 reveal-right">
+              <div className="bg-gradient-to-br from-cyan-900/40 to-teal-900/40 border border-cyan-500/20 rounded-2xl p-10 max-w-lg">
+                {/* Icon */}
+                <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-xl flex items-center justify-center mb-8">
+                  <Target className="w-8 h-8 text-white" />
+                </div>
+
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">Our Mission</h3>
+                <p className="text-neutral-300 text-lg md:text-xl leading-[1.9]">
+                  Empower organizations with tools, insights, and strategies that illuminate the path to sustainable growth. We don&apos;t just implement technology—we architect transformation that compounds value over time.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -242,12 +345,12 @@ export default function Home() {
         <div className="container mx-auto px-6 relative">
 
           {/* Services Cards */}
-          <div className="grid lg:grid-cols-4 gap-0 border border-white/10 rounded-xl overflow-hidden">
+          <div className="grid lg:grid-cols-3 gap-0 border border-white/10 rounded-xl overflow-hidden reveal-stagger">
             {/* Atlassian Solutions */}
-            <div className="p-6 lg:p-8 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[850px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
-              <Layers className="w-8 h-8 text-cyan-400 mb-3" strokeWidth={1.5} />
-              <h3 className="text-xl font-bold mb-3 text-white">Atlassian Solutions</h3>
-              <p className="text-neutral-400 mb-6 leading-relaxed text-sm">
+            <div className="p-8 lg:p-10 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
+              <Layers className="w-10 h-10 text-cyan-400 mb-4" strokeWidth={1.5} />
+              <h3 className="text-2xl font-bold mb-4 text-white">Atlassian Solutions</h3>
+              <p className="text-neutral-400 mb-8 leading-relaxed text-base">
                 Expert guidance on Jira, Confluence, and more. We tailor implementations to fit your workflow and maximize efficiency.
               </p>
 
@@ -380,10 +483,10 @@ export default function Home() {
             </div>
 
             {/* Cloud Migrations */}
-            <div className="p-6 lg:p-8 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[850px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
-              <Cloud className="w-8 h-8 text-cyan-400 mb-3" strokeWidth={1.5} />
-              <h3 className="text-xl font-bold mb-3 text-white">Cloud Migrations</h3>
-              <p className="text-neutral-400 mb-6 leading-relaxed text-sm">
+            <div className="p-8 lg:p-10 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
+              <Cloud className="w-10 h-10 text-cyan-400 mb-4" strokeWidth={1.5} />
+              <h3 className="text-2xl font-bold mb-4 text-white">Cloud Migrations</h3>
+              <p className="text-neutral-400 mb-8 leading-relaxed text-base">
                 Seamless transitions to cloud infrastructure with minimal disruption. We ensure your data is secure and accessible.
               </p>
 
@@ -426,7 +529,7 @@ export default function Home() {
                     <defs>
                       <linearGradient id="azure-vercel-gradient" x1="100%" y1="0%" x2="0%" y2="100%">
                         <stop offset="0%" stopColor="rgba(0, 120, 212, 0.6)" />
-                        <stop offset="100%" stopColor="rgba(255, 255, 255, 0.6)" />
+                        <stop offset="100%" stopColor={isDarkMode ? "rgba(255, 255, 255, 0.6)" : "rgba(6, 182, 212, 0.6)"} />
                       </linearGradient>
                     </defs>
                     {/* Azure to Vercel (top-right to center) */}
@@ -446,7 +549,7 @@ export default function Home() {
                     {/* AWS to Vercel (top-left to center) */}
                     <linearGradient id="aws-vercel-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="rgba(255, 153, 0, 0.6)" />
-                      <stop offset="100%" stopColor="rgba(255, 255, 255, 0.6)" />
+                      <stop offset="100%" stopColor={isDarkMode ? "rgba(255, 255, 255, 0.6)" : "rgba(6, 182, 212, 0.6)"} />
                     </linearGradient>
                     <line
                       x1="57" y1="57"
@@ -464,7 +567,7 @@ export default function Home() {
                     {/* Google Cloud to Vercel (bottom-left to center) */}
                     <linearGradient id="gcp-vercel-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="rgba(66, 133, 244, 0.6)" />
-                      <stop offset="100%" stopColor="rgba(255, 255, 255, 0.6)" />
+                      <stop offset="100%" stopColor={isDarkMode ? "rgba(255, 255, 255, 0.6)" : "rgba(6, 182, 212, 0.6)"} />
                     </linearGradient>
                     <line
                       x1="57" y1="175"
@@ -482,7 +585,7 @@ export default function Home() {
                     {/* Oracle to Vercel (bottom-right to center) */}
                     <linearGradient id="oracle-vercel-gradient" x1="100%" y1="100%" x2="0%" y2="0%">
                       <stop offset="0%" stopColor="rgba(199, 70, 52, 0.6)" />
-                      <stop offset="100%" stopColor="rgba(255, 255, 255, 0.6)" />
+                      <stop offset="100%" stopColor={isDarkMode ? "rgba(255, 255, 255, 0.6)" : "rgba(6, 182, 212, 0.6)"} />
                     </linearGradient>
                     <line
                       x1="175" y1="175"
@@ -497,12 +600,12 @@ export default function Home() {
                       strokeWidth="1"
                     />
                   </svg>
-                  {/* Top-left - AWS (white top, orange bottom) */}
+                  {/* Top-left - AWS (white/cyan top, orange bottom) */}
                   <div className="absolute top-0 left-0 w-12 h-12 flex items-center justify-center">
                     <svg className="absolute w-16 h-16 animate-rotate-gradient" viewBox="0 0 64 64" fill="none">
                       <defs>
                         <linearGradient id="aws-gradient-1" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#FFFFFF" />
+                          <stop offset="0%" stopColor={isDarkMode ? "#FFFFFF" : "#06B6D4"} />
                           <stop offset="100%" stopColor="#FF9900" />
                         </linearGradient>
                       </defs>
@@ -511,13 +614,13 @@ export default function Home() {
                     <svg className="absolute w-24 h-24 animate-rotate-gradient-slow" viewBox="0 0 96 96" fill="none">
                       <defs>
                         <linearGradient id="aws-gradient-2" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(255, 255, 255, 0.6)" />
+                          <stop offset="0%" stopColor={isDarkMode ? "rgba(255, 255, 255, 0.6)" : "rgba(6, 182, 212, 0.6)"} />
                           <stop offset="100%" stopColor="rgba(255, 153, 0, 0.6)" />
                         </linearGradient>
                       </defs>
                       <circle cx="48" cy="48" r="47" stroke="url(#aws-gradient-2)" strokeWidth="1" fill="none" />
                     </svg>
-                    <img src="/icons/aws-color.svg" alt="AWS" className="w-7 h-7 object-contain relative z-10" />
+                    <img src="/icons/aws-color.svg" alt="AWS" className="w-7 h-7 object-contain relative z-10 icon-invert-light" />
                   </div>
                   {/* Top-right - Azure (blue) */}
                   <div className="absolute top-0 right-0 w-12 h-12 flex items-center justify-center">
@@ -525,13 +628,13 @@ export default function Home() {
                     <div className="absolute w-24 h-24 rounded-full border animate-rotate-gradient-slow" style={{ borderColor: 'rgba(0, 120, 212, 0.6)' }}></div>
                     <img src="/icons/azure-color.svg" alt="Azure" className="w-6 h-6 object-contain relative z-10" />
                   </div>
-                  {/* Center - Vercel (white) */}
+                  {/* Center - Atlassian */}
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center">
                     <svg className="absolute w-16 h-16 animate-rotate-vercel-dashed" viewBox="0 0 64 64" fill="none">
-                      <circle cx="32" cy="32" r="31" stroke="white" strokeWidth="1" strokeDasharray="8 6" fill="none" />
+                      <circle cx="32" cy="32" r="31" className={isDarkMode ? "stroke-white" : "stroke-cyan-500"} strokeWidth="1" strokeDasharray="8 6" fill="none" />
                     </svg>
-                    <div className="absolute w-24 h-24 rounded-full border animate-rotate-gradient-slow" style={{ borderColor: 'rgba(255, 255, 255, 0.6)' }}></div>
-                    <img src="/icons/vercel-color.svg" alt="Vercel" className="w-7 h-7 object-contain relative z-10 -mt-1" />
+                    <div className={`absolute w-24 h-24 rounded-full border animate-rotate-gradient-slow ${isDarkMode ? 'border-white/60' : 'border-cyan-500/60'}`}></div>
+                    <img src="/icons/Atlassian_icon.svg" alt="Atlassian" className={`w-7 h-7 object-contain relative z-10 ${isDarkMode ? '' : 'brightness-0'}`} />
                   </div>
                   {/* Bottom-left - Google Cloud (blue, red, yellow, green) */}
                   <div className="absolute bottom-0 left-0 w-12 h-12 flex items-center justify-center">
@@ -573,10 +676,10 @@ export default function Home() {
             </div>
 
             {/* Data Analytics */}
-            <div className="p-6 lg:p-8 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[850px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
-              <BarChart3 className="w-8 h-8 text-cyan-400 mb-3" strokeWidth={1.5} />
-              <h3 className="text-xl font-bold mb-3 text-white">Data Analytics Services</h3>
-              <p className="text-neutral-400 mb-6 leading-relaxed text-sm">
+            <div className="p-8 lg:p-10 bg-neutral-900 min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
+              <BarChart3 className="w-10 h-10 text-cyan-400 mb-4" strokeWidth={1.5} />
+              <h3 className="text-2xl font-bold mb-4 text-white">Data Analytics Services</h3>
+              <p className="text-neutral-400 mb-8 leading-relaxed text-base">
                 Transform raw data into actionable insights with advanced analytics and customized dashboards.
               </p>
 
@@ -695,143 +798,21 @@ export default function Home() {
               </div>
 
             </div>
-
-            {/* Operational Transformations */}
-            <div className="p-6 lg:p-8 bg-neutral-900 min-h-[850px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
-              <Settings className="w-8 h-8 text-cyan-400 mb-3" strokeWidth={1.5} />
-              <h3 className="text-xl font-bold mb-3 text-white">Operational Transformations</h3>
-              <p className="text-neutral-400 mb-6 leading-relaxed text-sm">
-                Optimize processes and improve efficiency with tailored strategies aligned to your objectives.
-              </p>
-
-              <div className="flex flex-col gap-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-white/10 rounded-full w-fit transition-all duration-200 hover:bg-neutral-700 cursor-default">
-                  <RefreshCw className="w-5 h-5 text-neutral-300" strokeWidth={1.5} />
-                  <span className="text-sm text-neutral-200">Process Optimization</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-white/10 rounded-full w-fit transition-all duration-200 hover:bg-neutral-700 cursor-default">
-                  <Zap className="w-5 h-5 text-neutral-300" strokeWidth={1.5} />
-                  <span className="text-sm text-neutral-200">Workflow Automation</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-white/10 rounded-full w-fit transition-all duration-200 hover:bg-neutral-700 cursor-default">
-                  <Users className="w-5 h-5 text-neutral-300" strokeWidth={1.5} />
-                  <span className="text-sm text-neutral-200">Team Productivity</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-white/10 rounded-full w-fit transition-all duration-200 hover:bg-neutral-700 cursor-default">
-                  <Rocket className="w-5 h-5 text-neutral-300" strokeWidth={1.5} />
-                  <span className="text-sm text-neutral-200">Business Growth</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-white/10 rounded-full w-fit transition-all duration-200 hover:bg-neutral-700 cursor-default">
-                  <CheckCircle className="w-5 h-5 text-neutral-300" strokeWidth={1.5} />
-                  <span className="text-sm text-neutral-200">Best Practices</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-white/10 rounded-full w-fit transition-all duration-200 hover:bg-neutral-700 cursor-default">
-                  <Globe className="w-5 h-5 text-neutral-300" strokeWidth={1.5} />
-                  <span className="text-sm text-neutral-200">Change Management</span>
-                </div>
-              </div>
-
-              {/* Spacer */}
-              <div className="flex-grow"></div>
-
-              {/* Diagram 4 */}
-              <div className="w-full flex flex-col items-center justify-end mt-auto mb-12 relative">
-                {/* Box 0 (top) - 10% smaller */}
-                <div className="w-[65.61%] bg-neutral-800 border border-neutral-600 rounded-lg px-2 py-2 flex items-center opacity-[0.656] mb-0">
-                  {/* Traffic light buttons */}
-                  <div className="flex items-center gap-1">
-                    <div className="w-[6.56px] h-[6.56px] rounded-full bg-red-500"></div>
-                    <div className="w-[6.56px] h-[6.56px] rounded-full bg-yellow-500"></div>
-                    <div className="w-[6.56px] h-[6.56px] rounded-full bg-green-500"></div>
-                  </div>
-
-                  {/* Spacer to push content to the right */}
-                  <div className="flex-grow"></div>
-
-                  {/* Right: domain text */}
-                  <span className="text-neutral-300 font-mono" style={{ fontSize: '9.85px' }}>team.domain.com</span>
-                </div>
-
-                {/* Box 1 - 10% smaller */}
-                <div className="w-[72.9%] bg-neutral-800 border border-neutral-600 rounded-lg px-2.5 py-2.5 flex items-center opacity-[0.729] mb-0">
-                  {/* Traffic light buttons */}
-                  <div className="flex items-center gap-1">
-                    <div className="w-[7.29px] h-[7.29px] rounded-full bg-red-500"></div>
-                    <div className="w-[7.29px] h-[7.29px] rounded-full bg-yellow-500"></div>
-                    <div className="w-[7.29px] h-[7.29px] rounded-full bg-green-500"></div>
-                  </div>
-
-                  {/* Spacer to push content to the right */}
-                  <div className="flex-grow"></div>
-
-                  {/* Right: domain text */}
-                  <span className="text-neutral-300 font-mono" style={{ fontSize: '10.94px' }}>admin.domain.com</span>
-                </div>
-
-                {/* Box 2 - 10% smaller */}
-                <div className="w-[81%] bg-neutral-800 border border-neutral-600 rounded-lg px-3 py-2.5 flex items-center opacity-[0.81] mb-0">
-                  {/* Traffic light buttons */}
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-[8.1px] h-[8.1px] rounded-full bg-red-500"></div>
-                    <div className="w-[8.1px] h-[8.1px] rounded-full bg-yellow-500"></div>
-                    <div className="w-[8.1px] h-[8.1px] rounded-full bg-green-500"></div>
-                  </div>
-
-                  {/* Spacer to push content to the right */}
-                  <div className="flex-grow"></div>
-
-                  {/* Right: domain text */}
-                  <span className="text-neutral-300 font-mono" style={{ fontSize: '12.15px' }}>project.domain.com</span>
-                </div>
-
-                {/* Box 3 - 10% smaller, 10% less opacity */}
-                <div className="w-[90%] bg-neutral-800 border border-neutral-600 rounded-lg px-3.5 py-2.5 flex items-center opacity-[0.90] mb-0">
-                  {/* Traffic light buttons */}
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-[9px] h-[9px] rounded-full bg-red-500"></div>
-                    <div className="w-[9px] h-[9px] rounded-full bg-yellow-500"></div>
-                    <div className="w-[9px] h-[9px] rounded-full bg-green-500"></div>
-                  </div>
-
-                  {/* Spacer to push content to the right */}
-                  <div className="flex-grow"></div>
-
-                  {/* Right: domain text */}
-                  <span className="text-neutral-300 font-mono" style={{ fontSize: '13.5px' }}>customer.domain.com</span>
-                </div>
-
-                {/* Browser-style title bar - Box 4 (bottom) */}
-                <div className="w-full bg-neutral-800 border border-neutral-600 rounded-lg px-4 py-2.5 flex items-center">
-                  {/* Traffic light buttons */}
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
-                  </div>
-
-                  {/* Spacer to push content to the right */}
-                  <div className="flex-grow"></div>
-
-                  {/* Right: domain text */}
-                  <span className="text-neutral-300 font-mono" style={{ fontSize: '15px' }}>organization.domain.com</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-28">
+      {/* Why North Lantern Section */}
+      <section id="why-us" className="py-28">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Left side - Content */}
-            <div>
+            <div className="reveal-left">
               <p ref={aboutRef} className={`text-2xl font-semibold tracking-normal text-cyan-400 mb-4 relative inline-block ${aboutVisible ? 'who-we-are-visible' : ''}`}>
-                <span>Who We Are</span>
+                <span>Why North Lantern</span>
                 <span className="absolute bottom-0 left-0 h-[2px] bg-cyan-400 who-we-are-underline"></span>
               </p>
-              <h2 className="text-4xl md:text-5xl font-medium mb-8 text-white tracking-tight">Dedicated to Elevating Business Excellence</h2>
+              <h2 className="text-4xl md:text-5xl font-medium mb-8 text-white tracking-tight">Dedicated to Elevating Business Excellence Through Tailored Solutions</h2>
               <p className="text-lg text-neutral-400 mb-6">
                 North Lantern Group is a leading professional services firm specializing in innovative technology solutions. Founded to enhance collaboration and governance workflows, NLG offers tailored Atlassian solutions, seamless cloud migrations, and powerful data analytics services.
               </p>
@@ -898,135 +879,311 @@ export default function Home() {
             </div>
 
             {/* Right side - Interactive Globe */}
-            <div className="aspect-square flex items-center justify-end">
-              <InteractiveGlobe />
+            <div className="aspect-square flex items-center justify-end reveal-right">
+              <InteractiveGlobe key="globe-rose" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-28">
+      <section id="testimonials" className="py-28">
         <div className="container mx-auto px-6">
           {/* Centered Header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 reveal">
             <p className="text-2xl font-semibold tracking-normal text-cyan-400 mb-4">What Our Clients Say</p>
             <h2 className="text-4xl md:text-5xl font-medium text-white tracking-tight">Hear from Our Satisfied Clients</h2>
           </div>
 
-          {/* 3x3 Grid */}
-          <div className="grid grid-cols-3 border-t border-l border-white/10 grid-rows-3 testimonial-grid">
-            {/* Row 1 */}
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">Michael Thompson</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;<span className="text-neutral-200 font-medium">North Lantern Group transformed our workflow</span> and enhanced our collaboration significantly. Their expertise is truly commendable.&quot;
+          {/* Testimonial Bubbles */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger-slow">
+            {/* Bubble 1 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center text-white font-bold text-lg">
+                  MT
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Michael Thompson</p>
+                  <p className="text-neutral-500 text-sm">New York, USA</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;<span className="text-white font-medium">North Lantern Group transformed our workflow</span> and enhanced our collaboration significantly. Their expertise is truly commendable.&quot;
               </p>
-              <p className="text-neutral-500 text-sm mt-8">New York, United States</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">40.7128° N, 74.0060° W</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                Read the full story
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </a>
             </div>
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">Emma Johnson</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;The team at NLG provided insights that <span className="text-neutral-200 font-medium">reshaped our data strategy</span>, helping us achieve greater operational efficiency.&quot;
+
+            {/* Bubble 2 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
+                  EJ
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Emma Johnson</p>
+                  <p className="text-neutral-500 text-sm">London, UK</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;The team at NLG provided insights that <span className="text-white font-medium">reshaped our data strategy</span>, helping us achieve greater operational efficiency.&quot;
               </p>
-              <p className="text-neutral-500 text-sm mt-8">London, United Kingdom</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">51.5074° N, 0.1278° W</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                Read the case study
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </a>
             </div>
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">James Anderson</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;With NLG&apos;s cloud migration services, our transition was seamless, and <span className="text-neutral-200 font-medium">our productivity has skyrocketed</span> since!&quot;
+
+            {/* Bubble 3 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-lg">
+                  JA
+                </div>
+                <div>
+                  <p className="text-white font-semibold">James Anderson</p>
+                  <p className="text-neutral-500 text-sm">Toronto, Canada</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;With NLG&apos;s cloud migration services, our transition was seamless, and <span className="text-white font-medium">our productivity has skyrocketed</span> since!&quot;
               </p>
-              <p className="text-neutral-500 text-sm mt-8">Toronto, Canada</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">43.6532° N, 79.3832° W</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                Explore their journey
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </div>
+
+            {/* Bubble 4 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
+                  SW
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Sarah Williams</p>
+                  <p className="text-neutral-500 text-sm">Sydney, Australia</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;Thanks to North Lantern Group, <span className="text-white font-medium">our governance workflows are much smoother</span>. Their dedication to client success is outstanding!&quot;
+              </p>
+            </div>
+
+            {/* Bubble 5 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center text-white font-bold text-lg">
+                  DC
+                </div>
+                <div>
+                  <p className="text-white font-semibold">David Chen</p>
+                  <p className="text-neutral-500 text-sm">Singapore</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;The Atlassian implementation was flawless. <span className="text-white font-medium">Our teams now collaborate 3x faster</span> than before.&quot;
+              </p>
+            </div>
+
+            {/* Bubble 6 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold text-lg">
+                  MG
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Maria Garcia</p>
+                  <p className="text-neutral-500 text-sm">Dubai, UAE</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;NLG&apos;s Power BI dashboards gave us <span className="text-white font-medium">real-time visibility into our operations</span>. Game-changing for our decision making.&quot;
+              </p>
+            </div>
+
+            {/* Bubble 7 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-400 to-rose-500 flex items-center justify-center text-white font-bold text-lg">
+                  RK
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Robert Kim</p>
+                  <p className="text-neutral-500 text-sm">Tokyo, Japan</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;Switching to AWS with NLG&apos;s guidance <span className="text-white font-medium">reduced our infrastructure costs by 40%</span>. Exceptional service.&quot;
+              </p>
+            </div>
+
+            {/* Bubble 8 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center text-white font-bold text-lg">
+                  LM
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Lisa Mueller</p>
+                  <p className="text-neutral-500 text-sm">Berlin, Germany</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;The team&apos;s expertise in Confluence helped us <span className="text-white font-medium">centralize our entire knowledge base</span> in just weeks.&quot;
+              </p>
+            </div>
+
+            {/* Bubble 9 */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center text-white font-bold text-lg">
+                  AH
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Ahmed Hassan</p>
+                  <p className="text-neutral-500 text-sm">Abu Dhabi, UAE</p>
+                </div>
+              </div>
+              <p className="text-neutral-300 leading-relaxed">
+                &quot;NLG delivered exactly what we needed. <span className="text-white font-medium">Professional, responsive, and results-driven</span>. Highly recommend.&quot;
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-28 bg-neutral-950">
+        <div className="container mx-auto px-6">
+          {/* Section Header */}
+          <div className="text-center mb-16 reveal">
+            <p className="text-sm font-semibold tracking-widest text-cyan-400 uppercase mb-4">Engagement Models</p>
+            <h2 className="text-4xl md:text-5xl font-medium text-white tracking-tight mb-6">Flexible Structures for Every Need</h2>
+            <p className="text-lg text-neutral-400 max-w-3xl mx-auto leading-relaxed">
+              Choose the engagement model that aligns with your project scope, timeline, and organizational preferences. All models include senior consultant engagement and transparent communication.
+            </p>
+          </div>
+
+          {/* Pricing Cards */}
+          <div className="grid md:grid-cols-3 gap-8 reveal-stagger">
+            {/* Project-Based */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 transition-all duration-300 hover:border-cyan-500/30 hover:-translate-y-2">
+              <div className="text-4xl mb-6">📋</div>
+              <h3 className="text-2xl font-bold text-white mb-2">Project-Based</h3>
+              <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-4">Fixed Scope</p>
+              <p className="text-neutral-400 mb-8 leading-relaxed">
+                Defined deliverables. Clear timeline. Predictable investment. Ideal for implementations with well-understood requirements.
+              </p>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Comprehensive discovery phase
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Fixed scope and timeline
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Milestone-based delivery
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Detailed documentation
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Knowledge transfer included
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Post-launch support period
+                </li>
+              </ul>
+              <a
+                href="#contact"
+                className="block w-full py-4 px-6 text-center border border-white/20 rounded-lg text-white font-medium transition-all duration-300 hover:bg-white/5 hover:border-cyan-500/50"
+              >
+                Discuss Scope
               </a>
             </div>
 
-            {/* Row 2 */}
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">Sarah Williams</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;Thanks to North Lantern Group, <span className="text-neutral-200 font-medium">our governance workflows are much smoother</span>. Their dedication to client success is outstanding!&quot;
+            {/* Retainer - Featured */}
+            <div className="bg-gradient-to-b from-cyan-900/30 to-teal-900/20 border border-cyan-500/30 rounded-3xl p-8 relative transition-all duration-300 hover:-translate-y-2 scale-105">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-teal-500 text-neutral-900 px-4 py-1.5 rounded-full text-sm font-semibold">
+                Most Popular
+              </div>
+              <div className="text-4xl mb-6">🔄</div>
+              <h3 className="text-2xl font-bold text-white mb-2">Retainer</h3>
+              <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-4">Monthly Partnership</p>
+              <p className="text-neutral-400 mb-8 leading-relaxed">
+                Priority access. Continuous optimization. Strategic guidance month over month. For teams that need ongoing expert support.
               </p>
-              <p className="text-neutral-500 text-sm mt-8">Sydney, Australia</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">33.8688° S, 151.2093° E</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                See the transformation
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </a>
-            </div>
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">David Chen</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;The Atlassian implementation was flawless. <span className="text-neutral-200 font-medium">Our teams now collaborate 3x faster</span> than before.&quot;
-              </p>
-              <p className="text-neutral-500 text-sm mt-8">Singapore</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">1.3521° N, 103.8198° E</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                Read the full article
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </a>
-            </div>
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">Maria Garcia</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;NLG&apos;s Power BI dashboards gave us <span className="text-neutral-200 font-medium">real-time visibility into our operations</span>. Game-changing for our decision making.&quot;
-              </p>
-              <p className="text-neutral-500 text-sm mt-8">Dubai, United Arab Emirates</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">25.2048° N, 55.2708° E</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                Discover the impact
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Dedicated consultant hours
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Priority response times
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Proactive system optimization
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Monthly strategic advisory
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Flexible scope adjustments
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Preferential project rates
+                </li>
+              </ul>
+              <a
+                href="#contact"
+                className="block w-full py-4 px-6 text-center bg-gradient-to-r from-cyan-400 to-teal-500 rounded-lg text-neutral-900 font-semibold transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,212,255,0.4)]"
+              >
+                Start Partnership
               </a>
             </div>
 
-            {/* Row 3 */}
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">Robert Kim</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;Switching to AWS with NLG&apos;s guidance <span className="text-neutral-200 font-medium">reduced our infrastructure costs by 40%</span>. Exceptional service.&quot;
+            {/* Value-Based */}
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 transition-all duration-300 hover:border-cyan-500/30 hover:-translate-y-2">
+              <div className="text-4xl mb-6">📈</div>
+              <h3 className="text-2xl font-bold text-white mb-2">Value-Based</h3>
+              <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-4">ROI-Aligned</p>
+              <p className="text-neutral-400 mb-8 leading-relaxed">
+                Skin in the game. Pricing tied to the business value we create together. Our incentives match yours.
               </p>
-              <p className="text-neutral-500 text-sm mt-8">Tokyo, Japan</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">35.6762° N, 139.6503° E</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                Read the success story
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </a>
-            </div>
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">Lisa Mueller</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;The team&apos;s expertise in Confluence helped us <span className="text-neutral-200 font-medium">centralize our entire knowledge base</span> in just weeks.&quot;
-              </p>
-              <p className="text-neutral-500 text-sm mt-8">Berlin, Germany</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">52.5200° N, 13.4050° E</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                View the details
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </a>
-            </div>
-            <div className="testimonial-cell p-10 border-r border-b flex flex-col">
-              <p className="text-cyan-400 font-semibold mb-4">Ahmed Hassan</p>
-              <p className="text-neutral-400 leading-relaxed flex-grow">
-                &quot;NLG delivered exactly what we needed. <span className="text-neutral-200 font-medium">Professional, responsive, and results-driven</span>. Highly recommend.&quot;
-              </p>
-              <p className="text-neutral-500 text-sm mt-8">Abu Dhabi, United Arab Emirates</p>
-              <p className="text-neutral-600 text-base font-mono font-light mt-1">24.4539° N, 54.3773° E</p>
-              <a href="#" className="text-neutral-400 text-sm mt-4 flex items-center gap-2 hover:text-white transition-colors">
-                Learn more
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Performance-based components
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Shared success metrics
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Strategic partnership model
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Long-term value focus
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Aligned incentives
+                </li>
+                <li className="flex items-center gap-3 text-neutral-300">
+                  <span className="text-cyan-400">✦</span>
+                  Outcome guarantees
+                </li>
+              </ul>
+              <a
+                href="#contact"
+                className="block w-full py-4 px-6 text-center border border-white/20 rounded-lg text-white font-medium transition-all duration-300 hover:bg-white/5 hover:border-cyan-500/50"
+              >
+                Explore Options
               </a>
             </div>
           </div>
@@ -1037,14 +1194,13 @@ export default function Home() {
       <section id="contact" className="py-28">
         <div className="container mx-auto px-6">
           {/* Centered Header */}
-          <div className="text-center mb-16">
-            <p className="text-2xl font-semibold tracking-normal text-cyan-400 mb-4">Get in Touch</p>
+          <div className="text-center mb-16 reveal">
             <h2 className="text-4xl md:text-5xl font-medium text-white tracking-tight">Let&apos;s Start a Conversation</h2>
           </div>
 
           <div className="grid md:grid-cols-[2fr_1fr] gap-12 items-start max-w-5xl mx-auto">
             {/* Left side - Form */}
-            <form onSubmit={handleSubmit} className="p-8 rounded-xl bg-neutral-900 border border-white/10">
+            <form onSubmit={handleSubmit} className="p-8 rounded-xl bg-neutral-900 border border-white/10 reveal-left">
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium mb-2 text-neutral-300">First Name</label>
@@ -1138,6 +1294,19 @@ export default function Home() {
               </div>
 
               <div className="mb-4">
+                <label htmlFor="engagement" className="block text-sm font-medium mb-2 text-neutral-300">Preferred Engagement Model</label>
+                <select
+                  id="engagement"
+                  className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
+                >
+                  <option value="">Select engagement type</option>
+                  <option value="project-based">Project-Based (Fixed Scope)</option>
+                  <option value="retainer">Retainer (Monthly Partnership)</option>
+                  <option value="value-based">Value-Based (ROI-Aligned)</option>
+                </select>
+              </div>
+
+              <div className="mb-4">
                 <label htmlFor="message" className="block text-sm font-medium mb-2 text-neutral-300">How can we help?</label>
                 <textarea
                   id="message"
@@ -1168,7 +1337,7 @@ export default function Home() {
             </form>
 
             {/* Right side - Sales message */}
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center reveal-right">
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <svg className="w-6 h-6 text-neutral-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1206,53 +1375,82 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16">
+      <footer className="border-t border-white/5 pt-16 pb-8">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
+          <div className="grid md:grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-12">
+            {/* Brand Column */}
             <div>
-              <div className="h-12 overflow-hidden rounded-xl mb-4 w-fit">
+              <div className="mb-6">
                 <Image
                   src="/logo.png"
                   alt="North Lantern Group"
                   width={200}
                   height={60}
-                  className="h-16 w-auto -mt-2"
+                  className="h-14 w-auto"
                 />
               </div>
-              <p className="text-base text-neutral-500 leading-relaxed">
-                Illuminating your path to digital excellence
+              <p className="text-neutral-400 text-base leading-relaxed mb-6">
+                Atlassian Cloud implementation and Business Intelligence solutions that illuminate the path to sustainable growth.
               </p>
-            </div>
-
-            <div>
-              <h3 className="font-medium text-white mb-4 text-lg">Services</h3>
-              <ul className="space-y-2 text-base text-neutral-500">
-                <li><a href="#services" className="hover:text-white transition-colors">Atlassian Solutions</a></li>
-                <li><a href="#services" className="hover:text-white transition-colors">Business Intelligence</a></li>
-                <li><a href="#services" className="hover:text-white transition-colors">Cloud Migration</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-medium text-white mb-4 text-lg">Company</h3>
-              <ul className="space-y-2 text-base text-neutral-500">
-                <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-medium text-white mb-4 text-lg">Contact</h3>
-              <p className="text-base text-neutral-500">
-                <a href="mailto:info@northlantern.com" className="hover:text-white transition-colors">
-                  info@northlantern.com
+              <div className="flex gap-3">
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-cyan-400 hover:text-neutral-900 transition-all"
+                  aria-label="LinkedIn"
+                >
+                  in
                 </a>
-              </p>
+                <a
+                  href="#"
+                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-cyan-400 hover:text-neutral-900 transition-all"
+                  aria-label="Twitter"
+                >
+                  𝕏
+                </a>
+              </div>
+            </div>
+
+            {/* Services Column */}
+            <div>
+              <h4 className="text-white font-semibold text-lg mb-6">Services</h4>
+              <ul className="space-y-3">
+                <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Atlassian Cloud</a></li>
+                <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Business Intelligence</a></li>
+                <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Migrations</a></li>
+                <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Strategic Advisory</a></li>
+              </ul>
+            </div>
+
+            {/* Company Column */}
+            <div>
+              <h4 className="text-white font-semibold text-lg mb-6">Company</h4>
+              <ul className="space-y-3">
+                <li><a href="#about" className="text-neutral-400 hover:text-cyan-400 transition-colors">About Us</a></li>
+                <li><a href="#approach" className="text-neutral-400 hover:text-cyan-400 transition-colors">Our Approach</a></li>
+                <li><a href="#pricing" className="text-neutral-400 hover:text-cyan-400 transition-colors">Pricing</a></li>
+                <li><a href="#contact" className="text-neutral-400 hover:text-cyan-400 transition-colors">Contact</a></li>
+              </ul>
+            </div>
+
+            {/* Resources Column */}
+            <div>
+              <h4 className="text-white font-semibold text-lg mb-6">Resources</h4>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-neutral-400 hover:text-cyan-400 transition-colors">Case Studies</a></li>
+                <li><a href="#" className="text-neutral-400 hover:text-cyan-400 transition-colors">Blog</a></li>
+                <li><a href="#" className="text-neutral-400 hover:text-cyan-400 transition-colors">Documentation</a></li>
+                <li><a href="#" className="text-neutral-400 hover:text-cyan-400 transition-colors">FAQ</a></li>
+              </ul>
             </div>
           </div>
 
-          <div className="pt-8 text-center text-base text-neutral-600">
-            <p>&copy; 2026 North Lantern Group. All rights reserved.</p>
+          {/* Footer Bottom */}
+          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-neutral-500 text-sm">&copy; 2025 North Lantern Group. All rights reserved.</p>
+            <div className="flex gap-8">
+              <a href="#" className="text-neutral-500 text-sm hover:text-cyan-400 transition-colors">Privacy Policy</a>
+              <a href="#" className="text-neutral-500 text-sm hover:text-cyan-400 transition-colors">Terms of Service</a>
+            </div>
           </div>
         </div>
       </footer>

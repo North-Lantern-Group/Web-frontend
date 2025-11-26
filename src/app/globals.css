@@ -11,6 +11,223 @@ body {
   color: #FFFFFF;
 }
 
+/* Light mode styles */
+.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e5e5e5;
+  --text-primary: #171717;
+  --text-secondary: #525252;
+  --text-muted: #737373;
+  --border-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #171717;
+  --bg-tertiary: #262626;
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #737373;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Light mode overrides */
+.light section {
+  background-color: #ffffff;
+}
+
+.light .bg-neutral-950 {
+  background-color: #f8fafc !important;
+}
+
+.light .bg-neutral-900 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.light .bg-neutral-900\/50 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light .bg-neutral-800 {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light .bg-black {
+  background-color: #f8fafc !important;
+}
+
+.light .text-white {
+  color: #0f172a !important;
+}
+
+.light .text-neutral-200 {
+  color: #334155 !important;
+}
+
+.light .text-neutral-300 {
+  color: #475569 !important;
+}
+
+.light .text-neutral-400 {
+  color: #64748b !important;
+}
+
+.light .text-neutral-500 {
+  color: #64748b !important;
+}
+
+.light .text-neutral-600 {
+  color: #475569 !important;
+}
+
+.light .text-gray-400 {
+  color: #64748b !important;
+}
+
+.light .text-gray-300 {
+  color: #475569 !important;
+}
+
+.light .border-white\/10,
+.light .border-white\/5 {
+  border-color: #e2e8f0 !important;
+}
+
+.light .border-neutral-500 {
+  border-color: #475569 !important;
+}
+
+.light .border-neutral-600 {
+  border-color: #cbd5e1 !important;
+}
+
+.light .bg-gradient-to-br.from-cyan-900\/40 {
+  background: linear-gradient(to bottom right, rgba(8, 145, 178, 0.15), rgba(13, 148, 136, 0.1)) !important;
+}
+
+.light input,
+.light select,
+.light textarea {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+.light .phone-input-dark {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light .phone-input-dark .PhoneInputInput {
+  color: #0f172a !important;
+}
+
+.light .phone-input-dark .PhoneInputCountry {
+  border-right-color: #cbd5e1 !important;
+}
+
+.light .border-cyan-500\/20,
+.light .border-cyan-500\/30 {
+  border-color: rgba(6, 182, 212, 0.4) !important;
+}
+
+.light footer {
+  background-color: #f8fafc !important;
+  border-top-color: #e2e8f0 !important;
+}
+
+.light footer a {
+  color: #475569 !important;
+}
+
+.light footer a:hover {
+  color: #0891b2 !important;
+}
+
+.light footer h4 {
+  color: #0f172a !important;
+}
+
+.light footer p {
+  color: #64748b !important;
+}
+
+.light .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+.light .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Service cards in light mode */
+.light .hover\:bg-neutral-800\/50:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.light .hover\:bg-neutral-700:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Cloud Migration diagram - fix white elements for light mode */
+.light svg circle[stroke="white"],
+.light svg line[stroke="white"] {
+  stroke: #0f172a !important;
+}
+
+.light svg circle[stroke="rgba(255, 255, 255, 0.6)"] {
+  stroke: rgba(15, 23, 42, 0.4) !important;
+}
+
+.light div[style*="borderColor: 'rgba(255, 255, 255, 0.6)'"] {
+  border-color: rgba(15, 23, 42, 0.4) !important;
+}
+
+/* Fix Vercel logo center dashed circle in light mode */
+.light .animate-rotate-vercel-dashed circle {
+  stroke: #0891b2 !important;
+}
+
+/* Fix outer rings that use white in light mode */
+.light .animate-rotate-gradient-slow[style*="rgba(255, 255, 255"] {
+  border-color: rgba(8, 145, 178, 0.5) !important;
+}
+
+/* Fix SVG text colors in diagrams for light mode */
+.light svg text[fill="#737373"] {
+  fill: #64748b !important;
+}
+
+.light svg line[stroke="#525252"] {
+  stroke: #94a3b8 !important;
+}
+
+/* Fix icons in diagrams for light mode */
+.light .text-white svg,
+.light svg.text-white {
+  color: #0f172a !important;
+}
+
+/* Fix white-filled SVG icons in light mode - make them dark */
+.light .icon-invert-light {
+  filter: brightness(0) saturate(100%);
+}
+
+/* Ensure diagram containers have visible backgrounds in light mode */
+.light .bg-neutral-500 {
+  background-color: #64748b !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -374,4 +591,83 @@ body {
   .phone-input-dark .PhoneInputCountryIcon--border {
     box-shadow: none;
   }
+
+  /* Scroll-triggered reveal animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .reveal-left.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .reveal-right.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .reveal-scale.active {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Staggered children animations */
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .reveal-stagger.active > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(4) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(5) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(6) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(7) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(8) { transition-delay: 0.7s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(9) { transition-delay: 0.8s; opacity: 1; transform: translateY(0); }
+
+  /* Slower staggered animations for testimonials */
+  .reveal-stagger-slow > * {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .reveal-stagger-slow.active > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger-slow.active > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger-slow.active > *:nth-child(3) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger-slow.active > *:nth-child(4) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger-slow.active > *:nth-child(5) { transition-delay: 0.8s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger-slow.active > *:nth-child(6) { transition-delay: 1.0s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger-slow.active > *:nth-child(7) { transition-delay: 1.2s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger-slow.active > *:nth-child(8) { transition-delay: 1.4s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger-slow.active > *:nth-child(9) { transition-delay: 1.6s; opacity: 1; transform: translateY(0); }
 }
