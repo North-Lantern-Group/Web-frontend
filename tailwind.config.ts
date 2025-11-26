@@ -29,8 +29,8 @@ const config: Config = {
         'nlg-forest-green': '#2C5A32',
       },
       fontFamily: {
-        sans: ['var(--font-open-sans)', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-merriweather)', 'Georgia', 'serif'],
+        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'monospace'],
       },
     },
   },

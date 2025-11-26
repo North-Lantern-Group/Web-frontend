@@ -2,32 +2,376 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-merriweather: 'Merriweather', serif;
-  --font-open-sans: 'Open Sans', sans-serif;
+* {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 body {
-  font-family: var(--font-open-sans);
-  background-color: #1B2838;
+  background-color: #000000;
   color: #FFFFFF;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-merriweather);
-  font-weight: 700;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
 
-  .glow-effect {
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+/* Hardware-accelerated smooth animations */
+@layer components {
+  /* GPU-accelerated base for all animated elements */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform;
   }
 
-  .glow-effect-hover:hover {
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+  /* Compass animation - smooth continuous rotation */
+  @keyframes compass-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes compass-needle {
+    0%, 100% {
+      transform: rotate(-15deg);
+    }
+    50% {
+      transform: rotate(15deg);
+    }
+  }
+
+  @keyframes compass-glow {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-compass-spin {
+    animation: compass-spin 20s linear infinite;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  .animate-compass-needle {
+    animation: compass-needle 3s ease-in-out infinite;
+    transform-origin: center bottom;
+    will-change: transform;
+  }
+
+  .animate-compass-glow {
+    animation: compass-glow 4s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2s ease-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
+    will-change: background-position;
+  }
+
+  /* Rotating gradient circles */
+  @keyframes rotate-gradient {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes rotate-gradient-reverse {
+    0% {
+      transform: rotate(360deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes pulse-scale {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.03);
+      opacity: 0.8;
+    }
+  }
+
+  .animate-rotate-gradient {
+    animation: rotate-gradient 20s ease-in-out infinite;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  .animate-rotate-gradient-slow {
+    animation: rotate-gradient-reverse 28s ease-in-out infinite;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  .animate-rotate-gradient-slower {
+    animation: rotate-gradient 36s ease-in-out infinite;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  .animate-rotate-vercel-dashed {
+    animation: rotate-gradient 40s linear infinite;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  .smooth-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+  }
+
+  /* Subtle gradient orbs */
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    will-change: transform, opacity;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  /* Testimonial grid border animations - subtle and slow */
+  .testimonial-cell {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  @keyframes border-fade-1 {
+    0%, 100% {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    50% {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  @keyframes border-fade-2 {
+    0%, 100% {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    50% {
+      border-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  @keyframes border-fade-3 {
+    0%, 100% {
+      border-color: rgba(255, 255, 255, 0.08);
+      border-style: solid;
+    }
+    50% {
+      border-color: rgba(255, 255, 255, 0.15);
+      border-style: dashed;
+    }
+  }
+
+  @keyframes border-fade-4 {
+    0%, 100% {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    50% {
+      border-color: transparent;
+    }
+  }
+
+  @keyframes border-fade-5 {
+    0%, 100% {
+      border-color: rgba(255, 255, 255, 0.1);
+      border-style: dashed;
+    }
+    50% {
+      border-color: rgba(255, 255, 255, 0.05);
+      border-style: solid;
+    }
+  }
+
+  .testimonial-cell:nth-child(1) {
+    animation: border-fade-1 15s ease-in-out infinite;
+  }
+  .testimonial-cell:nth-child(2) {
+    animation: border-fade-4 18s ease-in-out infinite 2s;
+  }
+  .testimonial-cell:nth-child(3) {
+    animation: border-fade-3 20s ease-in-out infinite 4s;
+  }
+  .testimonial-cell:nth-child(4) {
+    animation: border-fade-2 17s ease-in-out infinite 3s;
+  }
+  .testimonial-cell:nth-child(5) {
+    animation: border-fade-5 22s ease-in-out infinite 5s;
+  }
+  .testimonial-cell:nth-child(6) {
+    animation: border-fade-4 16s ease-in-out infinite 1s;
+  }
+  .testimonial-cell:nth-child(7) {
+    animation: border-fade-3 19s ease-in-out infinite 6s;
+  }
+  .testimonial-cell:nth-child(8) {
+    animation: border-fade-2 21s ease-in-out infinite 2.5s;
+  }
+  .testimonial-cell:nth-child(9) {
+    animation: border-fade-5 14s ease-in-out infinite 4.5s;
+  }
+
+  /* Who We Are underline animation */
+  @keyframes underline-appear-disappear {
+    0% {
+      left: 0;
+      width: 0;
+    }
+    40% {
+      left: 0;
+      width: 100%;
+    }
+    60% {
+      left: 0;
+      width: 100%;
+    }
+    100% {
+      left: 100%;
+      width: 0;
+    }
+  }
+
+  .who-we-are-underline {
+    width: 0;
+    left: 0;
+  }
+
+  .who-we-are-visible .who-we-are-underline {
+    animation: underline-appear-disappear 1.8s ease-in-out forwards;
+  }
+
+  /* Phone input dark theme */
+  .phone-input-dark {
+    --PhoneInputCountryFlag-height: 1em;
+    --PhoneInputCountryFlag-borderColor: transparent;
+    --PhoneInputCountrySelectArrow-color: #a3a3a3;
+    --PhoneInputCountrySelectArrow-opacity: 1;
+  }
+
+  .phone-input-dark {
+    display: flex;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .phone-input-dark:focus-within {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .phone-input-dark .PhoneInputInput {
+    background: transparent;
+    border: none;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+    outline: none;
+    flex: 1;
+  }
+
+  .phone-input-dark .PhoneInputInput::placeholder {
+    color: #525252;
+  }
+
+  .phone-input-dark .PhoneInputCountry {
+    background: transparent;
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    padding: 0.75rem;
+    margin-right: 0;
+  }
+
+  .phone-input-dark .PhoneInputCountrySelect {
+    background: #000000;
+    color: #ffffff;
+  }
+
+  .phone-input-dark .PhoneInputCountrySelectArrow {
+    display: none;
+  }
+
+  .phone-input-dark .PhoneInputCountryIcon {
+    box-shadow: none;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .phone-input-dark .PhoneInputCountryIcon--border {
+    box-shadow: none;
   }
 }

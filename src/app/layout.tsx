@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Merriweather, Open_Sans } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-
-const merriweather = Merriweather({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  variable: '--font-merriweather',
-});
-
-const openSans = Open_Sans({
-  weight: ['300', '400', '600'],
-  subsets: ['latin'],
-  variable: '--font-open-sans',
-});
 
 export const metadata: Metadata = {
   title: "North Lantern Group | Illuminating Your Path to Digital Excellence",
@@ -26,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${merriweather.variable} ${openSans.variable} antialiased`}>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className="font-sans antialiased">
         {children}
       </body>
     </html>
