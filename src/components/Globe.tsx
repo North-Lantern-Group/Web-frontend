@@ -49,9 +49,9 @@ export default function Globe() {
       diffuse: 1.2,
       mapSamples: 80000,
       mapBrightness: 6,
-      baseColor: [0.05, 0.05, 0.05],
+      baseColor: [0.15, 0.15, 0.15],
       markerColor: [0.984, 0.443, 0.522],  // rose-400 (#fb7185) in RGB normalized
-      glowColor: [0.05, 0.05, 0.05],
+      glowColor: [0.1, 0.1, 0.12],
       markers: [
         { location: [40.7128, -74.006], size: 0.05 },    // New York
         { location: [51.5074, -0.1278], size: 0.05 },    // London
