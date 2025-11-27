@@ -210,10 +210,8 @@ export default function Home() {
           <CloudBackground />
         )}
 
-        {/* Bottom gradient fade */}
-        <div className={`absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent pointer-events-none ${isDarkMode ? 'to-neutral-950' : 'to-white'}`}></div>
 
-        <div className="relative container mx-auto px-[4%] pt-24">
+        <div className="relative container mx-auto px-[4%] pt-24 z-20">
           <div className="max-w-[900px] mx-auto text-center">
             {/* Badge */}
             <div className={`inline-flex items-center gap-2 border px-4 py-2 rounded-full text-sm mb-8 opacity-0 animate-[fadeInUp_0.8s_ease-out_forwards] ${isDarkMode ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-cyan-600/10 border-cyan-600/40 text-cyan-700'}`}>
@@ -251,8 +249,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Transition gradient between hero and stats - only needed for dark mode */}
+      {isDarkMode && (
+        <div className="w-full h-32 bg-gradient-to-b from-black to-neutral-950"></div>
+      )}
+
       {/* Stats Section */}
-      <section className="py-28 border-t border-white/10 bg-neutral-950">
+      <section className={`py-28 ${isDarkMode ? 'bg-neutral-950' : 'bg-white'}`}>
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-16 reveal-stagger">
             {/* Stat 1 - Faster Delivery */}
