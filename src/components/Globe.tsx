@@ -22,6 +22,10 @@ export default function Globe() {
     window.addEventListener("resize", onResize);
     onResize();
 
+    // Use lower pixel ratio on mobile for better performance
+    const isMobile = window.innerWidth < 768;
+    const pixelRatio = isMobile ? 1.5 : 2;
+
     let globe: ReturnType<typeof createGlobe>;
 
     // Fix white flash on page refresh
@@ -36,7 +40,7 @@ export default function Globe() {
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     globe = createGlobe(canvasRef.current!, {
-      devicePixelRatio: 2,
+      devicePixelRatio: pixelRatio,
       width: width * 2,
       height: width * 2,
       phi: 2.5,

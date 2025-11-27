@@ -934,7 +934,7 @@ export default function Home() {
             </div>
 
             {/* Right side - Interactive Globe */}
-            <div className="aspect-square max-h-[400px] md:max-h-none flex items-center justify-center md:justify-end reveal-right">
+            <div className="w-full h-[280px] sm:h-[350px] md:h-auto md:aspect-square flex items-center justify-center reveal-right order-first md:order-last">
               <InteractiveGlobe key="globe-rose" />
             </div>
           </div>
