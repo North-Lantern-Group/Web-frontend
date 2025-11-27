@@ -45,6 +45,7 @@ export default function Home() {
   const [aboutVisible, setAboutVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLParagraphElement>(null);
 
@@ -128,18 +129,18 @@ export default function Home() {
       {/* Fixed Theme Toggle Button - Bottom Right */}
       <button
         onClick={() => setIsDarkMode(!isDarkMode)}
-        className={`fixed bottom-6 right-6 z-[100] p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 ${
+        className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[100] p-3 md:p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 ${
           isDarkMode
             ? 'bg-neutral-800 hover:bg-neutral-700 text-white border border-white/10'
             : 'bg-white hover:bg-gray-100 text-neutral-800 border border-gray-200 shadow-xl'
         }`}
         aria-label="Toggle theme"
       >
-        {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+        {isDarkMode ? <Sun className="w-5 h-5 md:w-6 md:h-6" /> : <Moon className="w-5 h-5 md:w-6 md:h-6" />}
       </button>
 
       {/* Header with Navigation */}
-      <header className={`fixed top-0 left-0 right-0 z-50 px-[4%] flex justify-between items-center transition-all duration-400 ${scrolled ? (isDarkMode ? 'py-4 bg-neutral-950/95 backdrop-blur-[20px] border-b border-white/10' : 'py-4 bg-white/95 backdrop-blur-[20px] border-b border-black/10') : 'py-6'}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 px-4 md:px-[4%] flex justify-between items-center transition-all duration-400 ${scrolled ? (isDarkMode ? 'py-3 md:py-4 bg-neutral-950/95 backdrop-blur-[20px] border-b border-white/10' : 'py-3 md:py-4 bg-white/95 backdrop-blur-[20px] border-b border-black/10') : 'py-4 md:py-6'}`}>
         <nav className="w-full flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center gap-3">
@@ -148,12 +149,12 @@ export default function Home() {
               alt="North Lantern Group"
               width={500}
               height={125}
-              className="h-24 w-auto"
+              className="h-14 md:h-24 w-auto"
             />
           </a>
 
-          {/* Navigation Links */}
-          <ul className="hidden md:flex items-center gap-10 list-none">
+          {/* Navigation Links - Desktop */}
+          <ul className="hidden lg:flex items-center gap-10 list-none">
             <li>
               <a href="#about" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 About
@@ -186,14 +187,65 @@ export default function Home() {
             </li>
           </ul>
 
-          {/* CTA Button */}
+          {/* CTA Button - Desktop */}
           <a
             href="#contact"
-            className="bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-7 py-3 rounded-lg font-semibold text-[0.95rem] transition-all duration-300 hover:-translate-y-0.5 shadow-[0_0_30px_rgba(0,212,255,0.2)] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)]"
+            className="hidden md:inline-flex bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-5 lg:px-7 py-2.5 lg:py-3 rounded-lg font-semibold text-sm lg:text-[0.95rem] transition-all duration-300 hover:-translate-y-0.5 shadow-[0_0_30px_rgba(0,212,255,0.2)] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)]"
           >
             Start a Project
           </a>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={`lg:hidden p-2 rounded-lg transition-colors ${isDarkMode ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-black/10'}`}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </nav>
+
+        {/* Mobile Menu Dropdown */}
+        {mobileMenuOpen && (
+          <div className={`absolute top-full left-0 right-0 lg:hidden ${isDarkMode ? 'bg-neutral-950/98 border-b border-white/10' : 'bg-white/98 border-b border-black/10'} backdrop-blur-[20px]`}>
+            <nav className="container mx-auto px-4 py-6">
+              <ul className="flex flex-col gap-4">
+                <li>
+                  <a href="#about" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>About</a>
+                </li>
+                <li>
+                  <a href="#services" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Services</a>
+                </li>
+                <li>
+                  <a href="#why-us" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Why Us</a>
+                </li>
+                <li>
+                  <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Pricing</a>
+                </li>
+                <li>
+                  <a href="#contact" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Contact</a>
+                </li>
+                <li className="pt-4">
+                  <a
+                    href="#contact"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full text-center bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-6 py-3 rounded-lg font-semibold"
+                  >
+                    Start a Project
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -211,36 +263,36 @@ export default function Home() {
         )}
 
 
-        <div className="relative container mx-auto px-[4%] pt-24 z-20">
+        <div className="relative container mx-auto px-4 md:px-[4%] pt-20 md:pt-24 z-20">
           <div className="max-w-[900px] mx-auto text-center">
             {/* Badge */}
-            <div className={`inline-flex items-center gap-2 border px-4 py-2 rounded-full text-sm mb-8 opacity-0 animate-[fadeInUp_0.8s_ease-out_forwards] ${isDarkMode ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-cyan-600/10 border-cyan-600/40 text-cyan-700'}`}>
+            <div className={`inline-flex items-center gap-2 border px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm mb-6 md:mb-8 opacity-0 animate-[fadeInUp_0.8s_ease-out_forwards] ${isDarkMode ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-cyan-600/10 border-cyan-600/40 text-cyan-700'}`}>
               <span className={`w-2 h-2 rounded-full animate-pulse ${isDarkMode ? 'bg-cyan-400' : 'bg-cyan-600'}`}></span>
               Atlassian Cloud & Business Intelligence
             </div>
 
-            <h1 className={`font-serif text-[clamp(3rem,7vw,5rem)] font-bold leading-[1.15] mb-6 tracking-[-0.01em] opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards] ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+            <h1 className={`font-serif text-[clamp(2rem,7vw,5rem)] font-bold leading-[1.15] mb-4 md:mb-6 tracking-[-0.01em] opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards] ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
               Transform Your Infrastructure.{" "}
               <span className="bg-gradient-to-br from-cyan-500 to-teal-600 bg-clip-text text-transparent">
                 Unlock Intelligence.
               </span>
             </h1>
 
-            <p className={`text-[clamp(1.1rem,2vw,1.35rem)] max-w-[650px] mx-auto mb-10 leading-[1.8] opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards] ${isDarkMode ? 'text-gray-400' : 'text-slate-600'}`}>
+            <p className={`text-[clamp(0.95rem,2vw,1.35rem)] max-w-[650px] mx-auto mb-8 md:mb-10 leading-[1.7] md:leading-[1.8] px-2 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards] ${isDarkMode ? 'text-gray-400' : 'text-slate-600'}`}>
               We architect Atlassian ecosystems and business intelligence solutions that don&apos;t just work—they accelerate decisions, streamline operations, and scale with your ambitions.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards]">
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 md:gap-4 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards] px-4 sm:px-0">
               <a
                 href="#about"
-                className="inline-flex items-center gap-2 bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 hover:-translate-y-[3px] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)]"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold text-sm md:text-base transition-all duration-300 hover:-translate-y-[3px] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)]"
               >
                 Start Discovery
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
               <a
                 href="#services"
-                className="inline-flex items-center gap-2 bg-transparent border border-gray-500 text-white px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:bg-cyan-500/5"
+                className={`inline-flex items-center justify-center gap-2 bg-transparent border px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold text-sm md:text-base transition-all duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:bg-cyan-500/5 ${isDarkMode ? 'border-gray-500 text-white' : 'border-gray-400 text-gray-700'}`}
               >
                 Explore Solutions
               </a>
@@ -255,50 +307,50 @@ export default function Home() {
       )}
 
       {/* Stats Section */}
-      <section className={`py-28 ${isDarkMode ? 'bg-neutral-950' : 'bg-white'}`}>
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-16 reveal-stagger">
+      <section className={`py-16 md:py-28 ${isDarkMode ? 'bg-neutral-950' : 'bg-white'}`}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 reveal-stagger">
             {/* Stat 1 - Faster Delivery */}
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold text-cyan-400 mb-3">60%</div>
-              <div className="text-sm md:text-base text-neutral-400 uppercase tracking-widest">Faster Delivery</div>
+              <div className="text-4xl md:text-6xl font-bold text-cyan-400 mb-2 md:mb-3">60%</div>
+              <div className="text-xs md:text-base text-neutral-400 uppercase tracking-wider md:tracking-widest">Faster Delivery</div>
             </div>
             {/* Stat 2 - Team Efficiency */}
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold text-cyan-400 mb-3">3x</div>
-              <div className="text-sm md:text-base text-neutral-400 uppercase tracking-widest">Team Efficiency</div>
+              <div className="text-4xl md:text-6xl font-bold text-cyan-400 mb-2 md:mb-3">3x</div>
+              <div className="text-xs md:text-base text-neutral-400 uppercase tracking-wider md:tracking-widest">Team Efficiency</div>
             </div>
             {/* Stat 3 - Client Satisfaction */}
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold text-cyan-400 mb-3">92%</div>
-              <div className="text-sm md:text-base text-neutral-400 uppercase tracking-widest">Client Satisfaction</div>
+              <div className="text-4xl md:text-6xl font-bold text-cyan-400 mb-2 md:mb-3">92%</div>
+              <div className="text-xs md:text-base text-neutral-400 uppercase tracking-wider md:tracking-widest">Client Satisfaction</div>
             </div>
             {/* Stat 4 - Implementations */}
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold text-cyan-400 mb-3">60+</div>
-              <div className="text-sm md:text-base text-neutral-400 uppercase tracking-widest">Implementations</div>
+              <div className="text-4xl md:text-6xl font-bold text-cyan-400 mb-2 md:mb-3">60+</div>
+              <div className="text-xs md:text-base text-neutral-400 uppercase tracking-wider md:tracking-widest">Implementations</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Company Story & Mission Section */}
-      <section id="about" className="py-32 bg-neutral-950">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16 lg:gap-24 items-start">
+      <section id="about" className="py-16 md:py-32 bg-neutral-950">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 lg:gap-24 items-start">
             {/* Left side - Story Content */}
             <div className="reveal-left">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-12 leading-[1.2]">
+              <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-8 md:mb-12 leading-[1.2]">
                 We build the systems<br />
                 that power modern<br />
                 enterprises
               </h2>
 
-              <div className="space-y-8 text-gray-400 text-lg md:text-xl leading-[1.9]">
+              <div className="space-y-6 md:space-y-8 text-gray-400 text-base md:text-xl leading-[1.8] md:leading-[1.9]">
                 <p>
                   North Lantern Group emerged from a simple observation: organizations need more than implementation partners—they need strategic allies who understand both the technical complexities and business imperatives of digital transformation.
                 </p>
-                <p>
+                <p className="hidden md:block">
                   We recognized a critical gap in the market. Businesses weren&apos;t just looking for tool deployment. They needed architects who could design solutions that evolve with their organizations, providing both the infrastructure for collaboration and the intelligence layer for decision-making.
                 </p>
                 <p>
@@ -308,7 +360,7 @@ export default function Home() {
 
               <a
                 href="#services"
-                className="inline-flex items-center gap-3 mt-12 px-8 py-4 bg-neutral-800 border border-white/10 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:bg-neutral-700 hover:border-white/20"
+                className="inline-flex items-center gap-3 mt-8 md:mt-12 px-6 md:px-8 py-3 md:py-4 bg-neutral-800 border border-white/10 rounded-lg text-white text-base md:text-lg font-medium transition-all duration-300 hover:bg-neutral-700 hover:border-white/20"
               >
                 Our Capabilities
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -316,15 +368,15 @@ export default function Home() {
             </div>
 
             {/* Right side - Our Mission Card */}
-            <div className="flex justify-end items-start pt-4 reveal-right">
-              <div className="bg-gradient-to-br from-cyan-900/40 to-teal-900/40 border border-cyan-500/20 rounded-2xl p-10 max-w-lg">
+            <div className="flex justify-center md:justify-end items-start pt-0 md:pt-4 reveal-right">
+              <div className="bg-gradient-to-br from-cyan-900/40 to-teal-900/40 border border-cyan-500/20 rounded-2xl p-6 md:p-10 w-full md:max-w-lg">
                 {/* Icon */}
-                <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-xl flex items-center justify-center mb-8">
-                  <Target className="w-8 h-8 text-white" />
+                <div className="w-12 md:w-16 h-12 md:h-16 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-xl flex items-center justify-center mb-6 md:mb-8">
+                  <Target className="w-6 md:w-8 h-6 md:h-8 text-white" />
                 </div>
 
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">Our Mission</h3>
-                <p className="text-neutral-300 text-lg md:text-xl leading-[1.9]">
+                <h3 className="text-xl md:text-3xl font-bold text-white mb-4 md:mb-6">Our Mission</h3>
+                <p className="text-neutral-300 text-base md:text-xl leading-[1.8] md:leading-[1.9]">
                   Empower organizations with tools, insights, and strategies that illuminate the path to sustainable growth. We don&apos;t just implement technology—we architect transformation that compounds value over time.
                 </p>
               </div>
@@ -334,26 +386,26 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="pt-8 pb-28 relative">
+      <section id="services" className="pt-8 pb-16 md:pb-28 relative">
         {/* Section Header */}
-        <div ref={servicesRef} className="text-center py-16">
-          <h2 className={`text-4xl md:text-5xl font-bold text-white tracking-tight transition-all duration-700 hover:scale-[1.02] cursor-default ${servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div ref={servicesRef} className="text-center py-10 md:py-16 px-4">
+          <h2 className={`text-2xl md:text-5xl font-bold text-white tracking-tight transition-all duration-700 hover:scale-[1.02] cursor-default ${servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             Comprehensive solutions for every need.
           </h2>
-          <p className={`text-lg text-neutral-400 mt-4 max-w-2xl mx-auto transition-all duration-700 delay-200 ${servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <p className={`text-base md:text-lg text-neutral-400 mt-3 md:mt-4 max-w-2xl mx-auto transition-all duration-700 delay-200 ${servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             Expert services designed to modernize and elevate your business operations.
           </p>
         </div>
 
-        <div className="container mx-auto px-6 relative">
+        <div className="container mx-auto px-4 md:px-6 relative">
 
           {/* Services Cards */}
           <div className="grid lg:grid-cols-3 gap-0 border border-white/10 rounded-xl overflow-hidden reveal-stagger">
             {/* Atlassian Solutions */}
-            <div className="p-8 lg:p-10 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
-              <Layers className="w-10 h-10 text-cyan-400 mb-4" strokeWidth={1.5} />
-              <h3 className="text-2xl font-bold mb-4 text-white">Atlassian Solutions</h3>
-              <p className="text-neutral-400 mb-8 leading-relaxed text-base">
+            <div className="p-6 md:p-8 lg:p-10 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[500px] md:min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
+              <Layers className="w-8 md:w-10 h-8 md:h-10 text-cyan-400 mb-3 md:mb-4" strokeWidth={1.5} />
+              <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white">Atlassian Solutions</h3>
+              <p className="text-neutral-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">
                 Expert guidance on Jira, Confluence, and more. We tailor implementations to fit your workflow and maximize efficiency.
               </p>
 
@@ -384,7 +436,7 @@ export default function Home() {
               <div className="flex-grow"></div>
 
               {/* Diagram 1 */}
-              <div className="w-full h-56 flex items-center px-0 mt-2 mb-8 relative">
+              <div className="w-full h-48 md:h-56 flex items-center px-0 mt-2 mb-6 md:mb-8 relative hidden md:flex">
                 {/* Left: Single column with 5 rows, top and bottom rounded */}
                 <div className="flex flex-col">
                   {/* Row 1 - rounded top - Jira */}
@@ -486,10 +538,10 @@ export default function Home() {
             </div>
 
             {/* Cloud Migrations */}
-            <div className="p-8 lg:p-10 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
-              <Cloud className="w-10 h-10 text-cyan-400 mb-4" strokeWidth={1.5} />
-              <h3 className="text-2xl font-bold mb-4 text-white">Cloud Migrations</h3>
-              <p className="text-neutral-400 mb-8 leading-relaxed text-base">
+            <div className="p-6 md:p-8 lg:p-10 bg-neutral-900 border-b lg:border-b-0 lg:border-r border-white/10 min-h-[400px] md:min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
+              <Cloud className="w-8 md:w-10 h-8 md:h-10 text-cyan-400 mb-3 md:mb-4" strokeWidth={1.5} />
+              <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white">Cloud Migrations</h3>
+              <p className="text-neutral-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">
                 Seamless transitions to cloud infrastructure with minimal disruption. We ensure your data is secure and accessible.
               </p>
 
@@ -524,7 +576,7 @@ export default function Home() {
               <div className="flex-grow"></div>
 
               {/* Diagram 2 */}
-              <div className="w-full h-56 flex items-center justify-center mt-2 mb-8 relative">
+              <div className="w-full h-48 md:h-56 items-center justify-center mt-2 mb-6 md:mb-8 relative hidden md:flex">
                 {/* X pattern with 5 cloud logos */}
                 <div className="relative" style={{ width: '232px', height: '232px' }}>
                   {/* Connecting lines from Azure outer ring to Vercel outer ring */}
@@ -679,10 +731,10 @@ export default function Home() {
             </div>
 
             {/* Data Analytics */}
-            <div className="p-8 lg:p-10 bg-neutral-900 min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
-              <BarChart3 className="w-10 h-10 text-cyan-400 mb-4" strokeWidth={1.5} />
-              <h3 className="text-2xl font-bold mb-4 text-white">Data Analytics Services</h3>
-              <p className="text-neutral-400 mb-8 leading-relaxed text-base">
+            <div className="p-6 md:p-8 lg:p-10 bg-neutral-900 min-h-[400px] md:min-h-[900px] transition-all duration-300 hover:bg-neutral-800/50 group flex flex-col">
+              <BarChart3 className="w-8 md:w-10 h-8 md:h-10 text-cyan-400 mb-3 md:mb-4" strokeWidth={1.5} />
+              <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white">Data Analytics Services</h3>
+              <p className="text-neutral-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">
                 Transform raw data into actionable insights with advanced analytics and customized dashboards.
               </p>
 
@@ -806,49 +858,49 @@ export default function Home() {
       </section>
 
       {/* Why North Lantern Section */}
-      <section id="why-us" className="py-28">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section id="why-us" className="py-16 md:py-28">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Left side - Content */}
             <div className="reveal-left">
-              <p ref={aboutRef} className={`text-2xl font-semibold tracking-normal text-cyan-400 mb-4 relative inline-block ${aboutVisible ? 'who-we-are-visible' : ''}`}>
+              <p ref={aboutRef} className={`text-lg md:text-2xl font-semibold tracking-normal text-cyan-400 mb-3 md:mb-4 relative inline-block ${aboutVisible ? 'who-we-are-visible' : ''}`}>
                 <span>Why North Lantern</span>
                 <span className="absolute bottom-0 left-0 h-[2px] bg-cyan-400 who-we-are-underline"></span>
               </p>
-              <h2 className="text-4xl md:text-5xl font-medium mb-8 text-white tracking-tight">Dedicated to Elevating Business Excellence Through Tailored Solutions</h2>
-              <p className="text-lg text-neutral-400 mb-6">
+              <h2 className="text-2xl md:text-5xl font-medium mb-6 md:mb-8 text-white tracking-tight">Dedicated to Elevating Business Excellence Through Tailored Solutions</h2>
+              <p className="text-base md:text-lg text-neutral-400 mb-4 md:mb-6">
                 North Lantern Group is a leading professional services firm specializing in innovative technology solutions. Founded to enhance collaboration and governance workflows, NLG offers tailored Atlassian solutions, seamless cloud migrations, and powerful data analytics services.
               </p>
 
-              <div className="flex items-center gap-3 mb-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-amber-400/30 rounded-full">
-                  <span className="text-sm text-amber-400">5+ Global Awards</span>
+              <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-6 md:mb-8">
+                <div className="inline-flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 bg-neutral-800 border border-amber-400/30 rounded-full">
+                  <span className="text-xs md:text-sm text-amber-400">5+ Global Awards</span>
                 </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-teal-400/30 rounded-full">
-                  <span className="text-sm text-teal-400">24/7 Support Available</span>
+                <div className="inline-flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 bg-neutral-800 border border-teal-400/30 rounded-full">
+                  <span className="text-xs md:text-sm text-teal-400">24/7 Support</span>
                 </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-800 border border-emerald-400/30 rounded-full">
-                  <span className="text-sm text-emerald-400">12+ Years of Experience</span>
+                <div className="inline-flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 bg-neutral-800 border border-emerald-400/30 rounded-full">
+                  <span className="text-xs md:text-sm text-emerald-400">12+ Years Exp</span>
                 </div>
               </div>
 
-              <div className="flex gap-4 mt-8">
+              <div className="flex gap-3 md:gap-4 mt-6 md:mt-8">
                 {/* Labels row */}
                 <div className="flex-1 flex flex-col items-start">
-                  <div className="text-xs text-neutral-500 uppercase tracking-wider">Projects Delivered</div>
-                  <div className="text-2xl font-medium text-rose-400">60+</div>
+                  <div className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wider">Projects</div>
+                  <div className="text-xl md:text-2xl font-medium text-rose-400">60+</div>
                 </div>
                 <div className="flex-1 flex flex-col items-start">
-                  <div className="text-xs text-neutral-500 uppercase tracking-wider">Team Members</div>
-                  <div className="text-2xl font-medium text-violet-400">25+</div>
+                  <div className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wider">Team</div>
+                  <div className="text-xl md:text-2xl font-medium text-violet-400">25+</div>
                 </div>
                 <div className="flex-1 flex flex-col items-start">
-                  <div className="text-xs text-neutral-500 uppercase tracking-wider">Client Satisfaction</div>
-                  <div className="text-2xl font-medium text-cyan-400">92%</div>
+                  <div className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wider">Satisfaction</div>
+                  <div className="text-xl md:text-2xl font-medium text-cyan-400">92%</div>
                 </div>
               </div>
 
-              <div className="flex items-end gap-4 mt-4">
+              <div className="hidden md:flex items-end gap-4 mt-4">
                 {/* 60+ Projects Delivered */}
                 <div className="flex-1 flex flex-col">
                   <div className="flex flex-wrap-reverse content-start gap-[5px] mb-3 justify-end w-full">
@@ -882,7 +934,7 @@ export default function Home() {
             </div>
 
             {/* Right side - Interactive Globe */}
-            <div className="aspect-square flex items-center justify-end reveal-right">
+            <div className="aspect-square max-h-[400px] md:max-h-none flex items-center justify-center md:justify-end reveal-right">
               <InteractiveGlobe key="globe-rose" />
             </div>
           </div>
@@ -890,20 +942,20 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-28">
-        <div className="container mx-auto px-6">
+      <section id="testimonials" className="py-16 md:py-28">
+        <div className="container mx-auto px-4 md:px-6">
           {/* Centered Header */}
-          <div className="text-center mb-16 reveal">
-            <p className="text-2xl font-semibold tracking-normal text-cyan-400 mb-4">What Our Clients Say</p>
-            <h2 className="text-4xl md:text-5xl font-medium text-white tracking-tight">Hear from Our Satisfied Clients</h2>
+          <div className="text-center mb-10 md:mb-16 reveal">
+            <p className="text-lg md:text-2xl font-semibold tracking-normal text-cyan-400 mb-3 md:mb-4">What Our Clients Say</p>
+            <h2 className="text-2xl md:text-5xl font-medium text-white tracking-tight">Hear from Our Satisfied Clients</h2>
           </div>
 
           {/* Testimonial Bubbles */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger-slow">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 reveal-stagger-slow">
             {/* Bubble 1 */}
-            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center text-white font-bold text-lg">
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-5 md:p-8 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="w-10 md:w-12 h-10 md:h-12 rounded-full bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center text-white font-bold text-base md:text-lg">
                   MT
                 </div>
                 <div>
@@ -1048,70 +1100,70 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-28 bg-neutral-950">
-        <div className="container mx-auto px-6">
+      <section id="pricing" className="py-16 md:py-28 bg-neutral-950">
+        <div className="container mx-auto px-4 md:px-6">
           {/* Section Header */}
-          <div className="text-center mb-16 reveal">
-            <p className="text-sm font-semibold tracking-widest text-cyan-400 uppercase mb-4">Engagement Models</p>
-            <h2 className="text-4xl md:text-5xl font-medium text-white tracking-tight mb-6">Flexible Structures for Every Need</h2>
-            <p className="text-lg text-neutral-400 max-w-3xl mx-auto leading-relaxed">
+          <div className="text-center mb-10 md:mb-16 reveal">
+            <p className="text-xs md:text-sm font-semibold tracking-widest text-cyan-400 uppercase mb-3 md:mb-4">Engagement Models</p>
+            <h2 className="text-2xl md:text-5xl font-medium text-white tracking-tight mb-4 md:mb-6">Flexible Structures for Every Need</h2>
+            <p className="text-sm md:text-lg text-neutral-400 max-w-3xl mx-auto leading-relaxed">
               Choose the engagement model that aligns with your project scope, timeline, and organizational preferences. All models include senior consultant engagement and transparent communication.
             </p>
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid md:grid-cols-3 gap-8 reveal-stagger">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 reveal-stagger">
             {/* Project-Based */}
-            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 transition-all duration-300 hover:border-cyan-500/30 hover:-translate-y-2">
-              <div className="text-4xl mb-6">📋</div>
-              <h3 className="text-2xl font-bold text-white mb-2">Project-Based</h3>
-              <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-4">Fixed Scope</p>
-              <p className="text-neutral-400 mb-8 leading-relaxed">
+            <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 transition-all duration-300 hover:border-cyan-500/30 hover:-translate-y-2">
+              <div className="text-3xl md:text-4xl mb-4 md:mb-6">📋</div>
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Project-Based</h3>
+              <p className="text-cyan-400 text-xs md:text-sm font-semibold uppercase tracking-wider mb-3 md:mb-4">Fixed Scope</p>
+              <p className="text-neutral-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">
                 Defined deliverables. Clear timeline. Predictable investment. Ideal for implementations with well-understood requirements.
               </p>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3 text-neutral-300">
+              <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+                <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base">
                   <span className="text-cyan-400">✦</span>
                   Comprehensive discovery phase
                 </li>
-                <li className="flex items-center gap-3 text-neutral-300">
+                <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base">
                   <span className="text-cyan-400">✦</span>
                   Fixed scope and timeline
                 </li>
-                <li className="flex items-center gap-3 text-neutral-300">
+                <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base">
                   <span className="text-cyan-400">✦</span>
                   Milestone-based delivery
                 </li>
-                <li className="flex items-center gap-3 text-neutral-300">
+                <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base">
                   <span className="text-cyan-400">✦</span>
                   Detailed documentation
                 </li>
-                <li className="flex items-center gap-3 text-neutral-300">
+                <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base hidden md:flex">
                   <span className="text-cyan-400">✦</span>
                   Knowledge transfer included
                 </li>
-                <li className="flex items-center gap-3 text-neutral-300">
+                <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base hidden md:flex">
                   <span className="text-cyan-400">✦</span>
                   Post-launch support period
                 </li>
               </ul>
               <a
                 href="#contact"
-                className="block w-full py-4 px-6 text-center border border-white/20 rounded-lg text-white font-medium transition-all duration-300 hover:bg-white/5 hover:border-cyan-500/50"
+                className="block w-full py-3 md:py-4 px-6 text-center border border-white/20 rounded-lg text-white font-medium transition-all duration-300 hover:bg-white/5 hover:border-cyan-500/50 text-sm md:text-base"
               >
                 Discuss Scope
               </a>
             </div>
 
             {/* Retainer - Featured */}
-            <div className="bg-gradient-to-b from-cyan-900/30 to-teal-900/20 border border-cyan-500/30 rounded-3xl p-8 relative transition-all duration-300 hover:-translate-y-2 scale-105">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-teal-500 text-neutral-900 px-4 py-1.5 rounded-full text-sm font-semibold">
+            <div className="bg-gradient-to-b from-cyan-900/30 to-teal-900/20 border border-cyan-500/30 rounded-2xl md:rounded-3xl p-6 md:p-8 relative transition-all duration-300 hover:-translate-y-2 md:scale-105">
+              <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-teal-500 text-neutral-900 px-3 md:px-4 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-semibold">
                 Most Popular
               </div>
-              <div className="text-4xl mb-6">🔄</div>
-              <h3 className="text-2xl font-bold text-white mb-2">Retainer</h3>
-              <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-4">Monthly Partnership</p>
-              <p className="text-neutral-400 mb-8 leading-relaxed">
+              <div className="text-3xl md:text-4xl mb-4 md:mb-6 mt-2 md:mt-0">🔄</div>
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Retainer</h3>
+              <p className="text-cyan-400 text-xs md:text-sm font-semibold uppercase tracking-wider mb-3 md:mb-4">Monthly Partnership</p>
+              <p className="text-neutral-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">
                 Priority access. Continuous optimization. Strategic guidance month over month. For teams that need ongoing expert support.
               </p>
               <ul className="space-y-4 mb-8">
@@ -1194,17 +1246,17 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-28">
-        <div className="container mx-auto px-6">
+      <section id="contact" className="py-16 md:py-28">
+        <div className="container mx-auto px-4 md:px-6">
           {/* Centered Header */}
-          <div className="text-center mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-medium text-white tracking-tight">Let&apos;s Start a Conversation</h2>
+          <div className="text-center mb-10 md:mb-16 reveal">
+            <h2 className="text-2xl md:text-5xl font-medium text-white tracking-tight">Let&apos;s Start a Conversation</h2>
           </div>
 
-          <div className="grid md:grid-cols-[2fr_1fr] gap-12 items-start max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 md:gap-12 items-start max-w-5xl mx-auto">
             {/* Left side - Form */}
-            <form onSubmit={handleSubmit} className="p-8 rounded-xl bg-neutral-900 border border-white/10 reveal-left">
-              <div className="grid grid-cols-2 gap-4 mb-4">
+            <form onSubmit={handleSubmit} className="p-5 md:p-8 rounded-xl bg-neutral-900 border border-white/10 reveal-left">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium mb-2 text-neutral-300">First Name</label>
                   <input
@@ -1227,7 +1279,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                 <div>
                   <label htmlFor="company" className="block text-sm font-medium mb-2 text-neutral-300">Company</label>
                   <input
@@ -1378,34 +1430,34 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 pt-16 pb-8">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-12">
+      <footer className="border-t border-white/5 pt-10 md:pt-16 pb-6 md:pb-8">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr] gap-8 md:gap-12 mb-8 md:mb-12">
             {/* Brand Column */}
-            <div>
-              <div className="mb-6">
+            <div className="col-span-2 md:col-span-1">
+              <div className="mb-4 md:mb-6">
                 <Image
                   src="/logo.png"
                   alt="North Lantern Group"
                   width={200}
                   height={60}
-                  className="h-14 w-auto"
+                  className="h-10 md:h-14 w-auto"
                 />
               </div>
-              <p className="text-neutral-400 text-base leading-relaxed mb-6">
+              <p className="text-neutral-400 text-sm md:text-base leading-relaxed mb-4 md:mb-6">
                 Atlassian Cloud implementation and Business Intelligence solutions that illuminate the path to sustainable growth.
               </p>
               <div className="flex gap-3">
                 <a
                   href="#"
-                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-cyan-400 hover:text-neutral-900 transition-all"
+                  className="w-9 md:w-10 h-9 md:h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-cyan-400 hover:text-neutral-900 transition-all text-sm"
                   aria-label="LinkedIn"
                 >
                   in
                 </a>
                 <a
                   href="#"
-                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-cyan-400 hover:text-neutral-900 transition-all"
+                  className="w-9 md:w-10 h-9 md:h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-cyan-400 hover:text-neutral-900 transition-all text-sm"
                   aria-label="Twitter"
                 >
                   𝕏
@@ -1415,8 +1467,8 @@ export default function Home() {
 
             {/* Services Column */}
             <div>
-              <h4 className="text-white font-semibold text-lg mb-6">Services</h4>
-              <ul className="space-y-3">
+              <h4 className="text-white font-semibold text-base md:text-lg mb-4 md:mb-6">Services</h4>
+              <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
                 <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Atlassian Cloud</a></li>
                 <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Business Intelligence</a></li>
                 <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Migrations</a></li>
@@ -1426,8 +1478,8 @@ export default function Home() {
 
             {/* Company Column */}
             <div>
-              <h4 className="text-white font-semibold text-lg mb-6">Company</h4>
-              <ul className="space-y-3">
+              <h4 className="text-white font-semibold text-base md:text-lg mb-4 md:mb-6">Company</h4>
+              <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
                 <li><a href="#about" className="text-neutral-400 hover:text-cyan-400 transition-colors">About Us</a></li>
                 <li><a href="#approach" className="text-neutral-400 hover:text-cyan-400 transition-colors">Our Approach</a></li>
                 <li><a href="#pricing" className="text-neutral-400 hover:text-cyan-400 transition-colors">Pricing</a></li>
@@ -1435,8 +1487,8 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Resources Column */}
-            <div>
+            {/* Resources Column - Hidden on mobile to save space */}
+            <div className="hidden md:block">
               <h4 className="text-white font-semibold text-lg mb-6">Resources</h4>
               <ul className="space-y-3">
                 <li><a href="#" className="text-neutral-400 hover:text-cyan-400 transition-colors">Case Studies</a></li>
@@ -1448,11 +1500,11 @@ export default function Home() {
           </div>
 
           {/* Footer Bottom */}
-          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-neutral-500 text-sm">&copy; 2025 North Lantern Group. All rights reserved.</p>
-            <div className="flex gap-8">
-              <a href="#" className="text-neutral-500 text-sm hover:text-cyan-400 transition-colors">Privacy Policy</a>
-              <a href="#" className="text-neutral-500 text-sm hover:text-cyan-400 transition-colors">Terms of Service</a>
+          <div className="border-t border-white/5 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-neutral-500 text-xs md:text-sm">&copy; 2025 North Lantern Group. All rights reserved.</p>
+            <div className="flex gap-6 md:gap-8">
+              <a href="#" className="text-neutral-500 text-xs md:text-sm hover:text-cyan-400 transition-colors">Privacy Policy</a>
+              <a href="#" className="text-neutral-500 text-xs md:text-sm hover:text-cyan-400 transition-colors">Terms of Service</a>
             </div>
           </div>
         </div>
