@@ -1253,12 +1253,12 @@ export default function Home() {
             <h2 className="text-2xl md:text-5xl font-medium text-white tracking-tight">Let&apos;s Start a Conversation</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 md:gap-12 items-start max-w-5xl mx-auto">
-            {/* Left side - Form */}
-            <form onSubmit={handleSubmit} className="p-5 md:p-8 rounded-xl bg-neutral-900 border border-white/10 reveal-left">
+          <div className="max-w-2xl mx-auto">
+            {/* Contact Form */}
+            <form onSubmit={handleSubmit} className="p-5 md:p-8 rounded-xl bg-neutral-900 border border-white/10 reveal">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium mb-2 text-neutral-300">First Name</label>
+                  <label htmlFor="firstName" className="block text-sm font-medium mb-2 text-neutral-300">First Name <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     id="firstName"
@@ -1268,7 +1268,7 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium mb-2 text-neutral-300">Last Name</label>
+                  <label htmlFor="lastName" className="block text-sm font-medium mb-2 text-neutral-300">Last Name <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     id="lastName"
@@ -1281,7 +1281,7 @@ export default function Home() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                 <div>
-                  <label htmlFor="company" className="block text-sm font-medium mb-2 text-neutral-300">Company</label>
+                  <label htmlFor="company" className="block text-sm font-medium mb-2 text-neutral-300">Company <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     id="company"
@@ -1293,9 +1293,10 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="companySize" className="block text-sm font-medium mb-2 text-neutral-300">Company Size</label>
+                  <label htmlFor="companySize" className="block text-sm font-medium mb-2 text-neutral-300">Company Size <span className="text-red-500">*</span></label>
                   <select
                     id="companySize"
+                    required
                     className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
                   >
                     <option value="">Select size</option>
@@ -1310,7 +1311,7 @@ export default function Home() {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium mb-2 text-neutral-300">Email</label>
+                <label htmlFor="email" className="block text-sm font-medium mb-2 text-neutral-300">Email <span className="text-red-500">*</span></label>
                 <input
                   type="email"
                   id="email"
@@ -1323,20 +1324,22 @@ export default function Home() {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="phone" className="block text-sm font-medium mb-2 text-neutral-300">Phone</label>
+                <label htmlFor="phone" className="block text-sm font-medium mb-2 text-neutral-300">Phone <span className="text-red-500">*</span></label>
                 <PhoneInput
                   international
                   defaultCountry="US"
                   value={phoneValue}
                   onChange={setPhoneValue}
                   className="phone-input-dark"
+                  required
                 />
               </div>
 
               <div className="mb-4">
-                <label htmlFor="service" className="block text-sm font-medium mb-2 text-neutral-300">Primary Product Interest</label>
+                <label htmlFor="service" className="block text-sm font-medium mb-2 text-neutral-300">Primary Product Interest <span className="text-red-500">*</span></label>
                 <select
                   id="service"
+                  required
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
@@ -1345,19 +1348,6 @@ export default function Home() {
                   <option value="bi">Business Intelligence</option>
                   <option value="cloud">Cloud Migration</option>
                   <option value="all">All Services</option>
-                </select>
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="engagement" className="block text-sm font-medium mb-2 text-neutral-300">Preferred Engagement Model</label>
-                <select
-                  id="engagement"
-                  className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
-                >
-                  <option value="">Select engagement type</option>
-                  <option value="project-based">Project-Based (Fixed Scope)</option>
-                  <option value="retainer">Retainer (Monthly Partnership)</option>
-                  <option value="value-based">Value-Based (ROI-Aligned)</option>
                 </select>
               </div>
 
@@ -1390,41 +1380,6 @@ export default function Home() {
                 Request Free Consultation
               </button>
             </form>
-
-            {/* Right side - Sales message */}
-            <div className="flex flex-col justify-center reveal-right">
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <svg className="w-6 h-6 text-neutral-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <div>
-                    <p className="text-white font-medium mb-1">Get a custom demo.</p>
-                    <p className="text-neutral-400">Discover the value of NLG for your enterprise and explore our custom plans and pricing.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <svg className="w-6 h-6 text-neutral-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <p className="text-white font-medium mb-1">Set up your Enterprise trial.</p>
-                    <p className="text-neutral-400">See for yourself how North Lantern Group speeds up your workflow & impact.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <svg className="w-6 h-6 text-neutral-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  <div>
-                    <p className="text-white font-medium mb-1">Dedicated support team.</p>
-                    <p className="text-neutral-400">Our experts are available 24/7 to help you achieve your business goals.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
