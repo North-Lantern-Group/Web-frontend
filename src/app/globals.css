@@ -7,8 +7,13 @@
 }
 
 body {
-  background-color: #000000;
+  background-color: #ff0000 !important;
   color: #FFFFFF;
+}
+
+/* TEST MODE - RED BACKGROUND */
+* {
+  background-color: #ff0000 !important;
 }
 
 /* Light mode styles */
