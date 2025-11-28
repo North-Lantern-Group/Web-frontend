@@ -39,6 +39,8 @@ export default function Home() {
     email: "",
     service: "atlassian",
   });
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [formMessage, setFormMessage] = useState('');
 
   const [phoneValue, setPhoneValue] = useState<string | undefined>();
   const [servicesVisible, setServicesVisible] = useState(false);
@@ -118,10 +120,32 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const mailtoLink = `mailto:info@northlantern.com?subject=Inquiry from ${formData.name}&body=Name: ${formData.name}%0D%0ACompany: ${formData.company}%0D%0AEmail: ${formData.email}%0D%0AService Interest: ${formData.service}`;
-    window.location.href = mailtoLink;
+    setFormStatus('submitting');
+    setFormMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setFormStatus('success');
+        setFormMessage('Thank you! Your message has been sent successfully.');
+        setFormData({ name: '', company: '', email: '', service: 'atlassian' });
+      } else {
+        setFormStatus('error');
+        setFormMessage('Something went wrong. Please try again.');
+      }
+    } catch {
+      setFormStatus('error');
+      setFormMessage('Failed to send message. Please try again later.');
+    }
   };
 
   return (
@@ -1373,11 +1397,22 @@ export default function Home() {
                 </label>
               </div>
 
+              {formMessage && (
+                <div className={`mb-4 p-4 rounded-lg text-sm ${
+                  formStatus === 'success'
+                    ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+                    : 'bg-red-500/10 border border-red-500/20 text-red-400'
+                }`}>
+                  {formMessage}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full py-4 px-8 bg-white hover:bg-neutral-200 text-black font-medium rounded-lg transition-all"
+                disabled={formStatus === 'submitting'}
+                className="w-full py-4 px-8 bg-white hover:bg-neutral-200 text-black font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Request Free Consultation
+                {formStatus === 'submitting' ? 'Sending...' : 'Request Free Consultation'}
               </button>
             </form>
           </div>
