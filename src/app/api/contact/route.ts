@@ -5,23 +5,27 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { name, company, email, service } = await request.json();
+    const { firstName, lastName, company, companySize, email, service, message } = await request.json();
 
     // Validate required fields
-    if (!name || !email || !service) {
+    if (!firstName || !lastName || !email || !service) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
+    const fullName = `${firstName} ${lastName}`;
+
     const emailContent = `
 New Contact Form Submission
 
-Name: ${name}
+Name: ${fullName}
 Company: ${company || 'Not provided'}
+Company Size: ${companySize || 'Not provided'}
 Email: ${email}
 Service Interest: ${service}
+Message: ${message || 'No message provided'}
     `.trim();
 
     const htmlContent = `
@@ -47,11 +51,15 @@ Service Interest: ${service}
     <div class="content">
       <div class="field">
         <p class="label">Name:</p>
-        <p class="value">${name}</p>
+        <p class="value">${fullName}</p>
       </div>
       <div class="field">
         <p class="label">Company:</p>
         <p class="value">${company || 'Not provided'}</p>
+      </div>
+      <div class="field">
+        <p class="label">Company Size:</p>
+        <p class="value">${companySize || 'Not provided'}</p>
       </div>
       <div class="field">
         <p class="label">Email:</p>
@@ -60,6 +68,10 @@ Service Interest: ${service}
       <div class="field">
         <p class="label">Service Interest:</p>
         <p class="value">${service}</p>
+      </div>
+      <div class="field">
+        <p class="label">Message:</p>
+        <p class="value">${message || 'No message provided'}</p>
       </div>
     </div>
   </div>
@@ -74,7 +86,7 @@ Service Interest: ${service}
         'hello@northlanterngroup.com'
       ],
       replyTo: email,
-      subject: `New Inquiry from ${name} - ${service}`,
+      subject: `New Inquiry from ${fullName} - ${service}`,
       text: emailContent,
       html: htmlContent,
     });

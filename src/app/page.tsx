@@ -34,10 +34,13 @@ import Xarrow from "react-xarrows";
 
 export default function Home() {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     company: "",
+    companySize: "",
     email: "",
     service: "atlassian",
+    message: "",
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [formMessage, setFormMessage] = useState('');
@@ -137,7 +140,7 @@ export default function Home() {
       if (response.ok) {
         setFormStatus('success');
         setFormMessage('Thank you! Your message has been sent successfully.');
-        setFormData({ name: '', company: '', email: '', service: 'atlassian' });
+        setFormData({ firstName: '', lastName: '', company: '', companySize: '', email: '', service: 'atlassian', message: '' });
       } else {
         setFormStatus('error');
         setFormMessage('Something went wrong. Please try again.');
@@ -1287,6 +1290,8 @@ export default function Home() {
                     type="text"
                     id="firstName"
                     required
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600"
                     placeholder="John"
                   />
@@ -1297,6 +1302,8 @@ export default function Home() {
                     type="text"
                     id="lastName"
                     required
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600"
                     placeholder="Doe"
                   />
@@ -1321,6 +1328,8 @@ export default function Home() {
                   <select
                     id="companySize"
                     required
+                    value={formData.companySize}
+                    onChange={(e) => setFormData({ ...formData, companySize: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
                   >
                     <option value="">Select size</option>
@@ -1380,6 +1389,8 @@ export default function Home() {
                 <textarea
                   id="message"
                   rows={4}
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600 resize-none"
                   placeholder="Tell us about your project or questions..."
                 />
