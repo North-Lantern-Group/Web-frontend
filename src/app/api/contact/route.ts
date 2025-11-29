@@ -80,7 +80,7 @@ Message: ${message || 'No message provided'}
     `.trim();
 
     const { data, error } = await resend.emails.send({
-      from: 'North Lantern Group <noreply@send.northlanterngroup.com>',
+      from: 'North Lantern Group <noreply@northlanterngroup.com>',
       to: [
         'hamzachundrigar@northlanterngroup.com',
         'hello@northlanterngroup.com'
