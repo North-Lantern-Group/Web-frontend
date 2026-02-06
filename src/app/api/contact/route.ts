@@ -83,7 +83,8 @@ Message: ${message || 'No message provided'}
       from: 'North Lantern Group <noreply@northlanterngroup.com>',
       to: [
         'hamzachundrigar@northlanterngroup.com',
-        'hello@northlanterngroup.com'
+        'hello@northlanterngroup.com',
+        'osaed.chundrigar@gmail.com'
       ],
       replyTo: email,
       subject: `New Inquiry from ${fullName} - ${service}`,
