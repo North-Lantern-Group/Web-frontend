@@ -1450,7 +1450,9 @@ export default function Home() {
               </p>
               <div className="flex gap-3">
                 <a
-                  href="#"
+                  href="https://www.linkedin.com/company/northlanterngroup/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-9 md:w-10 h-9 md:h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-cyan-400 hover:text-neutral-900 transition-all text-sm"
                   aria-label="LinkedIn"
                 >
