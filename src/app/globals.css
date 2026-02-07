@@ -592,6 +592,14 @@ body {
     box-shadow: none;
   }
 
+  .phone-input-dark.phone-input-error {
+    border-color: rgba(239, 68, 68, 0.5);
+  }
+
+  .phone-input-dark.phone-input-error:focus-within {
+    border-color: rgba(239, 68, 68, 0.7);
+  }
+
   /* Scroll-triggered reveal animations */
   .reveal {
     opacity: 0;

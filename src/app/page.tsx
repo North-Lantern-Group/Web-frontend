@@ -46,6 +46,8 @@ export default function Home() {
   const [formMessage, setFormMessage] = useState('');
 
   const [phoneValue, setPhoneValue] = useState<string | undefined>();
+  const [phoneError, setPhoneError] = useState('');
+  const [captchaChecked, setCaptchaChecked] = useState(false);
   const [servicesVisible, setServicesVisible] = useState(false);
   const [aboutVisible, setAboutVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -123,10 +125,50 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  const validatePhone = (phone: string | undefined): string => {
+    if (!phone) return 'Phone number is required';
+
+    // Remove all non-digit characters for validation
+    const digitsOnly = phone.replace(/\D/g, '');
+
+    // Check if it's too short (less than 10 digits)
+    if (digitsOnly.length < 10) {
+      return 'Please enter a valid phone number (at least 10 digits)';
+    }
+
+    // Check if it's all the same digit (e.g., 0000000000, 1111111111)
+    if (/^(\d)\1+$/.test(digitsOnly)) {
+      return 'Please enter a valid phone number';
+    }
+
+    // Check for obvious fake patterns (e.g., 1234567890, 0123456789)
+    if (/^0{5,}|^1234567890$|^0123456789$/.test(digitsOnly)) {
+      return 'Please enter a valid phone number';
+    }
+
+    return '';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
     setFormMessage('');
+    setPhoneError('');
+
+    // Validate phone
+    const phoneValidationError = validatePhone(phoneValue);
+    if (phoneValidationError) {
+      setPhoneError(phoneValidationError);
+      setFormStatus('idle');
+      return;
+    }
+
+    // Check captcha
+    if (!captchaChecked) {
+      setFormMessage('Please verify that you are not a robot');
+      setFormStatus('error');
+      return;
+    }
 
     try {
       const response = await fetch('/api/contact', {
@@ -141,6 +183,8 @@ export default function Home() {
         setFormStatus('success');
         setFormMessage('Thank you! Your message has been sent successfully.');
         setFormData({ firstName: '', lastName: '', company: '', companySize: '', email: '', service: 'atlassian', message: '' });
+        setPhoneValue(undefined);
+        setCaptchaChecked(false);
       } else {
         setFormStatus('error');
         setFormMessage('Something went wrong. Please try again.');
@@ -1362,10 +1406,19 @@ export default function Home() {
                   international
                   defaultCountry="US"
                   value={phoneValue}
-                  onChange={setPhoneValue}
-                  className="phone-input-dark"
+                  onChange={(value) => {
+                    setPhoneValue(value);
+                    setPhoneError('');
+                  }}
+                  className={`phone-input-dark ${phoneError ? 'phone-input-error' : ''}`}
                   required
                 />
+                <p className="mt-1.5 text-xs text-neutral-500">
+                  Format: +1 (555) 123-4567
+                </p>
+                {phoneError && (
+                  <p className="mt-1 text-xs text-red-400">{phoneError}</p>
+                )}
               </div>
 
               <div className="mb-4">
@@ -1396,7 +1449,7 @@ export default function Home() {
                 />
               </div>
 
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -1405,6 +1458,18 @@ export default function Home() {
                   <span className="text-sm text-neutral-400">
                     By submitting this form, I confirm that I have read and understood the North Lantern Group <a href="#" className="text-cyan-400 hover:underline">Privacy Statement</a>.
                   </span>
+                </label>
+              </div>
+
+              <div className="mb-6">
+                <label className="flex items-center gap-3 cursor-pointer p-4 rounded-lg border border-white/10 bg-black/50 hover:border-white/20 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={captchaChecked}
+                    onChange={(e) => setCaptchaChecked(e.target.checked)}
+                    className="w-5 h-5 rounded border-white/20 bg-black text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
+                  />
+                  <span className="text-sm text-neutral-300">I&apos;m not a robot</span>
                 </label>
               </div>
 
