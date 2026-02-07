@@ -31,6 +31,7 @@ import {
   Moon,
 } from "lucide-react";
 import Xarrow from "react-xarrows";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -47,7 +48,8 @@ export default function Home() {
 
   const [phoneValue, setPhoneValue] = useState<string | undefined>();
   const [phoneError, setPhoneError] = useState('');
-  const [captchaChecked, setCaptchaChecked] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [servicesVisible, setServicesVisible] = useState(false);
   const [aboutVisible, setAboutVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -164,8 +166,8 @@ export default function Home() {
     }
 
     // Check captcha
-    if (!captchaChecked) {
-      setFormMessage('Please verify that you are not a robot');
+    if (!captchaToken) {
+      setFormMessage('Please complete the CAPTCHA verification');
       setFormStatus('error');
       return;
     }
@@ -176,7 +178,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, phone: phoneValue, captchaToken }),
       });
 
       if (response.ok) {
@@ -184,7 +186,8 @@ export default function Home() {
         setFormMessage('Thank you! Your message has been sent successfully.');
         setFormData({ firstName: '', lastName: '', company: '', companySize: '', email: '', service: 'atlassian', message: '' });
         setPhoneValue(undefined);
-        setCaptchaChecked(false);
+        setCaptchaToken(null);
+        recaptchaRef.current?.reset();
       } else {
         setFormStatus('error');
         setFormMessage('Something went wrong. Please try again.');
@@ -1462,15 +1465,13 @@ export default function Home() {
               </div>
 
               <div className="mb-6">
-                <label className="flex items-center gap-3 cursor-pointer p-4 rounded-lg border border-white/10 bg-black/50 hover:border-white/20 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={captchaChecked}
-                    onChange={(e) => setCaptchaChecked(e.target.checked)}
-                    className="w-5 h-5 rounded border-white/20 bg-black text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
-                  />
-                  <span className="text-sm text-neutral-300">I&apos;m not a robot</span>
-                </label>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+                  onChange={(token) => setCaptchaToken(token)}
+                  onExpired={() => setCaptchaToken(null)}
+                  theme="dark"
+                />
               </div>
 
               {formMessage && (

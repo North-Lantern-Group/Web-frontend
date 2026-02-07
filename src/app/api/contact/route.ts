@@ -3,14 +3,51 @@ import { NextResponse } from 'next/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+async function verifyCaptcha(token: string): Promise<boolean> {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) {
+    console.error('RECAPTCHA_SECRET_KEY not configured');
+    return false;
+  }
+
+  try {
+    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${secretKey}&response=${token}`,
+    });
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error('CAPTCHA verification error:', error);
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   try {
-    const { firstName, lastName, company, companySize, email, service, message } = await request.json();
+    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken } = await request.json();
 
     // Validate required fields
     if (!firstName || !lastName || !email || !service) {
       return NextResponse.json(
         { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Verify CAPTCHA
+    if (!captchaToken) {
+      return NextResponse.json(
+        { error: 'CAPTCHA verification required' },
+        { status: 400 }
+      );
+    }
+
+    const captchaValid = await verifyCaptcha(captchaToken);
+    if (!captchaValid) {
+      return NextResponse.json(
+        { error: 'CAPTCHA verification failed' },
         { status: 400 }
       );
     }
@@ -24,6 +61,7 @@ Name: ${fullName}
 Company: ${company || 'Not provided'}
 Company Size: ${companySize || 'Not provided'}
 Email: ${email}
+Phone: ${phone || 'Not provided'}
 Service Interest: ${service}
 Message: ${message || 'No message provided'}
     `.trim();
@@ -64,6 +102,10 @@ Message: ${message || 'No message provided'}
       <div class="field">
         <p class="label">Email:</p>
         <p class="value"><a href="mailto:${email}">${email}</a></p>
+      </div>
+      <div class="field">
+        <p class="label">Phone:</p>
+        <p class="value">${phone ? `<a href="tel:${phone}">${phone}</a>` : 'Not provided'}</p>
       </div>
       <div class="field">
         <p class="label">Service Interest:</p>
