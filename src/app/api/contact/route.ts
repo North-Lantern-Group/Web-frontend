@@ -5,7 +5,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function verifyCaptcha(token: string): Promise<boolean> {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+
+  // Allow dev-mode token when secret key is not configured (development only)
   if (!secretKey) {
+    if (token === 'dev-mode') {
+      console.warn('CAPTCHA bypassed - RECAPTCHA_SECRET_KEY not configured');
+      return true;
+    }
     console.error('RECAPTCHA_SECRET_KEY not configured');
     return false;
   }

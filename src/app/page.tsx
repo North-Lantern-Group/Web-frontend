@@ -1465,13 +1465,25 @@ export default function Home() {
               </div>
 
               <div className="mb-6">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-                  onChange={(token) => setCaptchaToken(token)}
-                  onExpired={() => setCaptchaToken(null)}
-                  theme="dark"
-                />
+                {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? (
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                    onChange={(token) => setCaptchaToken(token)}
+                    onExpired={() => setCaptchaToken(null)}
+                    theme="dark"
+                  />
+                ) : (
+                  <label className="flex items-center gap-3 cursor-pointer p-4 rounded-lg border border-white/10 bg-black/50 hover:border-white/20 transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={!!captchaToken}
+                      onChange={(e) => setCaptchaToken(e.target.checked ? 'dev-mode' : null)}
+                      className="w-5 h-5 rounded border-white/20 bg-black text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
+                    />
+                    <span className="text-sm text-neutral-300">I&apos;m not a robot</span>
+                  </label>
+                )}
               </div>
 
               {formMessage && (
