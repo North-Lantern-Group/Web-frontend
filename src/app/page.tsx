@@ -129,21 +129,97 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // Country code to expected phone length (digits after country code)
-  // Sorted by length (longest first) to match more specific codes first
-  const countryPhoneLengths: [string, number][] = [
-    ['92', 10],   // Pakistan
-    ['44', 10],   // UK
-    ['91', 10],   // India
-    ['61', 9],    // Australia
-    ['86', 11],   // China
-    ['49', 10],   // Germany
-    ['33', 9],    // France
-    ['81', 10],   // Japan
-    ['82', 9],    // South Korea
-    ['55', 11],   // Brazil
-    ['52', 10],   // Mexico
-    ['1', 10],    // US, Canada (check last since it's shortest)
+  // Country code to expected phone length range [min, max] (digits after country code)
+  // Sorted by code length (longest first) to match more specific codes first
+  const countryPhoneLengths: [string, number, number][] = [
+    // 4-digit country codes
+    ['1684', 7, 7],   // American Samoa
+    ['1670', 7, 7],   // Northern Mariana Islands
+    ['1671', 7, 7],   // Guam
+    ['1787', 7, 7],   // Puerto Rico
+    ['1939', 7, 7],   // Puerto Rico alt
+    ['1340', 7, 7],   // US Virgin Islands
+    // 3-digit country codes
+    ['971', 8, 9],    // UAE
+    ['966', 8, 9],    // Saudi Arabia
+    ['965', 7, 8],    // Kuwait
+    ['974', 7, 8],    // Qatar
+    ['973', 7, 8],    // Bahrain
+    ['968', 7, 8],    // Oman
+    ['962', 8, 9],    // Jordan
+    ['961', 7, 8],    // Lebanon
+    ['964', 10, 10],  // Iraq
+    ['963', 8, 9],    // Syria
+    ['852', 8, 8],    // Hong Kong
+    ['853', 8, 8],    // Macau
+    ['886', 9, 9],    // Taiwan
+    ['880', 10, 10],  // Bangladesh
+    ['234', 10, 10],  // Nigeria
+    ['254', 9, 9],    // Kenya
+    ['255', 9, 9],    // Tanzania
+    ['256', 9, 9],    // Uganda
+    ['251', 9, 9],    // Ethiopia
+    ['233', 9, 9],    // Ghana
+    ['212', 9, 9],    // Morocco
+    ['213', 9, 9],    // Algeria
+    ['216', 8, 8],    // Tunisia
+    ['218', 9, 9],    // Libya
+    ['353', 9, 9],    // Ireland
+    ['354', 7, 7],    // Iceland
+    ['358', 9, 10],   // Finland
+    ['372', 7, 8],    // Estonia
+    ['370', 8, 8],    // Lithuania
+    ['371', 8, 8],    // Latvia
+    ['380', 9, 9],    // Ukraine
+    ['375', 9, 9],    // Belarus
+    ['373', 8, 8],    // Moldova
+    ['374', 8, 8],    // Armenia
+    ['994', 9, 9],    // Azerbaijan
+    ['995', 9, 9],    // Georgia
+    ['998', 9, 9],    // Uzbekistan
+    // 2-digit country codes
+    ['92', 10, 10],   // Pakistan
+    ['91', 10, 10],   // India
+    ['90', 10, 10],   // Turkey
+    ['86', 11, 11],   // China
+    ['84', 9, 10],    // Vietnam
+    ['82', 9, 10],    // South Korea
+    ['81', 10, 10],   // Japan
+    ['66', 9, 9],     // Thailand
+    ['65', 8, 8],     // Singapore
+    ['64', 8, 9],     // New Zealand
+    ['63', 10, 10],   // Philippines
+    ['62', 9, 12],    // Indonesia
+    ['61', 9, 9],     // Australia
+    ['60', 9, 10],    // Malaysia
+    ['58', 10, 10],   // Venezuela
+    ['57', 10, 10],   // Colombia
+    ['56', 9, 9],     // Chile
+    ['55', 10, 11],   // Brazil
+    ['54', 10, 10],   // Argentina
+    ['53', 8, 8],     // Cuba
+    ['52', 10, 10],   // Mexico
+    ['51', 9, 9],     // Peru
+    ['49', 10, 11],   // Germany
+    ['48', 9, 9],     // Poland
+    ['47', 8, 8],     // Norway
+    ['46', 9, 9],     // Sweden
+    ['45', 8, 8],     // Denmark
+    ['44', 10, 10],   // UK
+    ['43', 10, 11],   // Austria
+    ['41', 9, 9],     // Switzerland
+    ['40', 9, 9],     // Romania
+    ['39', 9, 10],    // Italy
+    ['36', 9, 9],     // Hungary
+    ['34', 9, 9],     // Spain
+    ['33', 9, 9],     // France
+    ['32', 8, 9],     // Belgium
+    ['31', 9, 9],     // Netherlands
+    ['30', 10, 10],   // Greece
+    ['27', 9, 9],     // South Africa
+    ['20', 10, 10],   // Egypt
+    ['7', 10, 10],    // Russia, Kazakhstan
+    ['1', 10, 10],    // US, Canada, Caribbean
   ];
 
   const validateEmail = (email: string): string => {
@@ -195,16 +271,15 @@ export default function Home() {
     }
 
     // Validate based on country code (check longest codes first)
-    for (const [countryCode, expectedLength] of countryPhoneLengths) {
+    for (const [countryCode, minLength, maxLength] of countryPhoneLengths) {
       if (digitsOnly.startsWith(countryCode)) {
         const numberWithoutCode = digitsOnly.slice(countryCode.length);
-        const totalExpected = countryCode.length + expectedLength;
 
-        if (numberWithoutCode.length < expectedLength) {
-          return `Please enter ${expectedLength} digits after +${countryCode} (${numberWithoutCode.length}/${expectedLength})`;
+        if (numberWithoutCode.length < minLength) {
+          return `Please enter at least ${minLength} digits after +${countryCode}`;
         }
-        if (numberWithoutCode.length > expectedLength) {
-          return `Too many digits. Enter exactly ${expectedLength} digits after +${countryCode}`;
+        if (numberWithoutCode.length > maxLength) {
+          return `Too many digits. Enter at most ${maxLength} digits after +${countryCode}`;
         }
         return '';
       }
@@ -1506,9 +1581,6 @@ export default function Home() {
                   className={`phone-input-dark ${phoneError ? 'phone-input-error' : ''}`}
                   required
                 />
-                <p className="mt-1.5 text-xs text-neutral-500">
-                  Format: +1 (555) 123-4567
-                </p>
                 {phoneError && (
                   <p className="mt-1 text-xs text-red-400">{phoneError}</p>
                 )}
