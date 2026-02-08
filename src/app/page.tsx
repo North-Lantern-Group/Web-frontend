@@ -49,6 +49,7 @@ export default function Home() {
   const [phoneValue, setPhoneValue] = useState<string | undefined>();
   const [phoneError, setPhoneError] = useState('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [servicesVisible, setServicesVisible] = useState(false);
   const [aboutVisible, setAboutVisible] = useState(false);
@@ -127,16 +128,25 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  // Country code to expected phone length (digits after country code)
+  const countryPhoneLengths: Record<string, number> = {
+    '1': 10,    // US, Canada
+    '92': 10,   // Pakistan
+    '44': 10,   // UK
+    '91': 10,   // India
+    '61': 9,    // Australia
+    '86': 11,   // China
+    '49': 10,   // Germany
+    '33': 9,    // France
+    '81': 10,   // Japan
+    '82': 9,    // South Korea
+  };
+
   const validatePhone = (phone: string | undefined): string => {
     if (!phone) return 'Phone number is required';
 
     // Remove all non-digit characters for validation
     const digitsOnly = phone.replace(/\D/g, '');
-
-    // Check if it's too short (less than 10 digits)
-    if (digitsOnly.length < 10) {
-      return 'Please enter a valid phone number (at least 10 digits)';
-    }
 
     // Check if it's all the same digit (e.g., 0000000000, 1111111111)
     if (/^(\d)\1+$/.test(digitsOnly)) {
@@ -146,6 +156,22 @@ export default function Home() {
     // Check for obvious fake patterns (e.g., 1234567890, 0123456789)
     if (/^0{5,}|^1234567890$|^0123456789$/.test(digitsOnly)) {
       return 'Please enter a valid phone number';
+    }
+
+    // Validate based on country code
+    for (const [countryCode, expectedLength] of Object.entries(countryPhoneLengths)) {
+      if (digitsOnly.startsWith(countryCode)) {
+        const numberWithoutCode = digitsOnly.slice(countryCode.length);
+        if (numberWithoutCode.length !== expectedLength) {
+          return `Please enter exactly ${expectedLength} digits after +${countryCode}`;
+        }
+        return '';
+      }
+    }
+
+    // For other countries, just check minimum length
+    if (digitsOnly.length < 10) {
+      return 'Please enter a valid phone number (at least 10 digits)';
     }
 
     return '';
@@ -162,6 +188,13 @@ export default function Home() {
     if (phoneValidationError) {
       setPhoneError(phoneValidationError);
       setFormStatus('idle');
+      return;
+    }
+
+    // Check privacy policy acceptance
+    if (!privacyAccepted) {
+      setFormMessage('Please accept the Privacy Statement to continue');
+      setFormStatus('error');
       return;
     }
 
@@ -187,6 +220,7 @@ export default function Home() {
         setFormData({ firstName: '', lastName: '', company: '', companySize: '', email: '', service: 'atlassian', message: '' });
         setPhoneValue(undefined);
         setCaptchaToken(null);
+        setPrivacyAccepted(false);
         recaptchaRef.current?.reset();
       } else {
         setFormStatus('error');
@@ -1456,10 +1490,12 @@ export default function Home() {
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
+                    checked={privacyAccepted}
+                    onChange={(e) => setPrivacyAccepted(e.target.checked)}
                     className="mt-1 w-4 h-4 rounded border-white/10 bg-black text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
                   />
                   <span className="text-sm text-neutral-400">
-                    By submitting this form, I confirm that I have read and understood the North Lantern Group <a href="#" className="text-cyan-400 hover:underline">Privacy Statement</a>.
+                    By submitting this form, I confirm that I have read and understood the North Lantern Group <a href="#" className="text-cyan-400 hover:underline">Privacy Statement</a>. <span className="text-red-500">*</span>
                   </span>
                 </label>
               </div>
