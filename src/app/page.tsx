@@ -339,6 +339,8 @@ export default function Home() {
         body: JSON.stringify({ ...formData, phone: phoneValue, captchaToken }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         setFormStatus('success');
         setFormMessage('Thank you! Your message has been sent successfully.');
@@ -349,7 +351,8 @@ export default function Home() {
         recaptchaRef.current?.reset();
       } else {
         setFormStatus('error');
-        setFormMessage('Something went wrong. Please try again.');
+        // Show the actual error from the API
+        setFormMessage(data.error || 'Something went wrong. Please try again.');
       }
     } catch {
       setFormStatus('error');
