@@ -48,6 +48,7 @@ export default function Home() {
 
   const [phoneValue, setPhoneValue] = useState<string | undefined>();
   const [phoneError, setPhoneError] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
@@ -129,17 +130,42 @@ export default function Home() {
   }, []);
 
   // Country code to expected phone length (digits after country code)
-  const countryPhoneLengths: Record<string, number> = {
-    '1': 10,    // US, Canada
-    '92': 10,   // Pakistan
-    '44': 10,   // UK
-    '91': 10,   // India
-    '61': 9,    // Australia
-    '86': 11,   // China
-    '49': 10,   // Germany
-    '33': 9,    // France
-    '81': 10,   // Japan
-    '82': 9,    // South Korea
+  // Sorted by length (longest first) to match more specific codes first
+  const countryPhoneLengths: [string, number][] = [
+    ['92', 10],   // Pakistan
+    ['44', 10],   // UK
+    ['91', 10],   // India
+    ['61', 9],    // Australia
+    ['86', 11],   // China
+    ['49', 10],   // Germany
+    ['33', 9],    // France
+    ['81', 10],   // Japan
+    ['82', 9],    // South Korea
+    ['55', 11],   // Brazil
+    ['52', 10],   // Mexico
+    ['1', 10],    // US, Canada (check last since it's shortest)
+  ];
+
+  const validateEmail = (email: string): string => {
+    if (!email) return 'Email is required';
+
+    // Comprehensive email regex
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+
+    // Check for common typos in domain
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (domain) {
+      const invalidDomains = ['gmail.con', 'gmial.com', 'gmal.com', 'hotmail.con', 'yahoo.con', 'outlok.com'];
+      if (invalidDomains.includes(domain)) {
+        return 'Please check your email domain for typos';
+      }
+    }
+
+    return '';
   };
 
   const validatePhone = (phone: string | undefined): string => {
@@ -148,30 +174,45 @@ export default function Home() {
     // Remove all non-digit characters for validation
     const digitsOnly = phone.replace(/\D/g, '');
 
+    // Check minimum length
+    if (digitsOnly.length < 10) {
+      return 'Phone number is too short';
+    }
+
+    // Check maximum length (no phone number should be more than 15 digits per E.164)
+    if (digitsOnly.length > 15) {
+      return 'Phone number is too long';
+    }
+
     // Check if it's all the same digit (e.g., 0000000000, 1111111111)
     if (/^(\d)\1+$/.test(digitsOnly)) {
       return 'Please enter a valid phone number';
     }
 
-    // Check for obvious fake patterns (e.g., 1234567890, 0123456789)
+    // Check for obvious fake patterns
     if (/^0{5,}|^1234567890$|^0123456789$/.test(digitsOnly)) {
       return 'Please enter a valid phone number';
     }
 
-    // Validate based on country code
-    for (const [countryCode, expectedLength] of Object.entries(countryPhoneLengths)) {
+    // Validate based on country code (check longest codes first)
+    for (const [countryCode, expectedLength] of countryPhoneLengths) {
       if (digitsOnly.startsWith(countryCode)) {
         const numberWithoutCode = digitsOnly.slice(countryCode.length);
-        if (numberWithoutCode.length !== expectedLength) {
-          return `Please enter exactly ${expectedLength} digits after +${countryCode}`;
+        const totalExpected = countryCode.length + expectedLength;
+
+        if (numberWithoutCode.length < expectedLength) {
+          return `Please enter ${expectedLength} digits after +${countryCode} (${numberWithoutCode.length}/${expectedLength})`;
+        }
+        if (numberWithoutCode.length > expectedLength) {
+          return `Too many digits. Enter exactly ${expectedLength} digits after +${countryCode}`;
         }
         return '';
       }
     }
 
-    // For other countries, just check minimum length
-    if (digitsOnly.length < 10) {
-      return 'Please enter a valid phone number (at least 10 digits)';
+    // For unknown country codes, just enforce reasonable max length
+    if (digitsOnly.length > 15) {
+      return 'Phone number is too long (max 15 digits)';
     }
 
     return '';
@@ -181,7 +222,16 @@ export default function Home() {
     e.preventDefault();
     setFormStatus('submitting');
     setFormMessage('');
+    setEmailError('');
     setPhoneError('');
+
+    // Validate email
+    const emailValidationError = validateEmail(formData.email);
+    if (emailValidationError) {
+      setEmailError(emailValidationError);
+      setFormStatus('idle');
+      return;
+    }
 
     // Validate phone
     const phoneValidationError = validatePhone(phoneValue);
@@ -1431,10 +1481,16 @@ export default function Home() {
                   id="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600"
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value });
+                    setEmailError('');
+                  }}
+                  className={`w-full px-4 py-3 rounded-lg bg-black border ${emailError ? 'border-red-500/50' : 'border-white/10'} focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600`}
                   placeholder="john@acme.com"
                 />
+                {emailError && (
+                  <p className="mt-1 text-xs text-red-400">{emailError}</p>
+                )}
               </div>
 
               <div className="mb-4">
