@@ -20,7 +20,9 @@ async function verifyEmailExists(email: string): Promise<{ valid: boolean; reaso
     const data = await response.json();
 
     // Valid statuses that we accept
-    const validStatuses = ['valid', 'catch-all'];
+    // Including 'do_not_mail' because it catches role-based emails (hello@, info@, contact@)
+    // which are legitimate for business contact forms
+    const validStatuses = ['valid', 'catch-all', 'do_not_mail'];
 
     if (validStatuses.includes(data.status)) {
       return { valid: true };
@@ -30,7 +32,6 @@ async function verifyEmailExists(email: string): Promise<{ valid: boolean; reaso
     const errorMessages: Record<string, string> = {
       'invalid': 'This email address does not exist',
       'abuse': 'This email address cannot receive messages',
-      'do_not_mail': 'This email address cannot receive messages',
       'spamtrap': 'This email address is not valid',
       'disposable': 'Please use a permanent email address, not a temporary one',
       'unknown': 'Unable to verify this email address. Please check for typos',

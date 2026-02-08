@@ -353,10 +353,16 @@ export default function Home() {
         setFormStatus('error');
         // Show the actual error from the API
         setFormMessage(data.error || 'Something went wrong. Please try again.');
+        // Reset CAPTCHA so user can try again
+        setCaptchaToken(null);
+        recaptchaRef.current?.reset();
       }
     } catch {
       setFormStatus('error');
       setFormMessage('Failed to send message. Please try again later.');
+      // Reset CAPTCHA so user can try again
+      setCaptchaToken(null);
+      recaptchaRef.current?.reset();
     }
   };
 
