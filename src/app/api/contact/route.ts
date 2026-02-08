@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+// Contact form API with CAPTCHA and email verification
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
