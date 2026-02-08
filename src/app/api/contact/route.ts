@@ -199,7 +199,7 @@ Message: ${message || 'No message provided'}
     const { data, error } = await resend.emails.send({
       from: 'North Lantern Group <noreply@northlanterngroup.com>',
       to: [
-        'hamzachundrigar@northlanterngroup.com',
+        'hamza@northlanterngroup.com',
         'hello@northlanterngroup.com',
         'osaed.chundrigar@gmail.com'
       ],
