@@ -19,28 +19,24 @@ async function verifyEmailExists(email: string): Promise<{ valid: boolean; reaso
     );
     const data = await response.json();
 
-    // Valid statuses that we accept
-    // Including 'do_not_mail' because it catches role-based emails (hello@, info@, contact@)
-    // which are legitimate for business contact forms
-    const validStatuses = ['valid', 'catch-all', 'do_not_mail'];
+    // Only block emails that are definitely problematic
+    // Be lenient for contact forms - people filling out forms want to be contacted
+    const blockedStatuses = ['invalid', 'spamtrap', 'disposable'];
 
-    if (validStatuses.includes(data.status)) {
-      return { valid: true };
+    if (blockedStatuses.includes(data.status)) {
+      const errorMessages: Record<string, string> = {
+        'invalid': 'This email address does not exist. Please check for typos.',
+        'spamtrap': 'This email address is not valid.',
+        'disposable': 'Please use a permanent email address, not a temporary one.',
+      };
+      return {
+        valid: false,
+        reason: errorMessages[data.status] || 'This email address could not be verified'
+      };
     }
 
-    // Provide user-friendly error messages
-    const errorMessages: Record<string, string> = {
-      'invalid': 'This email address does not exist',
-      'abuse': 'This email address cannot receive messages',
-      'spamtrap': 'This email address is not valid',
-      'disposable': 'Please use a permanent email address, not a temporary one',
-      'unknown': 'Unable to verify this email address. Please check for typos',
-    };
-
-    return {
-      valid: false,
-      reason: errorMessages[data.status] || 'This email address could not be verified'
-    };
+    // Allow all other statuses (valid, catch-all, do_not_mail, abuse, unknown)
+    return { valid: true };
   } catch (error) {
     console.error('ZeroBounce verification error:', error);
     // Allow through if verification service fails
