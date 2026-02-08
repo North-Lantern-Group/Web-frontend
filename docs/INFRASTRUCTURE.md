@@ -52,7 +52,7 @@ All services and accounts involved in the website infrastructure:
 | Org Plan           | Free                                                   |
 | Org URL            | https://github.com/North-Lantern-Group                 |
 | Billing Email      | osaed.chundrigar@gmail.com                             |
-| Hamza's Account    | `HamzaChundrigar` (email: `hamza@ion8.net`)            |
+| Hamza's Account    | `HamzaChundrigar` (email: `hamzachundrigar@gmail.com`) |
 | Hamza's Org Role   | **Owner** (admin)                                      |
 | Osaed's Account    | `OsaedC`                                               |
 | Osaed's Org Role   | Member (admin on repos)                                |
@@ -374,7 +374,7 @@ Consider updating the git email per-repo to match the GitHub account:
 
 ```bash
 cd "/Users/hamzachundrigar/Documents/North Lantern Group/05 - Marketing & Brand/Website/Web-frontend"
-git config user.email "hamza@ion8.net"
+git config user.email "hamzachundrigar@gmail.com"
 ```
 
 ---
