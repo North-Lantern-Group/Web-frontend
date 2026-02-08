@@ -303,6 +303,27 @@ Three core pillars that should inform all website copy and design decisions:
 
 ---
 
+## Content Quality Issues
+
+The website copy and content is **not finalized** and needs significant work:
+
+- **Testimonials:** The 9 testimonials on the current site appear to be AI-generated with
+  fabricated names and companies. This is a **credibility risk** and should be replaced with
+  real client testimonials or removed entirely until genuine ones are available.
+- **Service descriptions:** Draft quality, needs review for accuracy and tone.
+- **Overall copy:** Needs to be rewritten to align with the brand pillars (Illumination,
+  Trust, Innovation) and the professional, trustworthy tone the brand guidelines establish.
+
+### Design Direction
+
+- **Dark mode is the preferred aesthetic.** Hamza likes the current dark mode look and wants
+  to preserve it. Any brand alignment work should maintain the dark mode as default.
+- The current high-contrast cyan (#00D4FF) is more visually striking than the brand's Teal
+  (#0096B4). When migrating colors, the dark mode may need "digital variant" adjustments
+  to maintain adequate contrast and visual appeal on dark backgrounds.
+
+---
+
 ## Alignment Checklist
 
 Summary of all changes needed to align the website with brand guidelines:
@@ -314,6 +335,9 @@ Summary of all changes needed to align the website with brand guidelines:
 | Update brand gradient in CSS | Medium | Pending | Multiple locations in page.tsx and globals.css |
 | Verify logo assets match brand variants | Medium | Pending | Check /public/logo.png against brand assets |
 | Add proper favicon from brand assets | Medium | Pending | Copy from brand assets to /public |
+| Replace/remove fabricated testimonials | Medium | Pending | Credibility risk - use real testimonials or remove |
+| Review and rewrite website copy | Medium | Pending | Align with brand voice and pillars |
+| Refactor page.tsx into components | Medium | Pending | ~1,400 line monolith needs to be broken up |
 | Update button styles to brand spec | Low | Pending | After color migration |
 | Update card styles to brand spec | Low | Pending | After color migration |
 | Implement shadow scale from brand | Low | Pending | After core alignment |
@@ -325,4 +349,5 @@ Summary of all changes needed to align the website with brand guidelines:
 
 | Date | Author | Change |
 |------|--------|--------|
+| Feb 8, 2026 | Hamza | Added content quality issues, design direction, expanded checklist |
 | Feb 8, 2026 | Hamza | Initial creation from brand guidelines analysis |

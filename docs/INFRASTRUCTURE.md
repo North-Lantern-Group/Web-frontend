@@ -381,6 +381,16 @@ git config user.email "hamzachundrigar@gmail.com"
 
 ## Team Access & Permissions
 
+### Team Context
+
+- **Hamza Chundrigar** — CEO of North Lantern Group, project owner
+- **Osaed Chundrigar** — Hamza's brother and business partner. Built the initial website.
+  Set up the original Vercel deployment, third-party service accounts (Resend, reCAPTCHA,
+  ZeroBounce), and DNS configuration.
+- **bhatnag8** — Volunteer contributor. Uses a personal email/GitHub account (no NLG email).
+  Currently has admin access on repos but should be scoped to Write access if the team
+  tightens permissions.
+
 ### GitHub Organization Roles
 
 | Person   | GitHub Username   | Org Role | Repo Access | Can Push main? | Can Push dev? |
@@ -388,6 +398,10 @@ git config user.email "hamzachundrigar@gmail.com"
 | Hamza    | `HamzaChundrigar` | Owner    | Admin       | Yes            | Yes           |
 | Osaed    | `OsaedC`          | Member   | Admin       | Yes            | Yes           |
 | bhatnag8 | `bhatnag8`        | Member   | Admin       | Yes            | Yes           |
+
+> **Note:** There are currently no branch protection rules on any branch. All three members
+> can push directly to `main` (production) and `dev` (staging). Adding branch protection
+> rules (requiring PRs, reviews before merging to `main`) is a recommended future improvement.
 
 ### Vercel Access
 
@@ -556,8 +570,34 @@ gh auth login --web
 
 ---
 
+## Important Notes & Conventions
+
+### Email Addresses
+
+| Email | Use |
+|-------|-----|
+| `hamzachundrigar@gmail.com` | Hamza's personal email, tied to GitHub account |
+| `hamza@northlanterngroup.com` | Hamza's NLG company email, tied to Vercel account |
+| `hamza@ion8.net` | **NEVER use in any NLG context.** This is a separate work email for an unrelated employer. |
+
+### Repository Naming
+
+The repo is currently named `Web-frontend`. This is slightly inaccurate since it also contains
+backend code (API route for contact form). Renaming to `website` has been discussed but is
+not urgent. If renamed, the Vercel integration will need to be reconnected.
+
+### Working Style Preferences
+
+- **Hamza wants to understand and approve all changes before they are pushed to any branch.**
+  Always explain what a change does and why before committing or pushing.
+- **Explain deployment and infrastructure concepts clearly.** Hamza is technically capable
+  but not deeply familiar with Vercel, CI/CD pipelines, or deployment workflows.
+
+---
+
 ## Document History
 
 | Date           | Author | Change                                          |
 |----------------|--------|-------------------------------------------------|
+| Feb 8, 2026    | Hamza  | Added team context, email conventions, working style notes |
 | Feb 8, 2026    | Hamza  | Initial creation - full infrastructure audit     |

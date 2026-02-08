@@ -74,3 +74,23 @@ for the full list. Without them, the site renders normally but form submissions 
 - The hero section renders different backgrounds based on dark/light mode
 - Service diagrams use `react-xarrows` for SVG connection lines
 - Phone input uses `react-phone-number-input` with country-specific validation
+
+### Known Issues & Future Work
+- **Monolithic page.tsx:** The entire site (~1,400 lines) lives in a single file. This should
+  be refactored into separate section components (Hero, Services, Contact, etc.).
+- **Website copy is draft quality:** The current text content is not finalized. Testimonials
+  appear fabricated (AI-generated names/companies) and are a credibility risk. All copy
+  needs to be reviewed and rewritten with real content.
+- **No branch protection:** Anyone with repo access can push directly to main (production).
+  See `docs/INFRASTRUCTURE.md` for details.
+
+## Working with Hamza (Project Owner)
+
+- **Always explain before acting.** Hamza wants to understand and approve changes before
+  they are pushed. Don't push to any branch without explicit approval.
+- **The dark mode aesthetic is intentional and liked.** Preserve the dark mode look and feel
+  during any redesign work.
+- **Keep language clear and direct.** Avoid jargon-heavy explanations without context.
+  Hamza is technically capable but deployment/DevOps concepts should be explained plainly.
+- **Never use `hamza@ion8.net`** — that is a separate work email for an unrelated employer.
+  GitHub is tied to `hamzachundrigar@gmail.com`. Vercel is tied to `hamza@northlanterngroup.com`.
