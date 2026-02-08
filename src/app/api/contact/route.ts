@@ -47,17 +47,17 @@ async function verifyEmailExists(email: string): Promise<{ valid: boolean; reaso
   }
 }
 
-async function verifyCaptcha(token: string): Promise<boolean> {
+async function verifyCaptcha(token: string): Promise<{ success: boolean; error?: string }> {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
   // Allow dev-mode token when secret key is not configured (development only)
   if (!secretKey) {
     if (token === 'dev-mode') {
       console.warn('CAPTCHA bypassed - RECAPTCHA_SECRET_KEY not configured');
-      return true;
+      return { success: true };
     }
     console.error('RECAPTCHA_SECRET_KEY not configured');
-    return false;
+    return { success: false, error: 'CAPTCHA not configured on server' };
   }
 
   try {
@@ -67,10 +67,29 @@ async function verifyCaptcha(token: string): Promise<boolean> {
       body: `secret=${secretKey}&response=${token}`,
     });
     const data = await response.json();
-    return data.success === true;
+
+    if (data.success === true) {
+      return { success: true };
+    }
+
+    // Map Google's error codes to user-friendly messages
+    const errorCodes = data['error-codes'] || [];
+    console.error('reCAPTCHA verification failed:', errorCodes);
+
+    if (errorCodes.includes('invalid-input-secret')) {
+      return { success: false, error: 'CAPTCHA configuration error. Please contact support.' };
+    }
+    if (errorCodes.includes('timeout-or-duplicate')) {
+      return { success: false, error: 'CAPTCHA expired. Please try again.' };
+    }
+    if (errorCodes.includes('bad-request')) {
+      return { success: false, error: 'Invalid CAPTCHA request. Please refresh and try again.' };
+    }
+
+    return { success: false, error: 'CAPTCHA verification failed. Please try again.' };
   } catch (error) {
     console.error('CAPTCHA verification error:', error);
-    return false;
+    return { success: false, error: 'CAPTCHA service unavailable. Please try again.' };
   }
 }
 
@@ -94,10 +113,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const captchaValid = await verifyCaptcha(captchaToken);
-    if (!captchaValid) {
+    const captchaResult = await verifyCaptcha(captchaToken);
+    if (!captchaResult.success) {
       return NextResponse.json(
-        { error: 'CAPTCHA verification failed' },
+        { error: captchaResult.error || 'CAPTCHA verification failed' },
         { status: 400 }
       );
     }
