@@ -3,6 +3,50 @@ import { NextResponse } from 'next/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Verify email exists using ZeroBounce
+async function verifyEmailExists(email: string): Promise<{ valid: boolean; reason?: string }> {
+  const apiKey = process.env.ZEROBOUNCE_API_KEY;
+
+  // Skip verification in dev mode if no API key
+  if (!apiKey) {
+    console.warn('ZEROBOUNCE_API_KEY not configured - skipping email verification');
+    return { valid: true };
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.zerobounce.net/v2/validate?api_key=${apiKey}&email=${encodeURIComponent(email)}`
+    );
+    const data = await response.json();
+
+    // Valid statuses that we accept
+    const validStatuses = ['valid', 'catch-all'];
+
+    if (validStatuses.includes(data.status)) {
+      return { valid: true };
+    }
+
+    // Provide user-friendly error messages
+    const errorMessages: Record<string, string> = {
+      'invalid': 'This email address does not exist',
+      'abuse': 'This email address cannot receive messages',
+      'do_not_mail': 'This email address cannot receive messages',
+      'spamtrap': 'This email address is not valid',
+      'disposable': 'Please use a permanent email address, not a temporary one',
+      'unknown': 'Unable to verify this email address. Please check for typos',
+    };
+
+    return {
+      valid: false,
+      reason: errorMessages[data.status] || 'This email address could not be verified'
+    };
+  } catch (error) {
+    console.error('ZeroBounce verification error:', error);
+    // Allow through if verification service fails
+    return { valid: true };
+  }
+}
+
 async function verifyCaptcha(token: string): Promise<boolean> {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
@@ -54,6 +98,15 @@ export async function POST(request: Request) {
     if (!captchaValid) {
       return NextResponse.json(
         { error: 'CAPTCHA verification failed' },
+        { status: 400 }
+      );
+    }
+
+    // Verify email actually exists
+    const emailVerification = await verifyEmailExists(email);
+    if (!emailVerification.valid) {
+      return NextResponse.json(
+        { error: emailVerification.reason || 'Invalid email address' },
         { status: 400 }
       );
     }
