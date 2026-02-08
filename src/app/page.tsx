@@ -1709,13 +1709,6 @@ export default function Home() {
                 >
                   in
                 </a>
-                <a
-                  href="#"
-                  className="w-9 md:w-10 h-9 md:h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-cyan-400 hover:text-neutral-900 transition-all text-sm"
-                  aria-label="Twitter"
-                >
-                  𝕏
-                </a>
               </div>
             </div>
 
@@ -1755,7 +1748,7 @@ export default function Home() {
 
           {/* Footer Bottom */}
           <div className="border-t border-white/5 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-neutral-500 text-xs md:text-sm">&copy; 2025 North Lantern Group. All rights reserved.</p>
+            <p className="text-neutral-500 text-xs md:text-sm">&copy; 2026 North Lantern Group. All rights reserved.</p>
             <div className="flex gap-6 md:gap-8">
               <a href="#" className="text-neutral-500 text-xs md:text-sm hover:text-cyan-400 transition-colors">Privacy Policy</a>
               <a href="#" className="text-neutral-500 text-xs md:text-sm hover:text-cyan-400 transition-colors">Terms of Service</a>
