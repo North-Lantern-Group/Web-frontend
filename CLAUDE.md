@@ -2,10 +2,25 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Self-Annealing Principle
+
+This project follows a 3-layer architecture for AI-assisted development:
+
+1. **Directives** (`directives/`) — Task SOPs in markdown. Before starting a task, check if
+   a directive exists. After completing a task, update or create the relevant directive.
+2. **Orchestration** — The AI agent (Claude Code). Makes decisions, reads directives, calls tools.
+3. **Execution** (`execution/`) — Deterministic scripts for repeatable tasks. Not yet created
+   for this project (no need for a marketing site), but add this layer when automation is needed.
+
+**When you fix an error:** update the tool/script that caused it, test the fix, then update
+the directive so the system gets stronger over time. Directives are living documents, not
+write-once artifacts.
+
 ## Documentation
 
 - `docs/INFRASTRUCTURE.md` - Infrastructure guide (accounts, environments, deployments, access)
 - `docs/BRAND-ALIGNMENT.md` - Brand guidelines to code mapping (fonts, colors, logos, components)
+- `directives/refactor-page.md` - SOP for component extraction pattern used in page.tsx refactor
 
 ## Brand Source of Truth
 
@@ -44,15 +59,26 @@ It is a single-page application with a contact form API route.
 - **Deployment**: Vercel (auto-deploys from GitHub)
 
 ### Project Structure
-- `src/app/page.tsx` - Main landing page (~1,400 lines, client component with form state)
+- `src/app/page.tsx` - Thin shell (~80 lines) composing section components
 - `src/app/api/contact/route.ts` - Contact form API (Resend email + ZeroBounce + reCAPTCHA)
 - `src/app/layout.tsx` - Root layout with font configuration and metadata
 - `src/app/globals.css` - Global styles, scroll animations, light/dark mode overrides
+- `src/components/layout/Header.tsx` - Nav bar, mobile menu, logo
+- `src/components/sections/Hero.tsx` - Hero with dark/light mode backgrounds
+- `src/components/sections/Stats.tsx` - Stat counters
+- `src/components/sections/About.tsx` - About / mission section
+- `src/components/sections/Services.tsx` - Service cards with xarrows diagrams
+- `src/components/sections/WhyNorthLantern.tsx` - Value propositions
+- `src/components/sections/Testimonials.tsx` - Client testimonials
+- `src/components/sections/Pricing.tsx` - Pricing tiers
+- `src/components/sections/Contact.tsx` - Contact form (form state is local)
+- `src/components/sections/Footer.tsx` - Footer with links and copyright
 - `src/components/Globe.tsx` - Interactive 3D globe (cobe library)
 - `src/components/ParticleCompass.tsx` - Mouse-following gradient canvas (dark mode hero)
 - `src/components/FloatingParticles.tsx` - Animated floating particles (dark mode hero)
 - `src/components/CloudBackground.tsx` - Parallax cloud animation (light mode hero)
 - `tailwind.config.ts` - Custom NLG color palette configuration
+- `directives/` - Task SOPs for AI-assisted development (see Self-Annealing Principle)
 - `docs/INFRASTRUCTURE.md` - Full infrastructure and environment documentation
 - `docs/BRAND-ALIGNMENT.md` - Brand guidelines alignment and checklist
 
@@ -76,8 +102,6 @@ for the full list. Without them, the site renders normally but form submissions 
 - Phone input uses `react-phone-number-input` with country-specific validation
 
 ### Known Issues & Future Work
-- **Monolithic page.tsx:** The entire site (~1,400 lines) lives in a single file. This should
-  be refactored into separate section components (Hero, Services, Contact, etc.).
 - **Website copy is draft quality:** The current text content is not finalized. Testimonials
   appear fabricated (AI-generated names/companies) and are a credibility risk. All copy
   needs to be reviewed and rewritten with real content.
