@@ -9,6 +9,7 @@
 body {
   background-color: #000000;
   color: #FFFFFF;
+  overflow-x: hidden;
 }
 
 /* Light mode styles */
@@ -598,6 +599,19 @@ body {
 
   .phone-input-dark.phone-input-error:focus-within {
     border-color: rgba(239, 68, 68, 0.7);
+  }
+
+  /* reCAPTCHA responsive scaling on small screens */
+  .g-recaptcha,
+  [data-theme] {
+    transform-origin: left top;
+  }
+
+  @media (max-width: 360px) {
+    .g-recaptcha,
+    [data-theme] {
+      transform: scale(0.85);
+    }
   }
 
   /* Scroll-triggered reveal animations */

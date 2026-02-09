@@ -3,7 +3,11 @@
 import { useEffect, useRef } from "react";
 import createGlobe from "cobe";
 
-export default function Globe() {
+interface GlobeProps {
+  isDarkMode?: boolean;
+}
+
+export default function Globe({ isDarkMode = true }: GlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerInteracting = useRef<{ x: number; y: number } | null>(null);
   const phiRef = useRef(0);
@@ -39,19 +43,22 @@ export default function Globe() {
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    globe = createGlobe(canvasRef.current!, {
+    const canvasEl = canvasRef.current;
+    if (!canvasEl) return;
+
+    globe = createGlobe(canvasEl, {
       devicePixelRatio: pixelRatio,
       width: width * 2,
       height: width * 2,
       phi: 2.5,
       theta: 0.3,
-      dark: 1,
+      dark: isDarkMode ? 1 : 0,
       diffuse: 1.2,
       mapSamples: 80000,
-      mapBrightness: 6,
-      baseColor: [0.15, 0.15, 0.15],
+      mapBrightness: isDarkMode ? 6 : 3,
+      baseColor: isDarkMode ? [0.15, 0.15, 0.15] : [0.9, 0.9, 0.9],
       markerColor: [0.984, 0.443, 0.522],  // rose-400 (#fb7185) in RGB normalized
-      glowColor: [0.1, 0.1, 0.12],
+      glowColor: isDarkMode ? [0.1, 0.1, 0.12] : [0.85, 0.85, 0.88],
       markers: [
         { location: [40.7128, -74.006], size: 0.05 },    // New York
         { location: [51.5074, -0.1278], size: 0.05 },    // London
@@ -134,7 +141,7 @@ export default function Globe() {
       window.removeEventListener("pointerup", handlePointerUp);
       window.removeEventListener("pointermove", handlePointerMove);
     };
-  }, []);
+  }, [isDarkMode]);
 
   return (
     <div className="w-full h-full flex items-center justify-center">

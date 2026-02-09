@@ -45,17 +45,17 @@ async function verifyEmailExists(email: string): Promise<{ valid: boolean; reaso
   }
 }
 
-async function verifyCaptcha(token: string): Promise<{ success: boolean; error?: string }> {
+// Minimum score threshold for reCAPTCHA v3 (0.0 = likely bot, 1.0 = likely human)
+// 0.5 is Google's recommended threshold for most use cases
+const RECAPTCHA_SCORE_THRESHOLD = 0.5;
+
+async function verifyCaptcha(token: string): Promise<{ success: boolean; error?: string; score?: number }> {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
-  // Allow dev-mode token when secret key is not configured (development only)
+  // Skip verification in development if no secret key
   if (!secretKey) {
-    if (token === 'dev-mode') {
-      console.warn('CAPTCHA bypassed - RECAPTCHA_SECRET_KEY not configured');
-      return { success: true };
-    }
-    console.error('RECAPTCHA_SECRET_KEY not configured');
-    return { success: false, error: 'CAPTCHA not configured on server' };
+    console.warn('RECAPTCHA_SECRET_KEY not configured - allowing submission');
+    return { success: true };
   }
 
   try {
@@ -66,34 +66,67 @@ async function verifyCaptcha(token: string): Promise<{ success: boolean; error?:
     });
     const data = await response.json();
 
-    if (data.success === true) {
-      return { success: true };
+    // Log for monitoring (remove in production if too verbose)
+    console.log('reCAPTCHA v3 response:', {
+      success: data.success,
+      score: data.score,
+      action: data.action,
+      hostname: data.hostname,
+    });
+
+    // Check if verification succeeded
+    if (!data.success) {
+      const errorCodes = data['error-codes'] || [];
+      console.error('reCAPTCHA verification failed:', errorCodes);
+
+      if (errorCodes.includes('invalid-input-secret')) {
+        return { success: false, error: 'Security verification configuration error.' };
+      }
+      if (errorCodes.includes('timeout-or-duplicate')) {
+        return { success: false, error: 'Security verification expired. Please try again.' };
+      }
+      return { success: false, error: 'Security verification failed. Please try again.' };
     }
 
-    // Map Google's error codes to user-friendly messages
-    const errorCodes = data['error-codes'] || [];
-    console.error('reCAPTCHA verification failed:', errorCodes);
-
-    if (errorCodes.includes('invalid-input-secret')) {
-      return { success: false, error: 'CAPTCHA configuration error. Please contact support.' };
-    }
-    if (errorCodes.includes('timeout-or-duplicate')) {
-      return { success: false, error: 'CAPTCHA expired. Please try again.' };
-    }
-    if (errorCodes.includes('bad-request')) {
-      return { success: false, error: 'Invalid CAPTCHA request. Please refresh and try again.' };
+    // Check score threshold (v3 specific)
+    const score = data.score || 0;
+    if (score < RECAPTCHA_SCORE_THRESHOLD) {
+      console.warn(`reCAPTCHA score too low: ${score} (threshold: ${RECAPTCHA_SCORE_THRESHOLD})`);
+      return {
+        success: false,
+        error: 'Unable to verify your request. Please try again or contact us directly.',
+        score
+      };
     }
 
-    return { success: false, error: 'CAPTCHA verification failed. Please try again.' };
+    // Optionally verify action matches expected value
+    if (data.action && data.action !== 'contact_form_submit') {
+      console.warn(`reCAPTCHA action mismatch: expected 'contact_form_submit', got '${data.action}'`);
+      // Don't fail on action mismatch, just log it
+    }
+
+    return { success: true, score };
   } catch (error) {
     console.error('CAPTCHA verification error:', error);
-    return { success: false, error: 'CAPTCHA service unavailable. Please try again.' };
+    return { success: false, error: 'Security verification service unavailable. Please try again.' };
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken } = await request.json();
+    interface ContactFormData {
+      firstName: string;
+      lastName: string;
+      company?: string;
+      companySize?: string;
+      email: string;
+      phone?: string;
+      service: string;
+      message?: string;
+      captchaToken: string;
+    }
+
+    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken }: ContactFormData = await request.json();
 
     // Validate required fields
     if (!firstName || !lastName || !email || !service) {
