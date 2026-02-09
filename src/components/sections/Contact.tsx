@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef, memo } from "react";
+import { useState, useCallback, memo } from "react";
 import PhoneInput from "react-phone-number-input";
 import type { Country } from "react-phone-number-input";
 import { getExampleNumber } from "libphonenumber-js/mobile";
 import examples from "libphonenumber-js/mobile/examples";
 import "react-phone-number-input/style.css";
-import ReCAPTCHA from "react-google-recaptcha";
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 function getPhoneFormatHint(country: Country | undefined): string {
   if (!country) return "";
@@ -23,7 +23,8 @@ interface ContactProps {
   isDarkMode: boolean;
 }
 
-const Contact = memo(function Contact({ isDarkMode }: ContactProps) {
+// Inner component that uses the reCAPTCHA hook
+const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -40,9 +41,10 @@ const Contact = memo(function Contact({ isDarkMode }: ContactProps) {
   const [phoneError, setPhoneError] = useState('');
   const [selectedCountry, setSelectedCountry] = useState<Country>("US");
   const [emailError, setEmailError] = useState('');
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // reCAPTCHA v3 hook
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   // Country code to expected phone length range [min, max] (digits after country code)
   // Sorted by code length (longest first) to match more specific codes first
@@ -238,14 +240,17 @@ const Contact = memo(function Contact({ isDarkMode }: ContactProps) {
       return;
     }
 
-    // Check captcha
-    if (!captchaToken) {
-      setFormMessage('Please complete the CAPTCHA verification');
+    // Execute reCAPTCHA v3 and get token
+    if (!executeRecaptcha) {
+      setFormMessage('reCAPTCHA not ready. Please refresh and try again.');
       setFormStatus('error');
       return;
     }
 
     try {
+      // Execute reCAPTCHA with action name for better security
+      const captchaToken = await executeRecaptcha('contact_form_submit');
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -261,23 +266,15 @@ const Contact = memo(function Contact({ isDarkMode }: ContactProps) {
         setFormMessage('Thank you! Your message has been sent successfully.');
         setFormData({ firstName: '', lastName: '', company: '', companySize: '', email: '', service: 'atlassian', message: '' });
         setPhoneValue(undefined);
-        setCaptchaToken(null);
         setPrivacyAccepted(false);
-        recaptchaRef.current?.reset();
       } else {
         setFormStatus('error');
         // Show the actual error from the API
         setFormMessage(data.error || 'Something went wrong. Please try again.');
-        // Reset CAPTCHA so user can try again
-        setCaptchaToken(null);
-        recaptchaRef.current?.reset();
       }
     } catch {
       setFormStatus('error');
       setFormMessage('Failed to send message. Please try again later.');
-      // Reset CAPTCHA so user can try again
-      setCaptchaToken(null);
-      recaptchaRef.current?.reset();
     }
   };
 
@@ -440,28 +437,8 @@ const Contact = memo(function Contact({ isDarkMode }: ContactProps) {
               </label>
             </div>
 
-            <div className="mb-6">
-              {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? (
-                <ReCAPTCHA
-                  key={isDarkMode ? "dark" : "light"}
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                  onChange={(token) => setCaptchaToken(token)}
-                  onExpired={() => setCaptchaToken(null)}
-                  theme={isDarkMode ? "dark" : "light"}
-                />
-              ) : (
-                <label className="flex items-center gap-3 cursor-pointer p-4 rounded-lg border border-white/10 bg-black/50 hover:border-white/20 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={!!captchaToken}
-                    onChange={(e) => setCaptchaToken(e.target.checked ? 'dev-mode' : null)}
-                    className="w-5 h-5 rounded border-white/20 bg-black text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
-                  />
-                  <span className="text-sm text-neutral-300">I&apos;m not a robot</span>
-                </label>
-              )}
-            </div>
+            {/* reCAPTCHA v3 is invisible - no checkbox needed */}
+            {/* Protected by reCAPTCHA badge shown automatically */}
 
             {formMessage && (
               <div className={`mb-4 p-4 rounded-lg text-sm ${
@@ -484,6 +461,29 @@ const Contact = memo(function Contact({ isDarkMode }: ContactProps) {
         </div>
       </div>
     </section>
+  );
+});
+
+// Wrapper component that provides the reCAPTCHA context
+const Contact = memo(function Contact({ isDarkMode }: ContactProps) {
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  // If no site key in dev, render form without reCAPTCHA
+  if (!siteKey) {
+    return <ContactForm isDarkMode={isDarkMode} />;
+  }
+
+  return (
+    <GoogleReCaptchaProvider
+      reCaptchaKey={siteKey}
+      scriptProps={{
+        async: true,
+        defer: true,
+        appendTo: "head",
+      }}
+    >
+      <ContactForm isDarkMode={isDarkMode} />
+    </GoogleReCaptchaProvider>
   );
 });
 
