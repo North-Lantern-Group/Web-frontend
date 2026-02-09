@@ -40,7 +40,7 @@ export default function FloatingParticles() {
     particlesRef.current = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const types: ("line" | "dot" | "dash")[] = ["line", "dot", "dash"];
+      const types = ["line", "dot", "dash"] as const;
       particlesRef.current.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -50,7 +50,7 @@ export default function FloatingParticles() {
         rotation: Math.random() * Math.PI * 2,
         rotationSpeed: (Math.random() - 0.5) * 0.02,
         opacity: Math.random() * 0.4 + 0.1,
-        type: types[Math.floor(Math.random() * types.length)],
+        type: types[Math.floor(Math.random() * types.length)] ?? "dot",
       });
     }
 

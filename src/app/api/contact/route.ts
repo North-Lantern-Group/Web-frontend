@@ -92,7 +92,19 @@ async function verifyCaptcha(token: string): Promise<{ success: boolean; error?:
 
 export async function POST(request: Request) {
   try {
-    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken } = await request.json();
+    interface ContactFormData {
+      firstName: string;
+      lastName: string;
+      company?: string;
+      companySize?: string;
+      email: string;
+      phone?: string;
+      service: string;
+      message?: string;
+      captchaToken: string;
+    }
+
+    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken }: ContactFormData = await request.json();
 
     // Validate required fields
     if (!firstName || !lastName || !email || !service) {
