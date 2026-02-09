@@ -1,6 +1,6 @@
 # North Lantern Group - Website Infrastructure & Environment Guide
 
-> **Last Updated:** February 8, 2026
+> **Last Updated:** February 9, 2026
 > **Maintained By:** Hamza Chundrigar
 > **Status:** Active
 
@@ -59,30 +59,26 @@ All services and accounts involved in the website infrastructure:
 | bhatnag8's Account | `bhatnag8`                                             |
 | bhatnag8's Role    | Member (admin on repos)                                |
 
-### Vercel (Current - Osaed's Account)
+### Vercel
 
 | Field           | Value                                                     |
 |-----------------|-----------------------------------------------------------|
-| Account Owner   | Osaed (personal account)                                  |
-| Project Name    | Web-frontend                                              |
-| Default URL     | https://web-frontend-six-chi.vercel.app                   |
+| Team            | `north-lantern-group-admins-projects`                     |
+| Account Email   | `hello@northlanterngroup.com`                             |
+| Username        | `hello-3558`                                              |
 | Plan            | Hobby (Free)                                              |
+| Project Name    | `web`                                                     |
+| Project ID      | `prj_z0qhneFjxBw03iaDFCLzL5VPWLXm`                      |
+| Production URL  | https://www.northlanterngroup.com                         |
 | GitHub Link     | Connected to `North-Lantern-Group/Web-frontend`           |
-| Status          | Active - currently serving production                     |
+| Production Branch | `main`                                                  |
+| Node Version    | 24.x                                                      |
+| CLI Auth        | Authenticated via `vercel login` (Vercel CLI v50.13.2)    |
+| Status          | Active — serving production                               |
 
-### Vercel (New - Hamza's Account)
-
-| Field           | Value                                                     |
-|-----------------|-----------------------------------------------------------|
-| Account Owner   | Hamza                                                     |
-| Email           | hamza@northlanterngroup.com                               |
-| Username        | `hamza-c`                                                 |
-| Scope           | `hamza-chundrigars-projects`                              |
-| User ID         | `LXk90PTcaSzz15Lp1K65UZRY`                               |
-| Plan            | Hobby (Free)                                              |
-| Projects        | None yet (pending migration or project import)            |
-| CLI Auth        | Authenticated (Vercel CLI v50.13.2)                       |
-| Status          | Created, authenticated, awaiting project setup            |
+> **Note:** Hamza also has a personal Vercel account (`hamza-c` / `hamza@northlanterngroup.com`)
+> but the website project is NOT on that account. The shared `hello@northlanterngroup.com`
+> account is used for the website.
 
 ### Other Services
 
@@ -91,7 +87,7 @@ All services and accounts involved in the website infrastructure:
 | Namecheap        | NLG                  | Domain registration & DNS         |
 | Google Workspace | NLG                  | Company email (@northlanterngroup.com) |
 | Resend           | Osaed (to confirm)   | Transactional email for contact form |
-| Google reCAPTCHA | Osaed (to confirm)   | Spam protection on contact form   |
+| Google reCAPTCHA | Osaed (to confirm) — site key: `6LcEIWQsAAAAA...` (v2 checkbox) | Spam protection on contact form   |
 | ZeroBounce       | Osaed (to confirm)   | Email validation before sending   |
 
 ---
@@ -106,11 +102,11 @@ All services and accounts involved in the website infrastructure:
 | URL              | https://github.com/North-Lantern-Group/Web-frontend       |
 | Visibility       | Public                                                    |
 | Default Branch   | `main`                                                    |
-| Other Branches   | `dev`                                                     |
+| Other Branches   | `dev`, `feature/issue-5-refactor` (both merged into main as of Feb 9, 2026) |
 | Branch Protection| None (both `main` and `dev` are unprotected)              |
 | GitHub Actions   | No workflows configured                                   |
 | Repo Secrets     | None stored in GitHub                                     |
-| Webhooks         | Vercel integration (via Osaed's GitHub-Vercel connection) |
+| Webhooks         | Vercel integration (via hello@northlanterngroup.com GitHub-Vercel connection) |
 
 ### Local Clone Location
 
@@ -125,18 +121,34 @@ All services and accounts involved in the website infrastructure:
 
 ```
 Web-frontend/
+  directives/              <-- Task SOPs for AI-assisted development
+    refactor-page.md       <-- SOP for component extraction pattern
   docs/                    <-- documentation (this file)
+    INFRASTRUCTURE.md
+    BRAND-ALIGNMENT.md
   public/
     icons/                 <-- SVG icons (Atlassian, AWS, Azure, GCP, Vercel)
     logo.png               <-- NLG logo
   src/
     app/
       api/contact/
-        route.ts           <-- Contact form API endpoint (Resend + ZeroBounce + reCAPTCHA)
+        route.ts           <-- Contact form API endpoint (Resend + ZeroBounce + reCAPTCHA v2)
       globals.css           <-- Global styles, scroll animations, light/dark mode
       layout.tsx            <-- Root layout (fonts, metadata)
-      page.tsx              <-- Main page (~1,400 lines, all sections)
+      page.tsx              <-- Main page (~80 lines, composes section components)
     components/
+      layout/
+        Header.tsx          <-- Nav bar, mobile menu, logo
+      sections/
+        Hero.tsx            <-- Hero with dark/light mode backgrounds
+        About.tsx           <-- About / mission section
+        Services.tsx        <-- Service cards with xarrows diagrams
+        WhyNorthLantern.tsx <-- Value propositions
+        Stats.tsx           <-- Stat counters
+        Testimonials.tsx    <-- Client testimonials
+        Pricing.tsx         <-- Pricing tiers
+        Contact.tsx         <-- Contact form (form state, reCAPTCHA, validation)
+        Footer.tsx          <-- Footer with links and copyright
       CloudBackground.tsx   <-- Animated cloud background (light mode)
       FloatingParticles.tsx <-- Floating cyan particles (dark mode)
       Globe.tsx             <-- Interactive 3D globe using cobe library
@@ -159,36 +171,31 @@ Web-frontend/
 
 ### Current Architecture
 
-All deployments are managed through Osaed's personal Vercel account. Vercel is connected
-to the GitHub repository and auto-deploys on every push.
+All deployments are managed through the shared NLG Vercel account (`hello@northlanterngroup.com`,
+team `north-lantern-group-admins-projects`). Vercel is connected to the GitHub repository
+and auto-deploys on every push.
 
 ```
 GitHub Push
     |
     v
-Vercel (Osaed's Account) auto-builds
+Vercel (hello@northlanterngroup.com) auto-builds
     |
     +--> Push to 'main'  --> Production deployment
-    |                        URL: web-frontend-six-chi.vercel.app
-    |                        Custom: northlanterngroup.com (pending verification)
+    |                        URL: www.northlanterngroup.com
     |
-    +--> Push to 'dev'   --> Preview deployment
-    |                        URL: auto-generated per commit
-    |                        Custom: test.northlanterngroup.com (DNS configured)
-    |
-    +--> Any branch/PR   --> Preview deployment
-                             URL: auto-generated per commit
+    +--> Any other branch --> Preview deployment
+                              URL: auto-generated per commit
 ```
 
 ### Deployment URLs
 
 | Environment | URL                                          | Branch  | Status |
 |------------|----------------------------------------------|---------|--------|
-| Production | `web-frontend-six-chi.vercel.app`            | `main`  | Live   |
-| Production | `northlanterngroup.com`                      | `main`  | DNS pointed to Vercel, served by Osaed's project |
-| Production | `www.northlanterngroup.com`                  | `main`  | DNS pointed to Vercel, served by Osaed's project |
-| Staging    | `test.northlanterngroup.com`                 | `dev`   | DNS pointed to Vercel, configuration TBD |
-| Preview    | `web-frontend-*-osaed-chundrigars-projects.vercel.app` | any | Auto-generated per commit |
+| Production | `www.northlanterngroup.com`                  | `main`  | Live   |
+| Production | `northlanterngroup.com`                      | `main`  | Live (redirects to www) |
+| Production | `web-three-sand-76.vercel.app`               | `main`  | Vercel default URL |
+| Preview    | `web-git-*-north-lantern-group-admins-projects.vercel.app` | any | Auto-generated per commit |
 
 ### How to Trigger Deployments
 
@@ -213,8 +220,7 @@ Preview deployment URLs can be found in:
 
 ## Environment Variables
 
-The website requires 4 environment variables. These are stored in Vercel (not in GitHub)
-and are currently configured in Osaed's Vercel project.
+The website requires 4 environment variables. These are stored in Vercel (not in GitHub) and are configured in the NLG team Vercel project (`hello@northlanterngroup.com`). All 4 variables are set for Production, Preview, and Development environments.
 
 | Variable                         | Type        | Required | Purpose                              |
 |----------------------------------|-------------|----------|--------------------------------------|
@@ -344,25 +350,31 @@ that should be addressed in a future update.
 
 ### Current State
 
-Both `main` and `dev` branches currently point to the same commit (`2e2af4a`). There are
-no branch protection rules, meaning anyone with push access can push directly to either branch.
+As of February 9, 2026, all branches have been reconciled into `main`. The `dev` and
+`feature/issue-5-refactor` branches were merged into `main` and are no longer divergent.
+`main` is the single source of truth and production branch. There are currently no branch
+protection rules, meaning anyone with push access can push directly to `main`.
 
-### Recommended Workflow
+### Current Workflow (Established Feb 9, 2026)
 
 ```
-feature/branch --> dev (staging) --> main (production)
-                    |                  |
-                    v                  v
-              test.nlg.com      northlanterngroup.com
+feature/branch --> main (production)
+                     |
+                     v
+              northlanterngroup.com
 ```
 
-1. Create a feature branch from `dev`
+1. Create a feature branch from `main`
 2. Make changes and push
-3. Vercel auto-generates a preview URL for the branch
-4. Review on the preview URL
-5. Merge to `dev` (deploys to staging)
-6. Review on test.northlanterngroup.com
-7. Merge `dev` to `main` (deploys to production)
+3. Vercel auto-generates a Preview URL for the branch
+4. Review on the Preview URL
+5. Open a PR to `main`
+6. Review and approve the PR
+7. Merge to `main` (auto-deploys to production)
+
+> **Note:** The `dev` branch still exists but is no longer used as an intermediary.
+> It was merged into `main` on Feb 9, 2026. Future use as a staging branch is optional
+> and can be discussed if the team wants a pre-production step.
 
 ### Git Configuration
 
@@ -407,8 +419,8 @@ git config user.email "hamzachundrigar@gmail.com"
 
 | Person | Vercel Account              | Access Level          |
 |--------|-----------------------------|-----------------------|
-| Hamza  | `hamza-c` (hamza@northlanterngroup.com) | Own account (no project yet) |
-| Osaed  | Personal account            | Owns the current production deployment |
+| Team   | `hello-3558` (hello@northlanterngroup.com) | Owner of `web` project |
+| Hamza  | `hamza-c` (hamza@northlanterngroup.com) | Personal account (no website project) |
 
 ### Adding a New Developer
 
@@ -490,26 +502,33 @@ company accounts. This is not urgent but is the long-term best practice.
 
 ### Goal
 
-Move the Vercel deployment from Osaed's personal account to Hamza's NLG Vercel account
-(`hamza@northlanterngroup.com`) so the website infrastructure is a company asset.
+The Vercel deployment has been migrated from Osaed's personal account to the shared NLG
+team account (`hello@northlanterngroup.com`). The remaining migration items are consolidating
+third-party service accounts (Resend, reCAPTCHA, ZeroBounce) under NLG company ownership.
 
 ### Why
 
-- The deployment infrastructure should be owned by the company, not an individual
+- Vercel deployment is now on a shared company account (completed)
+- Third-party service accounts (Resend, reCAPTCHA, ZeroBounce) are still under Osaed's personal accounts and need to be confirmed/migrated
 - If any team member changes roles, the company infrastructure continues uninterrupted
 - Cleaner separation between personal and business resources
 - Better audit trail and accountability
 
-### Migration Steps (When Ready)
+### Completed Steps
 
-1. Hamza imports `Web-frontend` repo into his Vercel account (`hamza-c`)
-2. Set up the 4 environment variables on the new project
-3. Test the new deployment on the auto-generated `.vercel.app` URL
-4. Coordinate with Osaed: he releases custom domains from his Vercel project
-5. Hamza claims the domains on his Vercel project (30-second switchover)
-6. Configure `test.northlanterngroup.com` to deploy from the `dev` branch
-7. Osaed removes old project from his personal Vercel account
-8. Invite Osaed to the project if/when upgrading to Vercel Pro
+1. Created NLG Vercel team (`north-lantern-group-admins-projects`)
+2. Imported Web-frontend repo into NLG Vercel project
+3. Configured 4 environment variables
+4. Custom domains (northlanterngroup.com, www.northlanterngroup.com) serving from NLG project
+5. Branch reconciliation -- all branches merged into main (Feb 9, 2026)
+
+### Remaining Steps
+
+1. Confirm ownership of Resend account and migrate to NLG company account if needed
+2. Confirm ownership of Google reCAPTCHA admin console (currently under Osaed's Google account)
+   - Generate new v3 keys under NLG company Google Workspace account (tracked in WEB-23)
+3. Confirm ownership of ZeroBounce account and migrate if needed
+4. (Optional) Create `github@northlanterngroup.com` as GitHub org owner
 
 ### What Does NOT Change During Migration
 
@@ -599,5 +618,6 @@ not urgent. If renamed, the Vercel integration will need to be reconnected.
 
 | Date           | Author | Change                                          |
 |----------------|--------|-------------------------------------------------|
+| Feb 9, 2026    | Claude (AI) | Vercel migration complete, branch reconciliation, updated all deployment details |
 | Feb 8, 2026    | Hamza  | Added team context, email conventions, working style notes |
 | Feb 8, 2026    | Hamza  | Initial creation - full infrastructure audit     |

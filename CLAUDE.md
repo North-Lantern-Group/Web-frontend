@@ -56,7 +56,7 @@ It is a single-page application with a contact form API route.
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom NLG color system
 - **Fonts**: Currently Geist (to be migrated to Montserrat per brand guidelines)
-- **Deployment**: Vercel (auto-deploys from GitHub)
+- **Deployment**: Vercel (auto-deploys `main` branch to Production; other branches get Preview URLs)
 
 ### Project Structure
 - `src/app/page.tsx` - Thin shell (~80 lines) composing section components
@@ -88,11 +88,11 @@ Custom Tailwind colors currently prefixed with `nlg-`:
 - Secondary (30%): `nlg-hunter-green`, `nlg-teal`, `nlg-light-gray`, `nlg-charcoal`
 - Tertiary (10%): `nlg-deep-navy`, `nlg-pine-green`, `nlg-emerald`, `nlg-coral`
 
-These need to be migrated to the brand guideline colors. See `docs/BRAND-ALIGNMENT.md`.
+These need to be migrated to the brand guideline colors. See `docs/BRAND-ALIGNMENT.md`. Note: The color migration is tracked in Epic WEB-2.
 
 ### Environment Variables
 Four env vars are required for the contact form to function. See `docs/INFRASTRUCTURE.md`
-for the full list. Without them, the site renders normally but form submissions will fail.
+for the full list. The env vars are: `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`, `RESEND_API_KEY`, `ZEROBOUNCE_API_KEY`. All 4 are set in Vercel for Production, Preview, and Development environments. Without them, the site renders normally but form submissions will fail.
 
 ### Key Patterns
 - Dark mode is the default; light mode toggle available via Sun/Moon button
@@ -107,6 +107,30 @@ for the full list. Without them, the site renders normally but form submissions 
   needs to be reviewed and rewritten with real content.
 - **No branch protection:** Anyone with repo access can push directly to main (production).
   See `docs/INFRASTRUCTURE.md` for details.
+- **Branch strategy resolved (Feb 9, 2026):** `main` is the single source of truth and production branch. All feature work branches from main, PRs merge back to main. The `dev` and `feature/issue-5-refactor` branches have been fully merged into main.
+- **Jira project tracking:** WEB project at northlanterngroup.atlassian.net. 4 Epics (WEB-1 through WEB-4) with 23 tasks for contact form redesign, visual alignment, reCAPTCHA v3 migration, and Privacy Policy page creation.
+
+## Git & Deployment Workflow
+
+- **Production branch:** `main` (Vercel auto-deploys to northlanterngroup.com)
+- **Feature branches:** Create from `main` (e.g., `feature/WEB-5-make-phone-optional`)
+- **Preview URLs:** Vercel auto-creates for every non-main branch push
+- **Merging:** Open PR to `main`, review via Preview URL, merge when approved
+- **Never manually promote** non-main deployments to Production in Vercel
+- **Vercel project:** `web` under team `north-lantern-group-admins-projects` (hello@northlanterngroup.com)
+- **GitHub repo:** `North-Lantern-Group/Web-frontend` (public)
+
+## Jira Project
+
+- **Board:** https://northlanterngroup.atlassian.net/jira/software/c/projects/WEB/boards/67
+- **API access:** `hamza@northlanterngroup.com` with API token at `~/.atlassian-api-token`
+- **Epics:**
+  - WEB-1: Contact Form — UX & Content Updates (9 tasks)
+  - WEB-2: Contact Form — Visual & Brand Alignment (3 tasks)
+  - WEB-3: Contact Form — reCAPTCHA v3 Migration (6 tasks)
+  - WEB-4: Privacy Policy Page — Creation & Compliance (5 tasks)
+- **Key completed task:** WEB-22 (Investigate reCAPTCHA) — documented current v2 implementation
+- **Key completed task:** WEB-28 (Branch strategy) — reconciled all branches, resolved
 
 ## Working with Hamza (Project Owner)
 
@@ -117,4 +141,5 @@ for the full list. Without them, the site renders normally but form submissions 
 - **Keep language clear and direct.** Avoid jargon-heavy explanations without context.
   Hamza is technically capable but deployment/DevOps concepts should be explained plainly.
 - **Never use `hamza@ion8.net`** — that is a separate work email for an unrelated employer.
-  GitHub is tied to `hamzachundrigar@gmail.com`. Vercel is tied to `hamza@northlanterngroup.com`.
+  GitHub is tied to `hamzachundrigar@gmail.com`. Vercel CLI is authenticated as `hello@northlanterngroup.com` (team: `north-lantern-group-admins-projects`).
+- **Vercel account for the website is `hello@northlanterngroup.com`** (team: `north-lantern-group-admins-projects`). Hamza also has a personal Vercel account at `hamza@northlanterngroup.com` but the website project is NOT on that account.

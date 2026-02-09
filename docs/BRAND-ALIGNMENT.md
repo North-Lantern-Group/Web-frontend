@@ -1,6 +1,6 @@
 # North Lantern Group - Brand Alignment Guide
 
-> **Last Updated:** February 8, 2026
+> **Last Updated:** February 9, 2026
 > **Source of Truth:** `NLG-Brand-Guidelines.html` (Brand System v1.0, January 2026)
 > **Location:** `05 - Marketing & Brand/Brand Assets/NLG-Brand-Guidelines.html`
 
@@ -337,11 +337,14 @@ Summary of all changes needed to align the website with brand guidelines:
 | Add proper favicon from brand assets | Medium | Pending | Copy from brand assets to /public |
 | Replace/remove fabricated testimonials | Medium | Pending | Credibility risk - use real testimonials or remove |
 | Review and rewrite website copy | Medium | Pending | Align with brand voice and pillars |
-| Refactor page.tsx into components | Medium | Pending | ~1,400 line monolith needs to be broken up |
+| Refactor page.tsx into components | Medium | ✅ Complete | Completed by Arryan (Feb 9, 2026). page.tsx split into 9 section components. |
 | Update button styles to brand spec | Low | Pending | After color migration |
 | Update card styles to brand spec | Low | Pending | After color migration |
 | Implement shadow scale from brand | Low | Pending | After core alignment |
 | Apply spacing system consistently | Low | Pending | After core alignment |
+| reCAPTCHA v2 → v3 migration | High | Pending | Tracked in Epic WEB-3 (6 tasks). Current: v2 checkbox, site key 6LcEIWQsAAAAA... |
+| Create Privacy Policy page | High | Pending | Tracked in Epic WEB-4 (5 tasks). Currently links to # placeholder. |
+| Contact form UX updates | High | Pending | Tracked in Epic WEB-1 (9 tasks). Field validation, dropdown, button text changes. |
 
 ---
 
@@ -349,5 +352,6 @@ Summary of all changes needed to align the website with brand guidelines:
 
 | Date | Author | Change |
 |------|--------|--------|
+| Feb 9, 2026 | Claude (AI) | Updated checklist: page refactor complete, added Jira epic tracking |
 | Feb 8, 2026 | Hamza | Added content quality issues, design direction, expanded checklist |
 | Feb 8, 2026 | Hamza | Initial creation from brand guidelines analysis |
