@@ -187,7 +187,7 @@ Message: ${message || 'No message provided'}
   <style>
     body { font-family: 'Open Sans', Arial, sans-serif; line-height: 1.6; color: #333; }
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, #0a1628 0%, #164e63 100%); color: white; padding: 30px; border-radius: 8px 8px 0 0; }
+    .header { background-color: #0891b2; padding: 30px; border-radius: 8px 8px 0 0; }
     .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; }
     .field { margin-bottom: 15px; }
     .label { font-weight: 600; color: #0a1628; }
@@ -196,9 +196,9 @@ Message: ${message || 'No message provided'}
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1 style="margin: 0; font-size: 24px; color: #ffffff !important;">New Contact Form Submission</h1>
-      <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9) !important;">North Lantern Group Website</p>
+    <div class="header" style="background-color: #0891b2 !important;">
+      <h1 style="margin: 0; font-size: 24px; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;">New Contact Form Submission</h1>
+      <p style="margin: 10px 0 0 0; color: #e0f7fa !important; -webkit-text-fill-color: #e0f7fa !important;">North Lantern Group Website</p>
     </div>
     <div class="content">
       <div class="field">
