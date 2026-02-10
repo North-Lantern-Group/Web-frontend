@@ -49,7 +49,8 @@ async function verifyEmailExists(email: string): Promise<{ valid: boolean; reaso
 // 0.5 is Google's recommended threshold for most use cases
 const RECAPTCHA_SCORE_THRESHOLD = 0.5;
 
-async function verifyCaptcha(token: string): Promise<{ success: boolean; error?: string; score?: number }> {
+// Result includes silentReject flag for low-score submissions that should appear successful to user
+async function verifyCaptcha(token: string): Promise<{ success: boolean; error?: string; score?: number; silentReject?: boolean }> {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
   // Skip verification in development if no secret key
@@ -66,7 +67,7 @@ async function verifyCaptcha(token: string): Promise<{ success: boolean; error?:
     });
     const data = await response.json();
 
-    // Log for monitoring (remove in production if too verbose)
+    // Log for monitoring
     console.log('reCAPTCHA v3 response:', {
       success: data.success,
       score: data.score,
@@ -89,14 +90,11 @@ async function verifyCaptcha(token: string): Promise<{ success: boolean; error?:
     }
 
     // Check score threshold (v3 specific)
+    // Per spec: score < 0.5 should be silently rejected (don't show error, don't send email)
     const score = data.score || 0;
     if (score < RECAPTCHA_SCORE_THRESHOLD) {
-      console.warn(`reCAPTCHA score too low: ${score} (threshold: ${RECAPTCHA_SCORE_THRESHOLD})`);
-      return {
-        success: false,
-        error: 'Unable to verify your request. Please try again or contact us directly.',
-        score
-      };
+      // Return silentReject flag - caller will return success to user but skip email
+      return { success: true, score, silentReject: true };
     }
 
     // Optionally verify action matches expected value
@@ -150,6 +148,29 @@ export async function POST(request: Request) {
         { error: captchaResult.error || 'CAPTCHA verification failed' },
         { status: 400 }
       );
+    }
+
+    // Silent rejection for low reCAPTCHA scores (per spec WEB-25)
+    // Return success to user but don't send email - prevents bots from knowing they were blocked
+    if (captchaResult.silentReject) {
+      // Log rejected submission with full data for review (keep for 30 days per spec)
+      console.warn('SILENT_REJECT: Low reCAPTCHA score submission blocked', {
+        timestamp: new Date().toISOString(),
+        score: captchaResult.score,
+        threshold: RECAPTCHA_SCORE_THRESHOLD,
+        submittedData: {
+          firstName,
+          lastName,
+          company: company || null,
+          companySize: companySize || null,
+          email,
+          phone: phone || null,
+          service,
+          message: message || null,
+        },
+      });
+      // Return success to user (they won't know it was rejected)
+      return NextResponse.json({ success: true });
     }
 
     // Verify email actually exists
