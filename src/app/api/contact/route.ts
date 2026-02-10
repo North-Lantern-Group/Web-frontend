@@ -197,8 +197,8 @@ Message: ${message || 'No message provided'}
 <body>
   <div class="container">
     <div class="header">
-      <h1 style="margin: 0; font-size: 24px;">New Contact Form Submission</h1>
-      <p style="margin: 10px 0 0 0; opacity: 0.9;">North Lantern Group Website</p>
+      <h1 style="margin: 0; font-size: 24px; color: #ffffff !important;">New Contact Form Submission</h1>
+      <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9) !important;">North Lantern Group Website</p>
     </div>
     <div class="content">
       <div class="field">
