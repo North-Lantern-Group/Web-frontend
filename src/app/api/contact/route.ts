@@ -49,6 +49,9 @@ async function verifyEmailExists(email: string): Promise<{ valid: boolean; reaso
 // 0.5 is Google's recommended threshold for most use cases
 const RECAPTCHA_SCORE_THRESHOLD = 0.5;
 
+// Debug logging flag - set DEBUG_RECAPTCHA=true in env to enable verbose logging
+const DEBUG_RECAPTCHA = process.env.DEBUG_RECAPTCHA === 'true';
+
 async function verifyCaptcha(token: string): Promise<{ success: boolean; error?: string; score?: number }> {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
@@ -66,13 +69,15 @@ async function verifyCaptcha(token: string): Promise<{ success: boolean; error?:
     });
     const data = await response.json();
 
-    // Log for monitoring
-    console.log('reCAPTCHA v3 response:', {
-      success: data.success,
-      score: data.score,
-      action: data.action,
-      hostname: data.hostname,
-    });
+    // Log for monitoring (gated behind DEBUG_RECAPTCHA flag per code review)
+    if (DEBUG_RECAPTCHA) {
+      console.log('reCAPTCHA v3 response:', {
+        success: data.success,
+        score: data.score,
+        action: data.action,
+        hostname: data.hostname,
+      });
+    }
 
     // Check if verification succeeded
     if (!data.success) {
