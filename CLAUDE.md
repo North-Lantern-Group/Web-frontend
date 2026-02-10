@@ -20,6 +20,8 @@ write-once artifacts.
 
 - `docs/INFRASTRUCTURE.md` - Infrastructure guide (accounts, environments, deployments, access)
 - `docs/BRAND-ALIGNMENT.md` - Brand guidelines to code mapping (fonts, colors, logos, components)
+- `docs/COPY-DECK.md` - Editable copy deck of all website text (for Hamza to edit, Claude Code to apply)
+- `docs/COPY-DECK-VISUAL-GUIDE.md` - Visual wireframe guide showing each section's layout
 - `directives/refactor-page.md` - SOP for component extraction pattern used in page.tsx refactor
 
 ## Brand Source of Truth
@@ -60,7 +62,7 @@ It is a single-page application with a contact form API route.
 
 ### Project Structure
 - `src/app/page.tsx` - Thin shell (~80 lines) composing section components
-- `src/app/api/contact/route.ts` - Contact form API (Resend email + ZeroBounce + reCAPTCHA)
+- `src/app/api/contact/route.ts` - Contact form API (Resend email + ZeroBounce + reCAPTCHA v3)
 - `src/app/layout.tsx` - Root layout with font configuration and metadata
 - `src/app/globals.css` - Global styles, scroll animations, light/dark mode overrides
 - `src/components/layout/Header.tsx` - Nav bar, mobile menu, logo
@@ -71,7 +73,7 @@ It is a single-page application with a contact form API route.
 - `src/components/sections/WhyNorthLantern.tsx` - Value propositions
 - `src/components/sections/Testimonials.tsx` - Client testimonials
 - `src/components/sections/Pricing.tsx` - Pricing tiers
-- `src/components/sections/Contact.tsx` - Contact form (form state is local)
+- `src/components/sections/Contact.tsx` - Contact form (reCAPTCHA v3 provider + form state)
 - `src/components/sections/Footer.tsx` - Footer with links and copyright
 - `src/components/Globe.tsx` - Interactive 3D globe (cobe library)
 - `src/components/ParticleCompass.tsx` - Mouse-following gradient canvas (dark mode hero)
@@ -100,37 +102,71 @@ for the full list. The env vars are: `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCH
 - The hero section renders different backgrounds based on dark/light mode
 - Service diagrams use `react-xarrows` for SVG connection lines
 - Phone input uses `react-phone-number-input` with country-specific validation
+- reCAPTCHA v3 (invisible) — `GoogleReCaptchaProvider` wraps Contact form, token generated on submit via `executeRecaptcha('contact_form_submit')`. Backend verifies with score threshold 0.5. No visible CAPTCHA widget.
+- Contact component uses a wrapper pattern: `Contact` (provider) → `ContactForm` (inner with hook)
 
 ### Known Issues & Future Work
 - **Website copy is draft quality:** The current text content is not finalized. Testimonials
   appear fabricated (AI-generated names/companies) and are a credibility risk. All copy
-  needs to be reviewed and rewritten with real content.
+  needs to be reviewed and rewritten with real content. A copy deck (`docs/COPY-DECK.md`)
+  has been prepared for Hamza to edit — once complete, Claude Code will apply the changes.
 - **No branch protection:** Anyone with repo access can push directly to main (production).
   See `docs/INFRASTRUCTURE.md` for details.
-- **Branch strategy resolved (Feb 9, 2026):** `main` is the single source of truth and production branch. All feature work branches from main, PRs merge back to main. The `dev` and `feature/issue-5-refactor` branches have been fully merged into main.
-- **Jira project tracking:** WEB project at northlanterngroup.atlassian.net. 4 Epics (WEB-1 through WEB-4) with 23 tasks for contact form redesign, visual alignment, reCAPTCHA v3 migration, and Privacy Policy page creation.
+- **reCAPTCHA v3 migration (Feb 9, 2026):** Osaed migrated from v2 (checkbox) to v3 (invisible)
+  in commit 36e6f42. Frontend and backend both updated. Currently in QA (WEB-24, WEB-25)
+  pending Hamza's manual end-user testing. The old `react-google-recaptcha` package has been
+  removed; `react-google-recaptcha-v3` is now used. Minor code issue: `useCallback` imported
+  but unused in Contact.tsx.
+- **Jira project tracking:** WEB project at northlanterngroup.atlassian.net. 4 Epics (WEB-1
+  through WEB-4). Current task count: 24+ tasks. Latest: WEB-30 (Cal.com booking page embed).
 
 ## Git & Deployment Workflow
 
-- **Production branch:** `main` (Vercel auto-deploys to northlanterngroup.com)
-- **Feature branches:** Create from `main` (e.g., `feature/WEB-5-make-phone-optional`)
-- **Preview URLs:** Vercel auto-creates for every non-main branch push
-- **Merging:** Open PR to `main`, review via Preview URL, merge when approved
-- **Never manually promote** non-main deployments to Production in Vercel
+**Agreed workflow (Feb 9, 2026 — Hamza, Arryan, Osaed):**
+
+```
+feature/WEB-XX  ──PR──▶  dev (staging)  ──PR──▶  main (production)
+                            │                        │
+                   test.northlanterngroup.com    northlanterngroup.com
+```
+
+### Workflow Rules
+1. **Feature branches** branch off `main` (e.g., `feature/WEB-24-recaptcha-v3`)
+2. **Feature PRs merge into `dev`** — not directly into `main`
+3. **`dev` is the staging/integration branch** — test combined features here, use `test.northlanterngroup.com` for review
+4. **When an epic's features are validated on `dev`**, open a PR from `dev` → `main` to release to production
+5. **After every merge to `main`**, rebase or fast-forward `dev` to match `main` to prevent drift
+6. **Never manually promote** non-main deployments to Production in Vercel
+
+### Deployment URLs
+- **Production:** `main` → northlanterngroup.com (auto-deployed by Vercel)
+- **Staging:** `dev` → test.northlanterngroup.com (auto-deployed by Vercel)
+- **Preview:** any other branch → auto-generated Vercel URL per commit
+
+### Key Details
 - **Vercel project:** `web` under team `north-lantern-group-admins-projects` (hello@northlanterngroup.com)
 - **GitHub repo:** `North-Lantern-Group/Web-frontend` (public)
+- **Claude Code must always follow this workflow** — never push directly to `main`, always go through `dev` first
 
 ## Jira Project
 
 - **Board:** https://northlanterngroup.atlassian.net/jira/software/c/projects/WEB/boards/67
 - **API access:** `hamza@northlanterngroup.com` with API token at `~/.atlassian-api-token`
+- **API note:** Use `/rest/api/3/search/jql` (not `/rest/api/3/search` — that endpoint was removed)
 - **Epics:**
-  - WEB-1: Contact Form — UX & Content Updates (9 tasks)
+  - WEB-1: Contact Form — UX & Content Updates (10 tasks, includes WEB-30 Cal.com embed)
   - WEB-2: Contact Form — Visual & Brand Alignment (3 tasks)
   - WEB-3: Contact Form — reCAPTCHA v3 Migration (6 tasks)
   - WEB-4: Privacy Policy Page — Creation & Compliance (5 tasks)
-- **Key completed task:** WEB-22 (Investigate reCAPTCHA) — documented current v2 implementation
-- **Key completed task:** WEB-28 (Branch strategy) — reconciled all branches, resolved
+- **Key completed tasks:**
+  - WEB-22 (Investigate reCAPTCHA) — Done, Hamza
+  - WEB-23 (Generate v3 keys) — Done, Osaed
+  - WEB-28 (Branch strategy) — Done, reconciled all branches
+- **Key in-progress tasks:**
+  - WEB-24 (v3 frontend) — QA, Osaed (code complete, awaiting Hamza's manual testing)
+  - WEB-25 (v3 backend) — QA, Osaed (code complete, awaiting Hamza's manual testing)
+  - WEB-27 (E2E testing) — In Progress, Hamza
+  - WEB-30 (Cal.com booking embed) — Backlog
 
 ## Working with Hamza (Project Owner)
 
