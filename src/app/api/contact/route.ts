@@ -4,6 +4,16 @@ import { NextResponse } from 'next/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Map service values to display names for email
+const serviceDisplayNames: Record<string, string> = {
+  'atlassian': 'Atlassian Implementation or Optimization',
+  'cloud-migration': 'Cloud Migration',
+  'analytics': 'Analytics & Dashboards',
+  'integration': 'Systems Integration & Automation',
+  'general': 'General Inquiry/Other',
+  'consultant-recovery': 'Our Last Consultant Left Us Worse Off',
+};
+
 // Verify email exists using ZeroBounce
 async function verifyEmailExists(email: string): Promise<{ valid: boolean; reason?: string }> {
   const apiKey = process.env.ZEROBOUNCE_API_KEY;
@@ -167,6 +177,7 @@ export async function POST(request: Request) {
     }
 
     const fullName = `${firstName} ${lastName}`;
+    const serviceDisplay = serviceDisplayNames[service] || service;
 
     const emailContent = `
 New Contact Form Submission
@@ -176,7 +187,7 @@ Company: ${company || 'Not provided'}
 Company Size: ${companySize || 'Not provided'}
 Email: ${email}
 Phone: ${phone || 'Not provided'}
-Service Interest: ${service}
+Area of Interest: ${serviceDisplay}
 Message: ${message || 'No message provided'}
     `.trim();
 
@@ -222,8 +233,8 @@ Message: ${message || 'No message provided'}
         <p class="value">${phone ? `<a href="tel:${phone}">${phone}</a>` : 'Not provided'}</p>
       </div>
       <div class="field">
-        <p class="label">Service Interest:</p>
-        <p class="value">${service}</p>
+        <p class="label">Area of Interest:</p>
+        <p class="value">${serviceDisplay}</p>
       </div>
       <div class="field">
         <p class="label">Message:</p>
@@ -243,7 +254,7 @@ Message: ${message || 'No message provided'}
         'osaed.chundrigar@gmail.com'
       ],
       replyTo: email,
-      subject: `New Inquiry from ${fullName} - ${service}`,
+      subject: `New Inquiry from ${fullName} - ${serviceDisplay}`,
       text: emailContent,
       html: htmlContent,
     });

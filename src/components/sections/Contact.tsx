@@ -31,7 +31,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
     company: "",
     companySize: "",
     email: "",
-    service: "atlassian",
+    service: "",
     message: "",
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -162,7 +162,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
   };
 
   const validatePhone = (phone: string | undefined): string => {
-    if (!phone) return 'Phone number is required';
+    if (!phone) return ''; // Phone is optional
 
     // Remove all non-digit characters for validation
     const digitsOnly = phone.replace(/\D/g, '');
@@ -264,7 +264,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
       if (response.ok) {
         setFormStatus('success');
         setFormMessage('Thank you! Your message has been sent successfully.');
-        setFormData({ firstName: '', lastName: '', company: '', companySize: '', email: '', service: 'atlassian', message: '' });
+        setFormData({ firstName: '', lastName: '', company: '', companySize: '', email: '', service: '', message: '' });
         setPhoneValue(undefined);
         setPrivacyAccepted(false);
       } else {
@@ -331,10 +331,9 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                 />
               </div>
               <div>
-                <label htmlFor="companySize" className="block text-sm font-medium mb-2 text-neutral-300">Company Size <span className="text-red-500">*</span></label>
+                <label htmlFor="companySize" className="block text-sm font-medium mb-2 text-neutral-300">Company Size</label>
                 <select
                   id="companySize"
-                  required
                   value={formData.companySize}
                   onChange={(e) => setFormData({ ...formData, companySize: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
@@ -370,7 +369,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="phone" className="block text-sm font-medium mb-2 text-neutral-300">Phone <span className="text-red-500">*</span></label>
+              <label htmlFor="phone" className="block text-sm font-medium mb-2 text-neutral-300">Phone</label>
               <PhoneInput
                 international
                 defaultCountry="US"
@@ -383,7 +382,6 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                   if (country) setSelectedCountry(country);
                 }}
                 className={`phone-input-dark ${phoneError ? 'phone-input-error' : ''}`}
-                required
               />
               {phoneError && (
                 <p className="mt-1 text-xs text-red-400">
@@ -396,7 +394,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="service" className="block text-sm font-medium mb-2 text-neutral-300">Primary Product Interest <span className="text-red-500">*</span></label>
+              <label htmlFor="service" className="block text-sm font-medium mb-2 text-neutral-300">Area of Interest <span className="text-red-500">*</span></label>
               <select
                 id="service"
                 required
@@ -404,10 +402,13 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                 onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                 className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
               >
-                <option value="atlassian">Atlassian Solutions</option>
-                <option value="bi">Business Intelligence</option>
-                <option value="cloud">Cloud Migration</option>
-                <option value="all">All Services</option>
+                <option value="" disabled>Select an area</option>
+                <option value="atlassian">Atlassian Implementation or Optimization</option>
+                <option value="cloud-migration">Cloud Migration</option>
+                <option value="analytics">Analytics & Dashboards</option>
+                <option value="integration">Systems Integration & Automation</option>
+                <option value="general">General Inquiry/Other</option>
+                <option value="consultant-recovery">Our Last Consultant Left Us Worse Off</option>
               </select>
             </div>
 
