@@ -1,6 +1,6 @@
 # North Lantern Group - Website Infrastructure & Environment Guide
 
-> **Last Updated:** February 9, 2026
+> **Last Updated:** February 10, 2026
 > **Maintained By:** Hamza Chundrigar
 > **Status:** Active
 
@@ -87,7 +87,7 @@ All services and accounts involved in the website infrastructure:
 | Namecheap        | NLG                  | Domain registration & DNS         |
 | Google Workspace | NLG                  | Company email (@northlanterngroup.com) |
 | Resend           | Osaed (to confirm)   | Transactional email for contact form |
-| Google reCAPTCHA | Osaed (to confirm) — site key: `6LcEIWQsAAAAA...` (v2 checkbox) | Spam protection on contact form   |
+| Google reCAPTCHA | Osaed (to confirm) — v3 keys (invisible/score-based), updated Feb 9, 2026 | Spam protection on contact form   |
 | ZeroBounce       | Osaed (to confirm)   | Email validation before sending   |
 
 ---
@@ -126,6 +126,8 @@ Web-frontend/
   docs/                    <-- documentation (this file)
     INFRASTRUCTURE.md
     BRAND-ALIGNMENT.md
+    COPY-DECK.md           <-- Editable copy deck for all website text
+    COPY-DECK-VISUAL-GUIDE.md <-- Visual wireframes of each section
   public/
     icons/                 <-- SVG icons (Atlassian, AWS, Azure, GCP, Vercel)
     logo.png               <-- NLG logo
@@ -183,6 +185,9 @@ Vercel (hello@northlanterngroup.com) auto-builds
     |
     +--> Push to 'main'  --> Production deployment
     |                        URL: www.northlanterngroup.com
+    |
+    +--> Push to 'dev'   --> Staging deployment
+    |                        URL: test.northlanterngroup.com
     |
     +--> Any other branch --> Preview deployment
                               URL: auto-generated per commit
@@ -267,7 +272,7 @@ The `.env.local` file is git-ignored and will not be committed.
 | `cobe`                   | Interactive 3D globe visualization         |
 | `lucide-react`           | Icon library                               |
 | `react-xarrows`          | SVG connection arrows in service diagrams  |
-| `react-google-recaptcha` | reCAPTCHA v2 widget                        |
+| `react-google-recaptcha-v3` | reCAPTCHA v3 invisible (score-based)  |
 | `react-phone-number-input` | International phone number input         |
 | `resend`                 | Email sending API (server-side)            |
 | `geist`                  | Vercel's Geist font family                 |
@@ -350,31 +355,35 @@ that should be addressed in a future update.
 
 ### Current State
 
-As of February 9, 2026, all branches have been reconciled into `main`. The `dev` and
-`feature/issue-5-refactor` branches were merged into `main` and are no longer divergent.
-`main` is the single source of truth and production branch. There are currently no branch
-protection rules, meaning anyone with push access can push directly to `main`.
+As of February 10, 2026, the team uses a staging-based branching strategy. `main` is the
+production branch and single source of truth. `dev` serves as the staging/integration branch
+where features are combined and tested before release. There are currently no branch protection
+rules, meaning anyone with push access can push directly to any branch.
 
-### Current Workflow (Established Feb 9, 2026)
+### Current Workflow (Agreed Feb 9, 2026 — Hamza, Arryan, Osaed)
 
 ```
-feature/branch --> main (production)
-                     |
-                     v
-              northlanterngroup.com
+feature/WEB-XX  ──PR──▶  dev (staging)  ──PR──▶  main (production)
+                            │                        │
+                   test.northlanterngroup.com    northlanterngroup.com
 ```
 
-1. Create a feature branch from `main`
-2. Make changes and push
-3. Vercel auto-generates a Preview URL for the branch
-4. Review on the Preview URL
-5. Open a PR to `main`
-6. Review and approve the PR
-7. Merge to `main` (auto-deploys to production)
+1. Create a feature branch from `main` (e.g., `feature/WEB-24-recaptcha-v3`)
+2. Make changes and push the feature branch
+3. Vercel auto-generates a Preview URL for the branch (useful for isolated feature review)
+4. Open a PR from feature branch → `dev`
+5. Review on `test.northlanterngroup.com` (staging URL for `dev` branch)
+6. Merge into `dev` — this combines the feature with any other in-progress features
+7. Once an epic's worth of work is validated on `dev`, open a PR from `dev` → `main`
+8. Merge to `main` → auto-deploys to production (northlanterngroup.com)
+9. **After every merge to `main`**: rebase or fast-forward `dev` to match `main` to prevent drift
 
-> **Note:** The `dev` branch still exists but is no longer used as an intermediary.
-> It was merged into `main` on Feb 9, 2026. Future use as a staging branch is optional
-> and can be discussed if the team wants a pre-production step.
+> **Why this workflow:** Arryan proposed (and Hamza/Osaed agreed) that individual features
+> may work in isolation but could break each other when combined. Using `dev` as staging
+> catches these interactions before they reach production. This was documented in WEB-28.
+>
+> **Key rule:** `dev` must never drift far from `main`. After every release (dev → main merge),
+> immediately sync dev back to main's HEAD.
 
 ### Git Configuration
 
@@ -480,12 +489,15 @@ email delivery for `@northlanterngroup.com` addresses.
 - **From address:** Uses a verified domain (configured in Resend dashboard)
 - **Account owner:** Osaed (to be confirmed/migrated)
 
-### Google reCAPTCHA v2
+### Google reCAPTCHA v3
 
 - **Purpose:** Prevents spam submissions on the contact form
-- **Type:** Checkbox ("I'm not a robot")
-- **Implementation:** Client-side widget + server-side token verification
-- **Account owner:** Osaed (to be confirmed)
+- **Type:** Invisible / score-based (no visible widget)
+- **Implementation:** `react-google-recaptcha-v3` provider on frontend, score verification
+  (threshold 0.5) on backend API route. Token generated on form submit with action `contact_form_submit`.
+- **Migration:** Migrated from v2 (checkbox) to v3 (invisible) by Osaed on Feb 9, 2026
+  (commit 36e6f42, PRs #12 and #13). Old `react-google-recaptcha` package removed.
+- **Account owner:** Osaed (to be confirmed/migrated to NLG company account)
 
 ### ZeroBounce
 
@@ -618,6 +630,7 @@ not urgent. If renamed, the Vercel integration will need to be reconnected.
 
 | Date           | Author | Change                                          |
 |----------------|--------|-------------------------------------------------|
+| Feb 10, 2026   | Claude (AI) | Session 4: Updated workflow to staging-based (feature→dev→main), reCAPTCHA v2→v3 migration, added copy deck docs, updated reCAPTCHA references |
 | Feb 9, 2026    | Claude (AI) | Vercel migration complete, branch reconciliation, updated all deployment details |
 | Feb 8, 2026    | Hamza  | Added team context, email conventions, working style notes |
 | Feb 8, 2026    | Hamza  | Initial creation - full infrastructure audit     |

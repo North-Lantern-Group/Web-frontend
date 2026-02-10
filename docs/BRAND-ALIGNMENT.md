@@ -335,16 +335,17 @@ Summary of all changes needed to align the website with brand guidelines:
 | Update brand gradient in CSS | Medium | Pending | Multiple locations in page.tsx and globals.css |
 | Verify logo assets match brand variants | Medium | Pending | Check /public/logo.png against brand assets |
 | Add proper favicon from brand assets | Medium | Pending | Copy from brand assets to /public |
-| Replace/remove fabricated testimonials | Medium | Pending | Credibility risk - use real testimonials or remove |
-| Review and rewrite website copy | Medium | Pending | Align with brand voice and pillars |
+| Replace/remove fabricated testimonials | Medium | Pending | Credibility risk - decision needed in copy deck (replace with real, or remove section) |
+| Review and rewrite website copy | Medium | In Progress | Copy deck (`docs/COPY-DECK.md`) prepared with all current text. Hamza editing. |
 | Refactor page.tsx into components | Medium | ✅ Complete | Completed by Arryan (Feb 9, 2026). page.tsx split into 9 section components. |
 | Update button styles to brand spec | Low | Pending | After color migration |
 | Update card styles to brand spec | Low | Pending | After color migration |
 | Implement shadow scale from brand | Low | Pending | After core alignment |
 | Apply spacing system consistently | Low | Pending | After core alignment |
-| reCAPTCHA v2 → v3 migration | High | Pending | Tracked in Epic WEB-3 (6 tasks). Current: v2 checkbox, site key 6LcEIWQsAAAAA... |
+| reCAPTCHA v2 → v3 migration | High | 🔍 QA | Implemented by Osaed (Feb 9, 2026). v3 invisible/score-based. WEB-24/WEB-25 in QA, awaiting manual testing. |
 | Create Privacy Policy page | High | Pending | Tracked in Epic WEB-4 (5 tasks). Currently links to # placeholder. |
-| Contact form UX updates | High | Pending | Tracked in Epic WEB-1 (9 tasks). Field validation, dropdown, button text changes. |
+| Contact form UX updates | High | Pending | Tracked in Epic WEB-1 (10 tasks incl. WEB-30 Cal.com embed). Field validation, dropdown, button text changes. |
+| Review and edit website copy | High | In Progress | Copy deck created (`docs/COPY-DECK.md`). Hamza to edit, then Claude Code applies changes. |
 
 ---
 
@@ -352,6 +353,7 @@ Summary of all changes needed to align the website with brand guidelines:
 
 | Date | Author | Change |
 |------|--------|--------|
+| Feb 10, 2026 | Claude (AI) | Session 4: reCAPTCHA v3 status updated to QA, copy deck in progress, added Cal.com task reference |
 | Feb 9, 2026 | Claude (AI) | Updated checklist: page refactor complete, added Jira epic tracking |
 | Feb 8, 2026 | Hamza | Added content quality issues, design direction, expanded checklist |
 | Feb 8, 2026 | Hamza | Initial creation from brand guidelines analysis |
