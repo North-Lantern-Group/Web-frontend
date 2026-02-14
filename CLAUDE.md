@@ -113,10 +113,9 @@ for the full list. The env vars are: `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCH
 - **No branch protection:** Anyone with repo access can push directly to main (production).
   See `docs/INFRASTRUCTURE.md` for details.
 - **reCAPTCHA v3 migration (Feb 9, 2026):** Osaed migrated from v2 (checkbox) to v3 (invisible)
-  in commit 36e6f42. Frontend and backend both updated. Currently in QA (WEB-24, WEB-25)
-  pending Hamza's manual end-user testing. The old `react-google-recaptcha` package has been
-  removed; `react-google-recaptcha-v3` is now used. Minor code issue: `useCallback` imported
-  but unused in Contact.tsx.
+  in commit 36e6f42. Frontend and backend both updated. WEB-24, WEB-25, WEB-27 all Done.
+  The old `react-google-recaptcha` package has been removed; `react-google-recaptcha-v3`
+  is now used. Minor code issue: `useCallback` imported but unused in Contact.tsx.
 - **Jira project tracking:** WEB project at northlanterngroup.atlassian.net. 5 Epics (WEB-1
   through WEB-4, plus WEB-33). Current task count: 43 tasks. All GitHub Issues migrated to
   Jira on Feb 15, 2026 — GitHub Issues are now closed with migration links.
