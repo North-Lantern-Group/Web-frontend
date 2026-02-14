@@ -1,6 +1,6 @@
 # North Lantern Group - Website Infrastructure & Environment Guide
 
-> **Last Updated:** February 10, 2026
+> **Last Updated:** February 15, 2026
 > **Maintained By:** Hamza Chundrigar
 > **Status:** Active
 
@@ -89,6 +89,7 @@ All services and accounts involved in the website infrastructure:
 | Resend           | Osaed (to confirm)   | Transactional email for contact form |
 | Google reCAPTCHA | Osaed (to confirm) — v3 keys (invisible/score-based), updated Feb 9, 2026 | Spam protection on contact form   |
 | ZeroBounce       | Osaed (to confirm)   | Email validation before sending   |
+| GitHub for Jira  | Hamza (Jira admin + GitHub org owner) — installed Feb 2026, backfill complete | Syncs branches/commits/PRs to Jira ticket Development panels |
 
 ---
 
@@ -102,11 +103,11 @@ All services and accounts involved in the website infrastructure:
 | URL              | https://github.com/North-Lantern-Group/Web-frontend       |
 | Visibility       | Public                                                    |
 | Default Branch   | `main`                                                    |
-| Other Branches   | `dev`, `feature/issue-5-refactor` (both merged into main as of Feb 9, 2026) |
+| Other Branches   | `dev` (staging branch, synced with main) |
 | Branch Protection| None (both `main` and `dev` are unprotected)              |
 | GitHub Actions   | No workflows configured                                   |
 | Repo Secrets     | None stored in GitHub                                     |
-| Webhooks         | Vercel integration (via hello@northlanterngroup.com GitHub-Vercel connection) |
+| Webhooks         | 1. Vercel integration (auto-deploy on push) 2. GitHub for Jira (syncs dev activity to Jira tickets) |
 
 ### Local Clone Location
 
@@ -505,6 +506,47 @@ email delivery for `@northlanterngroup.com` addresses.
 - **Implementation:** Server-side API call before processing the form
 - **Account owner:** Osaed (to be confirmed)
 
+### GitHub for Jira (GitHub for Atlassian)
+
+- **Purpose:** Syncs development activity (branches, commits, PRs) from GitHub into Jira
+  ticket Development panels. One-way data flow: GitHub → Jira. No code is stored in Jira.
+- **App:** GitHub for Atlassian (free, from Atlassian Marketplace)
+- **Installed on:** northlanterngroup.atlassian.net (Jira Cloud)
+- **Connected GitHub Org:** North-Lantern-Group
+- **Repository access:** All repos (currently 2: `Web-frontend` and `Captur`)
+- **Backfill status:** Finished — historical data from August 14, 2025 onward
+- **Permissions:** Full access (read/write on contents + issues/PRs)
+- **Setup date:** February 2026
+- **Account owner:** Hamza (Jira site admin + GitHub org owner)
+- **How linking works:** The app scans branch names, commit messages, and PR titles for
+  Jira issue keys (e.g., `WEB-24`). Matching activity appears in the ticket's Development
+  panel. Issue keys must be uppercase. Each repo's activity routes to the correct Jira
+  project by the issue key prefix (`WEB-XX` → WEB project, `CA-XX` → Captur project).
+- **Smart Commits:** Enabled. Developers can add comments (`#comment`), log time
+  (`#time`), and transition tickets (`#done`) from commit messages. Requires the
+  committer's Git email to match their Jira account email (see email matching table below).
+- **Confluence documentation:** Full guide at `Tech Stack + Guides > Development & DevOps >
+  GitHub for Jira — Integration Guide for NLG`
+
+#### Email Matching for Smart Commits
+
+Smart Commits only work when the Git committer email matches a Jira account email.
+Basic linking (branches, commits, PRs appearing on tickets) works regardless of email match.
+
+| Person | Git Email | Jira Email | Linking Works? | Smart Commits Work? |
+|--------|-----------|------------|----------------|---------------------|
+| Hamza  | `hamzachundrigar@gmail.com` | `hamza@northlanterngroup.com` | Yes | No — emails don't match |
+| Osaed  | `info@northlantern.com` | Unknown (account inactive) | Yes | No — email mismatch + inactive account |
+| Arryan (bhatnag8) | Unknown | Unknown | Yes (if issue keys used) | Unknown — needs verification |
+
+**To fix Smart Commits for Hamza:** Either (a) change the per-repo Git email to match
+Jira: `git config user.email "hamza@northlanterngroup.com"`, or (b) add
+`hamzachundrigar@gmail.com` as a secondary email in the Atlassian account settings.
+
+> **Note:** Osaed's Jira account shows as **inactive** (as of Feb 15, 2026). This may
+> be intentional (he may have a second account) or an oversight. His Git commit email
+> (`info@northlantern.com`) also does not appear to match any Jira account email.
+
 ---
 
 ## Future Migration Plan
@@ -630,6 +672,7 @@ not urgent. If renamed, the Vercel integration will need to be reconnected.
 
 | Date           | Author | Change                                          |
 |----------------|--------|-------------------------------------------------|
+| Feb 15, 2026   | Claude (AI) | Session 6: Added GitHub for Jira integration documentation, repo cleanup (deleted stale scripts/branches), updated branch listing, GitHub Issues migrated to Jira |
 | Feb 10, 2026   | Claude (AI) | Session 4: Updated workflow to staging-based (feature→dev→main), reCAPTCHA v2→v3 migration, added copy deck docs, updated reCAPTCHA references |
 | Feb 9, 2026    | Claude (AI) | Vercel migration complete, branch reconciliation, updated all deployment details |
 | Feb 8, 2026    | Hamza  | Added team context, email conventions, working style notes |

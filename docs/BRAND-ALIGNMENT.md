@@ -1,6 +1,6 @@
 # North Lantern Group - Brand Alignment Guide
 
-> **Last Updated:** February 9, 2026
+> **Last Updated:** February 15, 2026
 > **Source of Truth:** `NLG-Brand-Guidelines.html` (Brand System v1.0, January 2026)
 > **Location:** `05 - Marketing & Brand/Brand Assets/NLG-Brand-Guidelines.html`
 
@@ -342,9 +342,9 @@ Summary of all changes needed to align the website with brand guidelines:
 | Update card styles to brand spec | Low | Pending | After color migration |
 | Implement shadow scale from brand | Low | Pending | After core alignment |
 | Apply spacing system consistently | Low | Pending | After core alignment |
-| reCAPTCHA v2 → v3 migration | High | 🔍 QA | Implemented by Osaed (Feb 9, 2026). v3 invisible/score-based. WEB-24/WEB-25 in QA, awaiting manual testing. |
+| reCAPTCHA v2 → v3 migration | High | ✅ Complete | Done. WEB-24 (frontend), WEB-25 (backend), WEB-27 (E2E testing) all closed. |
 | Create Privacy Policy page | High | Pending | Tracked in Epic WEB-4 (5 tasks). Currently links to # placeholder. |
-| Contact form UX updates | High | Pending | Tracked in Epic WEB-1 (10 tasks incl. WEB-30 Cal.com embed). Field validation, dropdown, button text changes. |
+| Contact form UX updates | High | Partially Complete | WEB-5, 6, 7, 8 Done (phone optional, company size optional, dropdown renamed/updated). Remaining: WEB-9 through WEB-13, WEB-30 (Cal.com embed). |
 | Review and edit website copy | High | In Progress | Copy deck created (`docs/COPY-DECK.md`). Hamza to edit, then Claude Code applies changes. |
 
 ---
@@ -353,6 +353,7 @@ Summary of all changes needed to align the website with brand guidelines:
 
 | Date | Author | Change |
 |------|--------|--------|
+| Feb 15, 2026 | Claude (AI) | Session 6: reCAPTCHA marked complete, contact form UX partially complete (WEB-5/6/7/8 done), added Jira tracking notes for new WEB-33 epic |
 | Feb 10, 2026 | Claude (AI) | Session 4: reCAPTCHA v3 status updated to QA, copy deck in progress, added Cal.com task reference |
 | Feb 9, 2026 | Claude (AI) | Updated checklist: page refactor complete, added Jira epic tracking |
 | Feb 8, 2026 | Hamza | Added content quality issues, design direction, expanded checklist |

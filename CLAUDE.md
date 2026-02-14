@@ -113,12 +113,12 @@ for the full list. The env vars are: `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCH
 - **No branch protection:** Anyone with repo access can push directly to main (production).
   See `docs/INFRASTRUCTURE.md` for details.
 - **reCAPTCHA v3 migration (Feb 9, 2026):** Osaed migrated from v2 (checkbox) to v3 (invisible)
-  in commit 36e6f42. Frontend and backend both updated. Currently in QA (WEB-24, WEB-25)
-  pending Hamza's manual end-user testing. The old `react-google-recaptcha` package has been
-  removed; `react-google-recaptcha-v3` is now used. Minor code issue: `useCallback` imported
-  but unused in Contact.tsx.
-- **Jira project tracking:** WEB project at northlanterngroup.atlassian.net. 4 Epics (WEB-1
-  through WEB-4). Current task count: 24+ tasks. Latest: WEB-30 (Cal.com booking page embed).
+  in commit 36e6f42. Frontend and backend both updated. WEB-24, WEB-25, WEB-27 all Done.
+  The old `react-google-recaptcha` package has been removed; `react-google-recaptcha-v3`
+  is now used. Minor code issue: `useCallback` imported but unused in Contact.tsx.
+- **Jira project tracking:** WEB project at northlanterngroup.atlassian.net. 5 Epics (WEB-1
+  through WEB-4, plus WEB-33). Current task count: 43 tasks. All GitHub Issues migrated to
+  Jira on Feb 15, 2026 — GitHub Issues are now closed with migration links.
 
 ## Git & Deployment Workflow
 
@@ -148,6 +148,84 @@ feature/WEB-XX  ──PR──▶  dev (staging)  ──PR──▶  main (produ
 - **GitHub repo:** `North-Lantern-Group/Web-frontend` (public)
 - **Claude Code must always follow this workflow** — never push directly to `main`, always go through `dev` first
 
+## GitHub for Jira Integration
+
+The NLG Jira instance (`northlanterngroup.atlassian.net`) is connected to the GitHub org
+(`North-Lantern-Group`) via the **GitHub for Atlassian** app. This integration was set up
+in February 2026 and is actively syncing development data from GitHub into Jira.
+
+**How it works:** The integration scans branch names, commit messages, and PR titles for
+Jira issue keys (e.g., `WEB-24`). When it finds a match, it links that GitHub activity
+to the Jira ticket's Development panel. This is a one-way sync — GitHub data flows into
+Jira. Nothing in the repo or GitHub is changed by the integration.
+
+### Rules for Claude Code
+
+**These rules are mandatory for every branch, commit, and PR:**
+
+1. **Always include the Jira issue key in branch names:**
+   `feature/WEB-24-recaptcha-v3` — the `WEB-24` part is what triggers the link.
+
+2. **Always include the Jira issue key in commit messages:**
+   `WEB-24 Add reCAPTCHA v3 provider wrapper` — start the message with the key.
+   Without it, the commit will NOT appear on the Jira ticket.
+
+3. **Always include the Jira issue key in PR titles:**
+   `WEB-24: Add reCAPTCHA v3 to contact form` — this links the PR to the ticket.
+
+4. **Issue keys MUST be uppercase.** `WEB-24` works. `web-24` does not. The integration
+   only recognizes the standard Jira format: two or more uppercase letters, a hyphen,
+   then a number.
+
+5. **When working on multiple tickets in one commit**, include all keys:
+   `WEB-24 WEB-25 Complete reCAPTCHA migration frontend and backend`
+
+### Smart Commits (Optional)
+
+Smart Commits let you trigger Jira actions from commit messages. These are optional but
+useful. There are exactly three commands:
+
+```bash
+# Add a comment to the ticket
+git commit -m "WEB-24 #comment Fixed token refresh issue on form submit"
+
+# Log time against the ticket
+git commit -m "WEB-24 #time 2h Implemented provider wrapper"
+
+# Transition the ticket to a different status (e.g., move to Done)
+git commit -m "WEB-24 #done"
+
+# Combine multiple commands
+git commit -m "WEB-24 #time 3h #comment Completed reCAPTCHA migration #done"
+```
+
+**Smart Commit requirements:**
+- The committer's Git email must match their Jira account email (see email matching
+  note in `docs/INFRASTRUCTURE.md` under "GitHub for Jira" section)
+- Commands must be on a single line (no multi-line)
+- Transition names must match Jira workflow status names exactly
+- Avoid `git push --force` on branches with Smart Commits (rewritten commits can
+  cause duplicate command execution)
+
+### What the Integration Shows in Jira
+
+When you open a Jira ticket (e.g., WEB-24), the Development panel on the right shows:
+- **Branches** linked to this ticket (with direct GitHub links)
+- **Commits** that reference this ticket (with author, message, timestamp)
+- **Pull Requests** linked to this ticket (with OPEN / MERGED / DECLINED status)
+
+This means Hamza can see development progress on any ticket without leaving Jira.
+
+### Integration Details
+
+- **App:** GitHub for Atlassian (free, installed from Atlassian Marketplace)
+- **Connected Org:** North-Lantern-Group (all repos — Web-frontend and Captur)
+- **Backfill:** Completed (historical data from Aug 14, 2025 onward)
+- **Permissions:** Full access (read/write on contents and PRs for branch creation
+  from Jira and link unfurling)
+- **Confluence guide:** Full setup and usage guide at
+  `Tech Stack + Guides > Development & DevOps > GitHub for Jira — Integration Guide for NLG`
+
 ## Jira Project
 
 - **Board:** https://northlanterngroup.atlassian.net/jira/software/c/projects/WEB/boards/67
@@ -156,17 +234,24 @@ feature/WEB-XX  ──PR──▶  dev (staging)  ──PR──▶  main (produ
 - **Epics:**
   - WEB-1: Contact Form — UX & Content Updates (10 tasks, includes WEB-30 Cal.com embed)
   - WEB-2: Contact Form — Visual & Brand Alignment (3 tasks)
-  - WEB-3: Contact Form — reCAPTCHA v3 Migration (6 tasks)
+  - WEB-3: Contact Form — reCAPTCHA v3 Migration (6 tasks) — all Done
   - WEB-4: Privacy Policy Page — Creation & Compliance (5 tasks)
+  - WEB-33: Site-Wide Brand Alignment (8 tasks: WEB-34 through WEB-41)
+- **Standalone tasks:**
+  - WEB-42: Audit and fix npm dependency vulnerabilities
+  - WEB-43: Add prefers-reduced-motion support and keyboard focus states
 - **Key completed tasks:**
   - WEB-22 (Investigate reCAPTCHA) — Done, Hamza
   - WEB-23 (Generate v3 keys) — Done, Osaed
+  - WEB-24 (v3 frontend) — Done, Osaed
+  - WEB-25 (v3 backend) — Done, Osaed
+  - WEB-27 (E2E testing) — Done, Hamza
   - WEB-28 (Branch strategy) — Done, reconciled all branches
-- **Key in-progress tasks:**
-  - WEB-24 (v3 frontend) — QA, Osaed (code complete, awaiting Hamza's manual testing)
-  - WEB-25 (v3 backend) — QA, Osaed (code complete, awaiting Hamza's manual testing)
-  - WEB-27 (E2E testing) — In Progress, Hamza
-  - WEB-30 (Cal.com booking embed) — Backlog
+  - WEB-29 (Email header contrast) — Done
+- **GitHub Issues Migration (Feb 15, 2026):**
+  - All 11 GitHub Issues closed. 10 migrated to Jira (GH #5 closed as already completed).
+  - Each closed GH Issue has a comment linking to its Jira counterpart.
+  - GitHub Issues should no longer be used for this project — all tracking is in Jira.
 
 ## Working with Hamza (Project Owner)
 
