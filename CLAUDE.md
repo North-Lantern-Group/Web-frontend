@@ -148,6 +148,84 @@ feature/WEB-XX  ──PR──▶  dev (staging)  ──PR──▶  main (produ
 - **GitHub repo:** `North-Lantern-Group/Web-frontend` (public)
 - **Claude Code must always follow this workflow** — never push directly to `main`, always go through `dev` first
 
+## GitHub for Jira Integration
+
+The NLG Jira instance (`northlanterngroup.atlassian.net`) is connected to the GitHub org
+(`North-Lantern-Group`) via the **GitHub for Atlassian** app. This integration was set up
+in February 2026 and is actively syncing development data from GitHub into Jira.
+
+**How it works:** The integration scans branch names, commit messages, and PR titles for
+Jira issue keys (e.g., `WEB-24`). When it finds a match, it links that GitHub activity
+to the Jira ticket's Development panel. This is a one-way sync — GitHub data flows into
+Jira. Nothing in the repo or GitHub is changed by the integration.
+
+### Rules for Claude Code
+
+**These rules are mandatory for every branch, commit, and PR:**
+
+1. **Always include the Jira issue key in branch names:**
+   `feature/WEB-24-recaptcha-v3` — the `WEB-24` part is what triggers the link.
+
+2. **Always include the Jira issue key in commit messages:**
+   `WEB-24 Add reCAPTCHA v3 provider wrapper` — start the message with the key.
+   Without it, the commit will NOT appear on the Jira ticket.
+
+3. **Always include the Jira issue key in PR titles:**
+   `WEB-24: Add reCAPTCHA v3 to contact form` — this links the PR to the ticket.
+
+4. **Issue keys MUST be uppercase.** `WEB-24` works. `web-24` does not. The integration
+   only recognizes the standard Jira format: two or more uppercase letters, a hyphen,
+   then a number.
+
+5. **When working on multiple tickets in one commit**, include all keys:
+   `WEB-24 WEB-25 Complete reCAPTCHA migration frontend and backend`
+
+### Smart Commits (Optional)
+
+Smart Commits let you trigger Jira actions from commit messages. These are optional but
+useful. There are exactly three commands:
+
+```bash
+# Add a comment to the ticket
+git commit -m "WEB-24 #comment Fixed token refresh issue on form submit"
+
+# Log time against the ticket
+git commit -m "WEB-24 #time 2h Implemented provider wrapper"
+
+# Transition the ticket to a different status (e.g., move to Done)
+git commit -m "WEB-24 #done"
+
+# Combine multiple commands
+git commit -m "WEB-24 #time 3h #comment Completed reCAPTCHA migration #done"
+```
+
+**Smart Commit requirements:**
+- The committer's Git email must match their Jira account email (see email matching
+  note in `docs/INFRASTRUCTURE.md` under "GitHub for Jira" section)
+- Commands must be on a single line (no multi-line)
+- Transition names must match Jira workflow status names exactly
+- Avoid `git push --force` on branches with Smart Commits (rewritten commits can
+  cause duplicate command execution)
+
+### What the Integration Shows in Jira
+
+When you open a Jira ticket (e.g., WEB-24), the Development panel on the right shows:
+- **Branches** linked to this ticket (with direct GitHub links)
+- **Commits** that reference this ticket (with author, message, timestamp)
+- **Pull Requests** linked to this ticket (with OPEN / MERGED / DECLINED status)
+
+This means Hamza can see development progress on any ticket without leaving Jira.
+
+### Integration Details
+
+- **App:** GitHub for Atlassian (free, installed from Atlassian Marketplace)
+- **Connected Org:** North-Lantern-Group (all repos — Web-frontend and Captur)
+- **Backfill:** Completed (historical data from Aug 14, 2025 onward)
+- **Permissions:** Full access (read/write on contents and PRs for branch creation
+  from Jira and link unfurling)
+- **Confluence guide:** Full setup and usage guide at
+  `Tech Stack + Guides > Development & DevOps > GitHub for Jira — Integration Guide for NLG`
+
 ## Jira Project
 
 - **Board:** https://northlanterngroup.atlassian.net/jira/software/c/projects/WEB/boards/67
