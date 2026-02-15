@@ -42,6 +42,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
   const [selectedCountry, setSelectedCountry] = useState<Country>("US");
   const [emailError, setEmailError] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
 
   // reCAPTCHA v3 hook
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -256,7 +257,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...formData, phone: phoneValue, captchaToken }),
+        body: JSON.stringify({ ...formData, phone: phoneValue, captchaToken, website: honeypot }),
       });
 
       const data = await response.json();
@@ -436,6 +437,20 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                   By submitting this form, I confirm that I have read and understood the North Lantern Group <a href="#" className="text-cyan-400 hover:underline">Privacy Statement</a>. <span className="text-red-500">*</span>
                 </span>
               </label>
+            </div>
+
+            {/* Honeypot field - hidden from real users, catches bots that auto-fill */}
+            <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
+              <label htmlFor="website">Website</label>
+              <input
+                type="text"
+                id="website"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
             </div>
 
             {/* reCAPTCHA v3 is invisible - no checkbox needed */}
