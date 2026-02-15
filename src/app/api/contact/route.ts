@@ -139,14 +139,23 @@ export async function POST(request: Request) {
       service: string;
       message?: string;
       captchaToken: string;
+      website?: string;
     }
 
-    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken }: ContactFormData = await request.json();
+    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken, website: honeypot }: ContactFormData = await request.json();
 
     // Validate required fields
     if (!firstName || !lastName || !email || !service) {
       return NextResponse.json(
         { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Honeypot check - if filled, it's a bot (real users can't see this field)
+    if (honeypot) {
+      return NextResponse.json(
+        { error: 'Something went wrong. Please try again.' },
         { status: 400 }
       );
     }
