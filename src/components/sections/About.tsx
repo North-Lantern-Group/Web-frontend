@@ -10,7 +10,7 @@ function About() {
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 lg:gap-24 items-start">
           {/* Left side - Story Content */}
           <div className="reveal-left">
-            <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-8 md:mb-12 leading-[1.2]">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 md:mb-12 leading-[1.2]">
               We build the systems<br />
               that power modern<br />
               enterprises
