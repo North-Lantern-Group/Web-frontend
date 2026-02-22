@@ -30,14 +30,14 @@ The authoritative brand guidelines are in:
 `/05 - Marketing & Brand/Brand Assets/NLG-Brand-Guidelines.html` (Brand System v1.0, January 2026)
 
 Key brand standards:
-- **Font:** Montserrat (Google Fonts) - all weights 300-700. Single typeface system.
+- **Font:** Montserrat (Google Fonts) - all weights 300-700. Single typeface system. ✅ Aligned (WEB-34, Feb 2026)
 - **Primary Colors:** Astronaut Blue (#00304B), Teal (#0096B4), Deep Ocean (#1B4965), Dark Navy (#0A1628)
 - **Brand Gradient:** linear-gradient(135deg, #0096B4 0%, #1B4965 50%, #0A1628 100%)
 - **Brand Pillars:** Illumination, Trust, Innovation
 
-NOTE: The current codebase uses Geist font and a different color palette (nlg-cyan #00D4FF,
-nlg-navy #1B2838). These are misaligned with the brand guidelines and need to be updated.
-See `docs/BRAND-ALIGNMENT.md` for the full alignment checklist.
+NOTE: The font has been migrated to Montserrat (WEB-34, complete). The color palette still
+uses the old values (nlg-cyan #00D4FF, nlg-navy #1B2838) and needs to be updated to match
+the brand guidelines. See `docs/BRAND-ALIGNMENT.md` for the full alignment checklist.
 
 ## Build & Development Commands
 
@@ -57,7 +57,7 @@ It is a single-page application with a contact form API route.
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom NLG color system
-- **Fonts**: Currently Geist (to be migrated to Montserrat per brand guidelines)
+- **Fonts**: Montserrat (Google Fonts, self-hosted via next/font, weights 300-700)
 - **Deployment**: Vercel (auto-deploys `main` branch to Production; other branches get Preview URLs)
 
 ### Project Structure
@@ -90,7 +90,7 @@ Custom Tailwind colors currently prefixed with `nlg-`:
 - Secondary (30%): `nlg-hunter-green`, `nlg-teal`, `nlg-light-gray`, `nlg-charcoal`
 - Tertiary (10%): `nlg-deep-navy`, `nlg-pine-green`, `nlg-emerald`, `nlg-coral`
 
-These need to be migrated to the brand guideline colors. See `docs/BRAND-ALIGNMENT.md`. Note: The color migration is tracked in Epic WEB-2.
+These need to be migrated to the brand guideline colors. See `docs/BRAND-ALIGNMENT.md`. Note: The color migration is tracked in Epic WEB-33 (Site-Wide Brand Alignment).
 
 ### Environment Variables
 Four env vars are required for the contact form to function. See `docs/INFRASTRUCTURE.md`
