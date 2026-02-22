@@ -56,35 +56,23 @@ PNG in the same folder are superseded versions and should not be used for new de
 
 | Element | Brand Standard | Current Code | Aligned? |
 |---------|---------------|-------------|----------|
-| Font family | Montserrat | Geist (Vercel system font) | No |
+| Font family | Montserrat | Montserrat (next/font/google, weights 300-700) | ✅ Yes |
 | Heading weight | Bold (700) / SemiBold (600) | Mixed | Partial |
-| Body weight | Regular (400) | Regular (400) | Yes |
+| Body weight | Regular (400) | Regular (400) | ✅ Yes |
 | Line heights | 1.1 - 1.6 per scale | Varies | Partial |
 
-### Required Change
+### Completed (WEB-34, Session 8-9, Feb 2026)
 
-Replace Geist with Montserrat in:
-- `src/app/layout.tsx` (font import and CSS variable)
-- `tailwind.config.ts` (fontFamily configuration)
+Font migration from Geist to Montserrat is complete:
+- `src/app/layout.tsx` — Montserrat loaded via `next/font/google`, CSS variable `--font-montserrat`
+- `tailwind.config.ts` — `fontFamily.sans` set to `['var(--font-montserrat)', 'system-ui', 'sans-serif']`
+- `font-serif` overrides removed from Hero.tsx and About.tsx headings
+- Geist package removed from `package.json`
 
-**Implementation:**
-```typescript
-// layout.tsx
-import { Montserrat } from 'next/font/google'
+### Remaining Typography Work
 
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-montserrat',
-})
-```
-
-```typescript
-// tailwind.config.ts
-fontFamily: {
-  sans: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
-}
-```
+- Heading weights need audit against brand type scale (Display: 700, H1: 700, H2: 600, H3: 600)
+- Line heights need audit against brand type scale (Display: 1.1, H1: 1.2, H2: 1.25, etc.)
 
 ---
 
@@ -330,7 +318,7 @@ Summary of all changes needed to align the website with brand guidelines:
 
 | Item | Priority | Status | Notes |
 |------|----------|--------|-------|
-| Replace Geist font with Montserrat | High | Pending | Affects layout.tsx, tailwind.config.ts |
+| Replace Geist font with Montserrat | High | ✅ Complete | WEB-34 done (Session 8-9, Feb 2026). Montserrat loaded via next/font/google, Geist removed. |
 | Update Tailwind color palette to brand colors | High | Pending | Affects tailwind.config.ts + all components |
 | Update brand gradient in CSS | Medium | Pending | Multiple locations in page.tsx and globals.css |
 | Verify logo assets match brand variants | Medium | Pending | Check /public/logo.png against brand assets |
@@ -353,6 +341,7 @@ Summary of all changes needed to align the website with brand guidelines:
 
 | Date | Author | Change |
 |------|--------|--------|
+| Feb 22, 2026 | Claude (AI) | Session 9: WEB-34 font migration marked complete (Geist → Montserrat), typography section updated, remaining typography work documented |
 | Feb 15, 2026 | Claude (AI) | Session 6: reCAPTCHA marked complete, contact form UX partially complete (WEB-5/6/7/8 done), added Jira tracking notes for new WEB-33 epic |
 | Feb 10, 2026 | Claude (AI) | Session 4: reCAPTCHA v3 status updated to QA, copy deck in progress, added Cal.com task reference |
 | Feb 9, 2026 | Claude (AI) | Updated checklist: page refactor complete, added Jira epic tracking |
