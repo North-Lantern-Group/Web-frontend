@@ -32,7 +32,7 @@ export default function Hero({ isDarkMode }: HeroProps) {
             Atlassian Cloud & Business Intelligence
           </div>
 
-          <h1 className={`font-serif text-[clamp(2rem,7vw,5rem)] font-bold leading-[1.15] mb-4 md:mb-6 tracking-[-0.01em] opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards] ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+          <h1 className={`text-[clamp(2rem,7vw,5rem)] font-bold leading-[1.15] mb-4 md:mb-6 tracking-[-0.01em] opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards] ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
             Transform Your Infrastructure.{" "}
             <span className="bg-gradient-to-br from-cyan-500 to-teal-600 bg-clip-text text-transparent">
               Unlock Intelligence.
