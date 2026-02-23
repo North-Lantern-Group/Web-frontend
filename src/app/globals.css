@@ -4,20 +4,15 @@
 
 /*
  * NLG Brand Rule: Hide sparkle element when logo is below 48px tall.
- * Mobile: h-10 (40px) — sparkle hidden (below threshold).
- * Desktop (md+): h-12 (48px) — sparkle shown (at threshold).
- * Override: add .nlg-logo-lg to force sparkle visible at any size.
+ * Mobile: h-12 (48px) — at threshold, sparkle shown.
+ * Desktop: h-14 (56px) — above threshold, sparkle shown.
+ * For smaller usages (< 48px), add .nlg-logo-sm to hide sparkle.
  */
 svg[aria-label="North Lantern Group"] .nlg-sparkle {
-  display: none;
-}
-@media (min-width: 768px) {
-  svg[aria-label="North Lantern Group"] .nlg-sparkle {
-    display: block;
-  }
-}
-svg[aria-label="North Lantern Group"].nlg-logo-lg .nlg-sparkle {
   display: block;
+}
+svg[aria-label="North Lantern Group"].nlg-logo-sm .nlg-sparkle {
+  display: none;
 }
 
 * {
