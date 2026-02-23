@@ -23,6 +23,7 @@ write-once artifacts.
 - `docs/COPY-DECK.md` - Editable copy deck of all website text (for Hamza to edit, Claude Code to apply)
 - `docs/COPY-DECK-VISUAL-GUIDE.md` - Visual wireframe guide showing each section's layout
 - `directives/refactor-page.md` - SOP for component extraction pattern used in page.tsx refactor
+- `directives/frontend-design.md` - **Auto-activating** frontend design directive. Contains all brand tokens, design patterns, premium dark-mode philosophy, component specs, and Figma references. Read this BEFORE any frontend UI task.
 
 ## Brand Source of Truth
 
