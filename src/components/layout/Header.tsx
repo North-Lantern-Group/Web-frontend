@@ -20,7 +20,17 @@ export default function Header({ isDarkMode }: HeaderProps) {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 px-5 md:px-[5%] lg:px-[6%] flex justify-between items-center transition-all duration-400 ${scrolled ? (isDarkMode ? 'py-4 md:py-5 bg-neutral-950/95 backdrop-blur-[20px] border-b border-white/10' : 'py-4 md:py-5 bg-white/95 backdrop-blur-[20px] border-b border-black/10') : 'py-5 md:py-7'}`}>
+    <header
+      className={`fixed z-50 flex justify-between items-center transition-all duration-500 ease-out ${
+        scrolled
+          ? `top-3 md:top-4 left-3 right-3 md:left-[3%] md:right-[3%] rounded-2xl px-5 md:px-6 lg:px-8 py-3 md:py-3.5 ${
+              isDarkMode
+                ? 'bg-neutral-950/90 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.03)]'
+                : 'bg-white/90 backdrop-blur-xl border border-black/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.08)]'
+            }`
+          : 'top-0 left-0 right-0 rounded-none px-5 md:px-[5%] lg:px-[6%] py-5 md:py-7'
+      }`}
+    >
       <nav className="w-full flex items-center justify-between">
         {/* Logo — h-16 (64px) mobile, h-20 (80px) desktop. Cyan glow on dark mode. */}
         <a href="#" className="flex items-center">
@@ -98,7 +108,13 @@ export default function Header({ isDarkMode }: HeaderProps) {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className={`absolute top-full left-0 right-0 lg:hidden ${isDarkMode ? 'bg-neutral-950/98 border-b border-white/10' : 'bg-white/98 border-b border-black/10'} backdrop-blur-[20px]`}>
+        <div className={`absolute top-full left-0 right-0 lg:hidden ${
+          scrolled ? 'mt-2 rounded-2xl border' : 'border-b'
+        } ${
+          isDarkMode
+            ? `bg-neutral-950/95 ${scrolled ? 'border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : 'border-white/10'}`
+            : `bg-white/95 ${scrolled ? 'border-black/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.08)]' : 'border-black/10'}`
+        } backdrop-blur-xl`}>
           <nav className="container mx-auto px-4 py-6">
             <ul className="flex flex-col gap-4">
               <li>

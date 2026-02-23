@@ -41,7 +41,7 @@ export default function NLGLogo({
 function WhiteLogo({ className }: { className: string }) {
   return (
     <svg
-      viewBox="0 0 600 200"
+      viewBox="0 25 600 150"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -101,7 +101,7 @@ function WhiteLogo({ className }: { className: string }) {
 function PrimaryLogo({ className }: { className: string }) {
   return (
     <svg
-      viewBox="0 0 600 200"
+      viewBox="0 25 600 150"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
