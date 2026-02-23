@@ -22,16 +22,16 @@ export default function Header({ isDarkMode }: HeaderProps) {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 px-5 md:px-[5%] lg:px-[6%] flex justify-between items-center transition-all duration-400 ${scrolled ? (isDarkMode ? 'py-4 md:py-5 bg-neutral-950/95 backdrop-blur-[20px] border-b border-white/10' : 'py-4 md:py-5 bg-white/95 backdrop-blur-[20px] border-b border-black/10') : 'py-5 md:py-7'}`}>
       <nav className="w-full flex items-center justify-between">
-        {/* Logo — h-12 (48px) mobile, h-14 (56px) desktop. Cyan glow on dark mode. */}
+        {/* Logo — h-16 (64px) mobile, h-20 (80px) desktop. Cyan glow on dark mode. */}
         <a href="#" className="flex items-center">
-          <div className={`relative h-12 md:h-14 w-auto transition-all duration-500 ${isDarkMode ? 'drop-shadow-[0_0_20px_rgba(0,150,180,0.25)]' : ''}`}>
+          <div className={`relative h-16 md:h-20 w-auto transition-all duration-500 ${isDarkMode ? 'drop-shadow-[0_0_24px_rgba(0,150,180,0.3)]' : ''}`}>
             <NLGLogo
               variant="white"
-              className={`h-12 md:h-14 w-auto absolute inset-0 transition-opacity duration-500 ${isDarkMode ? 'opacity-100' : 'opacity-0'}`}
+              className={`h-16 md:h-20 w-auto absolute inset-0 transition-opacity duration-500 ${isDarkMode ? 'opacity-100' : 'opacity-0'}`}
             />
             <NLGLogo
               variant="primary"
-              className={`h-12 md:h-14 w-auto transition-opacity duration-500 ${isDarkMode ? 'opacity-0' : 'opacity-100'}`}
+              className={`h-16 md:h-20 w-auto transition-opacity duration-500 ${isDarkMode ? 'opacity-0' : 'opacity-100'}`}
             />
           </div>
         </a>
