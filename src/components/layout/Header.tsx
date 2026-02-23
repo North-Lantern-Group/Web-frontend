@@ -25,23 +25,23 @@ export default function Header({ isDarkMode }: HeaderProps) {
         scrolled
           ? `top-3 md:top-4 left-3 right-3 md:left-[3%] md:right-[3%] rounded-2xl px-5 md:px-6 lg:px-8 py-3 md:py-3.5 ${
               isDarkMode
-                ? 'bg-neutral-950/90 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.03)]'
-                : 'bg-white/90 backdrop-blur-xl border border-black/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.08)]'
+                ? 'bg-[#0A1628]/85 backdrop-blur-xl border border-white/[0.06] shadow-[0_8px_32px_rgba(0,20,40,0.5),inset_0_1px_0_rgba(255,255,255,0.04)]'
+                : 'bg-[#F7FAFC]/88 backdrop-blur-xl border border-[#E1E5EB]/60 shadow-[0_8px_32px_rgba(0,48,75,0.06)]'
             }`
           : 'top-0 left-0 right-0 rounded-none px-5 md:px-[5%] lg:px-[6%] py-5 md:py-7'
       }`}
     >
       <nav className="w-full flex items-center justify-between">
-        {/* Logo — h-16 (64px) mobile, h-20 (80px) desktop. Cyan glow on dark mode. */}
+        {/* Logo — icon + text lockup. Scales down when scrolled for compact floating header. */}
         <a href="#" className="flex items-center">
-          <div className={`relative h-16 md:h-20 w-auto transition-all duration-500 ${isDarkMode ? 'drop-shadow-[0_0_24px_rgba(0,150,180,0.3)]' : ''}`}>
+          <div className={`relative ${scrolled ? 'h-11 md:h-14' : 'h-14 md:h-[4.5rem]'} w-auto transition-all duration-500 ${isDarkMode ? 'drop-shadow-[0_0_24px_rgba(0,150,180,0.3)]' : ''}`}>
             <NLGLogo
               variant="white"
-              className={`h-16 md:h-20 w-auto absolute inset-0 transition-opacity duration-500 ${isDarkMode ? 'opacity-100' : 'opacity-0'}`}
+              className={`${scrolled ? 'h-11 md:h-14' : 'h-14 md:h-[4.5rem]'} w-auto absolute inset-0 transition-all duration-500 ${isDarkMode ? 'opacity-100' : 'opacity-0'}`}
             />
             <NLGLogo
               variant="primary"
-              className={`h-16 md:h-20 w-auto transition-opacity duration-500 ${isDarkMode ? 'opacity-0' : 'opacity-100'}`}
+              className={`${scrolled ? 'h-11 md:h-14' : 'h-14 md:h-[4.5rem]'} w-auto transition-all duration-500 ${isDarkMode ? 'opacity-0' : 'opacity-100'}`}
             />
           </div>
         </a>
@@ -112,8 +112,8 @@ export default function Header({ isDarkMode }: HeaderProps) {
           scrolled ? 'mt-2 rounded-2xl border' : 'border-b'
         } ${
           isDarkMode
-            ? `bg-neutral-950/95 ${scrolled ? 'border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : 'border-white/10'}`
-            : `bg-white/95 ${scrolled ? 'border-black/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.08)]' : 'border-black/10'}`
+            ? `bg-[#0A1628]/92 ${scrolled ? 'border-white/[0.06] shadow-[0_8px_32px_rgba(0,20,40,0.5)]' : 'border-white/10'}`
+            : `bg-[#F7FAFC]/95 ${scrolled ? 'border-[#E1E5EB]/60 shadow-[0_8px_32px_rgba(0,48,75,0.06)]' : 'border-black/10'}`
         } backdrop-blur-xl`}>
           <nav className="container mx-auto px-4 py-6">
             <ul className="flex flex-col gap-4">
