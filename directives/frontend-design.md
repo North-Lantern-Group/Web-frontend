@@ -183,10 +183,13 @@ Brand rules:
 
 ```
 Component:  src/components/brand/NLGLogo.tsx
-Header use: h-12 md:h-14 (48px mobile, 56px desktop)
-Glow:       drop-shadow(0 0 20px rgba(0,150,180,0.25)) on dark mode
-Transition: 500ms opacity crossfade between variants on mode toggle
-Sparkle:    visible (both sizes >= 48px threshold)
+Architecture: Split lockup — icon SVG (h-full, square) + HTML text (Montserrat SemiBold)
+Icon viewBox: 25 25 150 150 (captures frame + N + sparkle)
+Text sizes:   text-[0.9375rem] md:text-lg (15px / 18px)
+Header sizes: h-14 md:h-[4.5rem] (default) → h-11 md:h-14 (scrolled)
+Glow:         drop-shadow(0 0 24px rgba(0,150,180,0.3)) on dark mode
+Transition:   500ms opacity crossfade between variants on mode toggle
+Sparkle:      always visible (minimum rendered size is 44px)
 ```
 
 ---
@@ -219,14 +222,20 @@ Accent:     Add a gradient top border (2px) using brand gradient for featured ca
 ### Header / Navigation
 
 ```
-Glassmorphism (scrolled):
-  Dark:  bg-neutral-950/95 backdrop-blur-[20px] border-b border-white/10
-  Light: bg-white/95 backdrop-blur-[20px] border-b border-black/10
+Floating header (scrolled):
+  Position: top-3 md:top-4 left-3 right-3 md:left-[3%] md:right-[3%]
+  Shape:    rounded-2xl (floating pill)
+  Dark:     bg-[#0A1628]/85 (Dark Navy glass — brand-tinted, not neutral)
+            border-white/[0.06], shadow with rgba(0,20,40,0.5)
+            inset highlight: rgba(255,255,255,0.04)
+  Light:    bg-[#F7FAFC]/88 (cool-tinted white, not pure white)
+            border-[#E1E5EB]/60, shadow with rgba(0,48,75,0.06) (Astronaut Blue tint)
+  Blur:     backdrop-blur-xl
 
-Padding:
-  Horizontal: px-5 md:px-[5%] lg:px-[6%]
-  Vertical:   py-5 md:py-7 (default) → py-4 md:py-5 (scrolled)
-  Transition: duration-400 on all properties
+Default (not scrolled):
+  Position: top-0 left-0 right-0 (full width, transparent)
+  Padding:  px-5 md:px-[5%] lg:px-[6%] py-5 md:py-7
+  Transition: duration-500 ease-out on all properties
 
 Nav links: text-[0.95rem] font-medium tracking-[0.01em]
            Underline animation on hover (2px cyan bar, left-to-right)
