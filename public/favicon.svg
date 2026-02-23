@@ -1,0 +1,19 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>
+  .bg { fill: #00304B; }
+  .fr { stroke: white; }
+  .n { fill: white; }
+  @media (prefers-color-scheme: dark) {
+    .bg { fill: #0A1628; }
+    .fr { stroke: #0096B4; }
+  }
+</style>
+<rect class="bg" width="32" height="32"/>
+<g clip-path="url(#c)">
+  <path class="fr" d="M2 22.2222V2H30V30H9.77778" stroke-width="2.72222" stroke-linecap="square"/>
+  <path class="n" d="M11.5 21V11H13.4143L19.3143 18.2H18.3857V11H20.6714V21H18.7714L12.8571 13.8H13.7857V21H11.5Z"/>
+</g>
+<defs>
+  <clipPath id="c"><rect width="32" height="32" fill="white"/></clipPath>
+</defs>
+</svg>
