@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
+import NLGLogo from "@/components/brand/NLGLogo";
 
 interface HeaderProps {
   isDarkMode: boolean;
@@ -23,13 +23,10 @@ export default function Header({ isDarkMode }: HeaderProps) {
     <header className={`fixed top-0 left-0 right-0 z-50 px-4 md:px-[4%] flex justify-between items-center transition-all duration-400 ${scrolled ? (isDarkMode ? 'py-3 md:py-4 bg-neutral-950/95 backdrop-blur-[20px] border-b border-white/10' : 'py-3 md:py-4 bg-white/95 backdrop-blur-[20px] border-b border-black/10') : 'py-4 md:py-6'}`}>
       <nav className="w-full flex items-center justify-between">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-3">
-          <Image
-            src="/logo.png"
-            alt="North Lantern Group"
-            width={500}
-            height={125}
-            className="h-14 md:h-24 w-auto"
+        <a href="#" className="flex items-center">
+          <NLGLogo
+            variant={isDarkMode ? "white" : "primary"}
+            className="h-8 md:h-10 w-auto"
           />
         </a>
 
