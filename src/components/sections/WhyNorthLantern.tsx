@@ -1,113 +1,85 @@
 "use client";
 
-import { memo, useState, useEffect, useRef } from "react";
-import InteractiveGlobe from "@/components/Globe";
+import { memo, useRef } from "react";
+import dynamic from "next/dynamic";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { Clock, MapPin, UserCheck } from "lucide-react";
 
-interface WhyNorthLanternProps {
-  isDarkMode: boolean;
-}
+const Globe = dynamic(() => import("@/components/Globe"), {
+  ssr: false,
+  loading: () => (
+    <div className="mx-auto aspect-square w-full max-w-[420px] rounded-full border border-white/10 bg-black/20" />
+  ),
+});
 
-function WhyNorthLantern({ isDarkMode }: WhyNorthLanternProps) {
-  const [aboutVisible, setAboutVisible] = useState(false);
-  const aboutRef = useRef<HTMLParagraphElement>(null);
+const promises = [
+  {
+    icon: Clock,
+    text: "Response within one business day, in Canadian working hours.",
+  },
+  {
+    icon: UserCheck,
+    text: "Founder-led scoping, senior delivery from start to finish.",
+  },
+  {
+    icon: MapPin,
+    text: "Canada-based delivery, data resident in Canada when clients require it.",
+  },
+];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting) {
-          setAboutVisible(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (aboutRef.current) {
-      observer.observe(aboutRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+function WhyNorthLantern() {
+  const promiseRef = useRef<HTMLDivElement>(null);
+  const promisesInView = useInView(promiseRef, { once: true, amount: 0.35 });
+  const reducedMotion = useReducedMotion();
 
   return (
     <section id="why-us" className="py-16 md:py-28">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-          {/* Left side - Content */}
+        <div className="grid items-center gap-8 md:grid-cols-2 md:gap-12">
           <div className="reveal-left">
-            <p ref={aboutRef} className={`text-lg md:text-2xl font-semibold tracking-normal text-cyan-400 mb-3 md:mb-4 relative inline-block ${aboutVisible ? 'who-we-are-visible' : ''}`}>
-              <span>Why North Lantern</span>
-              <span className="absolute bottom-0 left-0 h-[2px] bg-cyan-400 who-we-are-underline"></span>
+            <p className="mb-3 inline-block text-lg font-semibold tracking-normal text-cyan-400 md:mb-4 md:text-2xl">
+              Why North Lantern
             </p>
-            <h2 className="text-2xl md:text-5xl font-medium mb-6 md:mb-8 text-white tracking-tight">Dedicated to Elevating Business Excellence Through Tailored Solutions</h2>
-            <p className="text-base md:text-lg text-neutral-400 mb-4 md:mb-6">
-              North Lantern Group is a leading professional services firm specializing in innovative technology solutions. Founded to enhance collaboration and governance workflows, NLG offers tailored Atlassian solutions, seamless cloud migrations, and powerful data analytics services.
+            <h2 className="mb-6 text-2xl font-medium tracking-tight text-white md:mb-8 md:text-5xl">
+              A Canadian consultancy that delivers the way it scopes.
+            </h2>
+            <p className="mb-4 text-base text-neutral-400 md:mb-6 md:text-lg">
+              We are a small, Ontario-incorporated firm with a deliberately narrow delivery bench. Every engagement runs senior-only. The consultant who scopes the work is the consultant who signs off on the delivery.
             </p>
 
-            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-6 md:mb-8">
-              <div className="inline-flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 bg-neutral-800 border border-amber-400/30 rounded-full">
-                <span className="text-xs md:text-sm text-amber-400">5+ Global Awards</span>
-              </div>
-              <div className="inline-flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 bg-neutral-800 border border-teal-400/30 rounded-full">
-                <span className="text-xs md:text-sm text-teal-400">24/7 Support</span>
-              </div>
-              <div className="inline-flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 bg-neutral-800 border border-emerald-400/30 rounded-full">
-                <span className="text-xs md:text-sm text-emerald-400">12+ Years Exp</span>
-              </div>
-            </div>
-
-            <div className="flex gap-3 md:gap-4 mt-6 md:mt-8">
-              {/* Labels row */}
-              <div className="flex-1 flex flex-col items-start">
-                <div className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wider">Projects</div>
-                <div className="text-xl md:text-2xl font-medium text-rose-400">60+</div>
-              </div>
-              <div className="flex-1 flex flex-col items-start">
-                <div className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wider">Team</div>
-                <div className="text-xl md:text-2xl font-medium text-violet-400">25+</div>
-              </div>
-              <div className="flex-1 flex flex-col items-start">
-                <div className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-wider">Satisfaction</div>
-                <div className="text-xl md:text-2xl font-medium text-cyan-400">92%</div>
-              </div>
-            </div>
-
-            <div className="hidden md:flex items-end gap-4 mt-4">
-              {/* 60+ Projects Delivered */}
-              <div className="flex-1 flex flex-col">
-                <div className="flex flex-wrap-reverse content-start gap-[5px] mb-3 justify-end w-full">
-                  {Array.from({ length: 67 }).map((_, i) => (
-                    <div key={i} className="w-[10px] h-[10px] rounded-full bg-rose-400"></div>
-                  ))}
-                </div>
-                <div className="h-[1px] bg-white w-full"></div>
-              </div>
-
-              {/* 25+ Team Members */}
-              <div className="flex-1 flex flex-col">
-                <div className="flex flex-wrap-reverse content-start gap-[5px] mb-3 justify-end w-full">
-                  {Array.from({ length: 25 }).map((_, i) => (
-                    <div key={i} className="w-[10px] h-[10px] rounded-full bg-violet-400"></div>
-                  ))}
-                </div>
-                <div className="h-[1px] bg-white w-full"></div>
-              </div>
-
-              {/* 92% Client Satisfaction */}
-              <div className="flex-1 flex flex-col">
-                <div className="flex flex-wrap-reverse content-start gap-[5px] mb-3 justify-end w-full">
-                  {Array.from({ length: 92 }).map((_, i) => (
-                    <div key={i} className="w-[10px] h-[10px] rounded-full bg-cyan-400"></div>
-                  ))}
-                </div>
-                <div className="h-[1px] bg-white w-full"></div>
-              </div>
+            <div ref={promiseRef} className="mt-6 grid gap-3 md:mt-8 md:gap-4">
+              {promises.map((promise, index) => {
+                const PromiseIcon = promise.icon;
+                return (
+                  <motion.div
+                    key={promise.text}
+                    initial={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -12 }}
+                    animate={promisesInView ? { opacity: 1, x: 0 } : undefined}
+                    transition={{
+                      duration: reducedMotion ? 0.2 : 0.5,
+                      delay: reducedMotion ? 0 : index * 0.1,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="flex items-start gap-3 rounded-lg border border-white/10 bg-neutral-900/80 p-4"
+                  >
+                    <PromiseIcon className="mt-0.5 h-5 w-5 shrink-0 text-cyan-400" strokeWidth={1.5} />
+                    <p className="text-sm text-neutral-300 md:text-base">{promise.text}</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
-          {/* Right side - Interactive Globe */}
-          <div className="w-full h-[280px] sm:h-[350px] md:h-auto md:aspect-square flex items-center justify-center reveal-right order-first md:order-last">
-            <InteractiveGlobe key="globe-rose" isDarkMode={isDarkMode} />
+          <div className="reveal-right order-first md:order-last">
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-neutral-900 p-6 md:p-8">
+              <Globe />
+              <div className="mt-6 border-t border-white/10 pt-6">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-400">How we work</p>
+                <p className="mt-4 text-sm leading-relaxed text-neutral-400 md:text-base">
+                  Adoption is not a separate service. Every engagement includes rollout, governance, and documentation. If the team cannot operate the system after launch, the work is not finished.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

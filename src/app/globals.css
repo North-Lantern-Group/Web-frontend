@@ -4,8 +4,8 @@
 
 /*
  * NLG Brand Rule: Hide sparkle element when logo is below 48px tall.
- * Mobile: h-12 (48px) — at threshold, sparkle shown.
- * Desktop: h-14 (56px) — above threshold, sparkle shown.
+ * Mobile: h-12 (48px). At threshold, sparkle shown.
+ * Desktop: h-14 (56px). Above threshold, sparkle shown.
  * For smaller usages (< 48px), add .nlg-logo-sm to hide sparkle.
  */
 svg[aria-label="North Lantern Group"] .nlg-sparkle {
@@ -23,6 +23,61 @@ body {
   background-color: #000000;
   color: #FFFFFF;
   overflow-x: hidden;
+}
+
+@keyframes ottawaPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.78;
+  }
+  50% {
+    transform: scale(1.45);
+    opacity: 1;
+  }
+}
+
+@keyframes nlgButtonShimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.nlg-shimmer-button {
+  isolation: isolate;
+}
+
+.nlg-shimmer-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.22) 42%, transparent 65%);
+  transform: translateX(-120%);
+  animation: nlgButtonShimmer 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.nlg-ottawa-pulse {
+  animation: ottawaPulse 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.phone-input-dark:focus-within {
+  border-color: rgba(34, 211, 238, 0.6) !important;
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.4), 0 0 0 6px rgba(0, 212, 255, 0.12);
+  transition: box-shadow 160ms ease, border-color 160ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nlg-shimmer-button::before {
+    animation: none;
+  }
+
+  .nlg-ottawa-pulse {
+    animation: none;
+  }
 }
 
 /* Light mode styles */
@@ -434,88 +489,6 @@ body {
     animation: float 8s ease-in-out infinite;
   }
 
-  /* Testimonial grid border animations - subtle and slow */
-  .testimonial-cell {
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  @keyframes border-fade-1 {
-    0%, 100% {
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-    50% {
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-  }
-
-  @keyframes border-fade-2 {
-    0%, 100% {
-      border-color: rgba(255, 255, 255, 0.12);
-    }
-    50% {
-      border-color: rgba(0, 0, 0, 0.5);
-    }
-  }
-
-  @keyframes border-fade-3 {
-    0%, 100% {
-      border-color: rgba(255, 255, 255, 0.08);
-      border-style: solid;
-    }
-    50% {
-      border-color: rgba(255, 255, 255, 0.15);
-      border-style: dashed;
-    }
-  }
-
-  @keyframes border-fade-4 {
-    0%, 100% {
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-    50% {
-      border-color: transparent;
-    }
-  }
-
-  @keyframes border-fade-5 {
-    0%, 100% {
-      border-color: rgba(255, 255, 255, 0.1);
-      border-style: dashed;
-    }
-    50% {
-      border-color: rgba(255, 255, 255, 0.05);
-      border-style: solid;
-    }
-  }
-
-  .testimonial-cell:nth-child(1) {
-    animation: border-fade-1 15s ease-in-out infinite;
-  }
-  .testimonial-cell:nth-child(2) {
-    animation: border-fade-4 18s ease-in-out infinite 2s;
-  }
-  .testimonial-cell:nth-child(3) {
-    animation: border-fade-3 20s ease-in-out infinite 4s;
-  }
-  .testimonial-cell:nth-child(4) {
-    animation: border-fade-2 17s ease-in-out infinite 3s;
-  }
-  .testimonial-cell:nth-child(5) {
-    animation: border-fade-5 22s ease-in-out infinite 5s;
-  }
-  .testimonial-cell:nth-child(6) {
-    animation: border-fade-4 16s ease-in-out infinite 1s;
-  }
-  .testimonial-cell:nth-child(7) {
-    animation: border-fade-3 19s ease-in-out infinite 6s;
-  }
-  .testimonial-cell:nth-child(8) {
-    animation: border-fade-2 21s ease-in-out infinite 2.5s;
-  }
-  .testimonial-cell:nth-child(9) {
-    animation: border-fade-5 14s ease-in-out infinite 4.5s;
-  }
-
   /* Who We Are underline animation */
   @keyframes underline-appear-disappear {
     0% {
@@ -680,29 +653,23 @@ body {
   }
 
   .reveal-stagger.active > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger.active > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger.active > *:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger.active > *:nth-child(4) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger.active > *:nth-child(5) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger.active > *:nth-child(6) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger.active > *:nth-child(7) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger.active > *:nth-child(8) { transition-delay: 0.7s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger.active > *:nth-child(9) { transition-delay: 0.8s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(2) { transition-delay: 0.08s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(3) { transition-delay: 0.16s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(4) { transition-delay: 0.24s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(5) { transition-delay: 0.32s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(6) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(7) { transition-delay: 0.48s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(8) { transition-delay: 0.56s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.active > *:nth-child(9) { transition-delay: 0.64s; opacity: 1; transform: translateY(0); }
 
-  /* Slower staggered animations for testimonials */
-  .reveal-stagger-slow > * {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal-left,
+    .reveal-right,
+    .reveal-scale,
+    .reveal-stagger > * {
+      transform: none !important;
+      transition: opacity 200ms ease !important;
+    }
   }
-
-  .reveal-stagger-slow.active > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger-slow.active > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger-slow.active > *:nth-child(3) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger-slow.active > *:nth-child(4) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger-slow.active > *:nth-child(5) { transition-delay: 0.8s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger-slow.active > *:nth-child(6) { transition-delay: 1.0s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger-slow.active > *:nth-child(7) { transition-delay: 1.2s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger-slow.active > *:nth-child(8) { transition-delay: 1.4s; opacity: 1; transform: translateY(0); }
-  .reveal-stagger-slow.active > *:nth-child(9) { transition-delay: 1.6s; opacity: 1; transform: translateY(0); }
 }

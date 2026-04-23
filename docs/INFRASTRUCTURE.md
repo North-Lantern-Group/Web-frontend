@@ -135,7 +135,7 @@ Web-frontend/
   src/
     app/
       api/contact/
-        route.ts           <-- Contact form API endpoint (Resend + ZeroBounce + reCAPTCHA v2)
+        route.ts           <-- Contact form API endpoint (Resend + ZeroBounce + reCAPTCHA v3)
       globals.css           <-- Global styles, scroll animations, light/dark mode
       layout.tsx            <-- Root layout (fonts, metadata)
       page.tsx              <-- Main page (~80 lines, composes section components)
@@ -145,16 +145,14 @@ Web-frontend/
       sections/
         Hero.tsx            <-- Hero with dark/light mode backgrounds
         About.tsx           <-- About / mission section
-        Services.tsx        <-- Service cards with xarrows diagrams
+        Services.tsx        <-- Three service lanes using local Lucide icons
         WhyNorthLantern.tsx <-- Value propositions
-        Stats.tsx           <-- Stat counters
-        Testimonials.tsx    <-- Client testimonials
         Pricing.tsx         <-- Pricing tiers
         Contact.tsx         <-- Contact form (form state, reCAPTCHA, validation)
-        Footer.tsx          <-- Footer with links and copyright
+      Footer.tsx          <-- Footer with links and copyright
       CloudBackground.tsx   <-- Animated cloud background (light mode)
       FloatingParticles.tsx <-- Floating cyan particles (dark mode)
-      Globe.tsx             <-- Interactive 3D globe using cobe library
+      Globe.tsx             <-- Canada-marker 3D globe using cobe
       ParticleCompass.tsx   <-- Mouse-following gradient effect (dark mode)
   .env.example              <-- Template for environment variables
   .eslintrc.json
@@ -255,6 +253,27 @@ The `.env.local` file is git-ignored and will not be committed.
 
 ---
 
+## Legal Entity and Registered Office
+
+The public website uses the registered corporate identity below for privacy, schema, and legal pages:
+
+```text
+North Lantern Group Inc.
+400 Slater St.
+Ottawa, ON K1R 7S7
+Canada
+```
+
+Usage rules:
+
+- `/privacy` uses the full registered office address.
+- JSON-LD `ProfessionalService` schema uses `streetAddress`, `addressLocality`, `addressRegion`, `postalCode`, and `addressCountry`.
+- Public marketing copy uses `Canada-based` or `Canadian firm`. It does not market NLG as Ottawa-based or Hamilton-based.
+- Serving global markets does not conflict with Canada-based positioning. The phrase describes where the firm is based, not the full service area.
+- Do not call NLG a global firm until public proof exists beyond availability to serve. Use direct service-area language instead.
+
+---
+
 ## Tech Stack
 
 ### Core Framework
@@ -262,7 +281,7 @@ The `.env.local` file is git-ignored and will not be committed.
 | Technology    | Version  | Purpose                          |
 |---------------|----------|----------------------------------|
 | Next.js       | 15.x     | React framework, SSR, API routes |
-| React         | 19.x     | UI library                       |
+| React         | 18.x     | UI library                       |
 | TypeScript    | 5.9.x    | Type safety                      |
 | Tailwind CSS  | 3.x      | Utility-first CSS                |
 
@@ -270,13 +289,12 @@ The `.env.local` file is git-ignored and will not be committed.
 
 | Package                  | Purpose                                    |
 |--------------------------|--------------------------------------------|
-| `cobe`                   | Interactive 3D globe visualization         |
+| `cobe`                   | Canada-marker globe visualization          |
+| `framer-motion`          | Premium section and card motion            |
 | `lucide-react`           | Icon library                               |
-| `react-xarrows`          | SVG connection arrows in service diagrams  |
 | `react-google-recaptcha-v3` | reCAPTCHA v3 invisible (score-based)  |
 | `react-phone-number-input` | International phone number input         |
 | `resend`                 | Email sending API (server-side)            |
-| `geist`                  | Vercel's Geist font family                 |
 
 ### Development Tools (Global)
 
@@ -483,10 +501,16 @@ email delivery for `@northlanterngroup.com` addresses.
 ### Resend (Email Delivery)
 
 - **Purpose:** Sends contact form submission emails
-- **Recipients configured in code:**
-  - hamza@northlanterngroup.com
-  - hello@northlanterngroup.com
-  - osaed.chundrigar@gmail.com
+- **Current production recipient configured in code:**
+  - leads@northlanterngroup.com
+- **Lead Google Group status:** Created by founder on 2026-04-24
+- **Lead Google Group purpose:** Inbound leads from the `northlanterngroup.com` contact form, sent through Resend after form completion
+- **Lead Google Group response standard:** Members respond within one business day in Canadian working hours
+- **Lead Google Group routing lanes:**
+  - Atlassian Systems
+  - BI and Operational Reporting
+  - Automation and Integration
+- **Lead Google Group membership target:** Hamza Chundrigar as Owner, `hello@northlanterngroup.com` as Member or monitoring alias, no personal Gmail recipients
 - **From address:** Uses a verified domain (configured in Resend dashboard)
 - **Account owner:** Osaed (to be confirmed/migrated)
 

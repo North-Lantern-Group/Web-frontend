@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
 
 interface Particle {
   x: number;
@@ -19,10 +20,11 @@ export default function FloatingParticles() {
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const animationRef = useRef<number>();
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || reducedMotion) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -130,7 +132,11 @@ export default function FloatingParticles() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []);
+  }, [reducedMotion]);
+
+  if (reducedMotion) {
+    return null;
+  }
 
   return (
     <canvas

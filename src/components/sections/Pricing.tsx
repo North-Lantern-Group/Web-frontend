@@ -1,150 +1,131 @@
 "use client";
 
 import { memo } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Check, ClipboardList, Repeat2, TrendingUp } from "lucide-react";
+import TiltCard from "@/components/motion/TiltCard";
+
+const cards = [
+  {
+    icon: ClipboardList,
+    title: "Project-based",
+    eyebrow: "Fixed scope",
+    body: "Defined outcome, fixed scope, clear owner. The right model when the problem is known and the path is clear enough to commit to before starting.",
+    pills: [
+      "Scoping before build",
+      "Fixed scope and timeline",
+      "Milestone-based delivery",
+      "Documentation included",
+      "Knowledge transfer included",
+      "Post-launch handoff",
+    ],
+    cta: "Discuss scope",
+    featured: false,
+  },
+  {
+    icon: Repeat2,
+    title: "Retainer",
+    eyebrow: "Ongoing senior access",
+    body: "Reserved senior capacity for teams that need a steady owner on Atlassian, reporting, or integration work. The right model when scope evolves month to month.",
+    pills: [
+      "Reserved senior capacity",
+      "Planned response rhythm",
+      "System governance",
+      "Monthly operating review",
+      "Scope queue management",
+      "Delivery backlog control",
+    ],
+    cta: "Start a retainer",
+    featured: true,
+  },
+  {
+    icon: TrendingUp,
+    title: "Outcome-aligned",
+    eyebrow: "Measured work",
+    body: "A portion of the engagement fee is tied to measurable outcomes agreed at scoping. The right model when outcomes are quantifiable and both sides accept upside and downside.",
+    pills: [
+      "Outcome definition",
+      "Measurement plan",
+      "Executive checkpoints",
+      "Risk boundaries",
+      "Engagement structure review",
+      "Founder-led scoping",
+    ],
+    cta: "Explore an outcome deal",
+    featured: false,
+  },
+];
 
 function Pricing() {
+  const reducedMotion = useReducedMotion();
+
   return (
-    <section id="pricing" className="py-16 md:py-28 bg-neutral-950">
+    <section id="pricing" className="bg-neutral-950 py-16 md:py-28">
       <div className="container mx-auto px-4 md:px-6">
-        {/* Section Header */}
-        <div className="text-center mb-10 md:mb-16 reveal">
-          <p className="text-xs md:text-sm font-semibold tracking-widest text-cyan-400 uppercase mb-3 md:mb-4">Engagement Models</p>
-          <h2 className="text-2xl md:text-5xl font-medium text-white tracking-tight mb-4 md:mb-6">Flexible Structures for Every Need</h2>
-          <p className="text-sm md:text-lg text-neutral-400 max-w-3xl mx-auto leading-relaxed">
-            Choose the engagement model that aligns with your project scope, timeline, and organizational preferences. All models include senior consultant engagement and transparent communication.
+        <div className="reveal mb-10 text-center md:mb-16">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-cyan-400 md:mb-4 md:text-sm">How we engage</p>
+          <h2 className="mb-4 text-2xl font-medium tracking-tight text-white md:mb-6 md:text-5xl">Three ways to work with us.</h2>
+          <p className="mx-auto max-w-3xl text-sm leading-relaxed text-neutral-400 md:text-lg">
+            Every engagement starts with a paid scoping call. We define the lane, the risk, the operating owner, and the work that has to stick after launch. Recommendation and fit assessment are complimentary; scoping work is billed.
           </p>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 reveal-stagger">
-          {/* Project-Based */}
-          <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 transition-all duration-300 hover:border-cyan-500/30 hover:-translate-y-2">
-            <div className="text-3xl md:text-4xl mb-4 md:mb-6">📋</div>
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Project-Based</h3>
-            <p className="text-cyan-400 text-xs md:text-sm font-semibold uppercase tracking-wider mb-3 md:mb-4">Fixed Scope</p>
-            <p className="text-neutral-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">
-              Defined deliverables. Clear timeline. Predictable investment. Ideal for implementations with well-understood requirements.
-            </p>
-            <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8">
-              <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base">
-                <span className="text-cyan-400">✦</span>
-                Comprehensive discovery phase
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base">
-                <span className="text-cyan-400">✦</span>
-                Fixed scope and timeline
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base">
-                <span className="text-cyan-400">✦</span>
-                Milestone-based delivery
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base">
-                <span className="text-cyan-400">✦</span>
-                Detailed documentation
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base hidden md:flex">
-                <span className="text-cyan-400">✦</span>
-                Knowledge transfer included
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300 text-sm md:text-base hidden md:flex">
-                <span className="text-cyan-400">✦</span>
-                Post-launch support period
-              </li>
-            </ul>
-            <a
-              href="#contact"
-              className="block w-full py-3 md:py-4 px-6 text-center border border-white/20 rounded-lg text-white font-medium transition-all duration-300 hover:bg-white/5 hover:border-cyan-500/50 text-sm md:text-base"
-            >
-              Discuss Scope
-            </a>
-          </div>
+        <div className="reveal-stagger grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+          {cards.map((card) => {
+            const CardIcon = card.icon;
+            return (
+              <div key={card.title}>
+                <TiltCard
+                  maxTilt={4}
+                  glow="0 0 90px rgba(0,212,255,0.18)"
+                  className={`h-full rounded-2xl border p-6 md:rounded-3xl md:p-8 ${
+                    card.featured
+                      ? "border-cyan-500/30 bg-gradient-to-b from-cyan-900/30 to-teal-900/20"
+                      : "border-white/10 bg-neutral-900/50"
+                  }`}
+                >
+                  {card.featured && (
+                    <motion.div
+                      animate={reducedMotion ? undefined : { scale: [1, 1.04, 1] }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: [0.4, 0, 0.2, 1],
+                      }}
+                      className="absolute right-5 top-5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-semibold text-cyan-300"
+                    >
+                      Most Popular
+                    </motion.div>
+                  )}
 
-          {/* Retainer - Featured */}
-          <div className="bg-gradient-to-b from-cyan-900/30 to-teal-900/20 border border-cyan-500/30 rounded-2xl md:rounded-3xl p-6 md:p-8 relative transition-all duration-300 hover:-translate-y-2 md:scale-105">
-            <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-teal-500 text-neutral-900 px-3 md:px-4 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-semibold">
-              Most Popular
-            </div>
-            <div className="text-3xl md:text-4xl mb-4 md:mb-6 mt-2 md:mt-0">🔄</div>
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Retainer</h3>
-            <p className="text-cyan-400 text-xs md:text-sm font-semibold uppercase tracking-wider mb-3 md:mb-4">Monthly Partnership</p>
-            <p className="text-neutral-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">
-              Priority access. Continuous optimization. Strategic guidance month over month. For teams that need ongoing expert support.
-            </p>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Dedicated consultant hours
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Priority response times
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Proactive system optimization
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Monthly strategic advisory
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Flexible scope adjustments
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Preferential project rates
-              </li>
-            </ul>
-            <a
-              href="#contact"
-              className="block w-full py-4 px-6 text-center bg-gradient-to-r from-cyan-400 to-teal-500 rounded-lg text-neutral-900 font-semibold transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,212,255,0.4)]"
-            >
-              Start Partnership
-            </a>
-          </div>
-
-          {/* Value-Based */}
-          <div className="bg-neutral-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 transition-all duration-300 hover:border-cyan-500/30 hover:-translate-y-2">
-            <div className="text-4xl mb-6">📈</div>
-            <h3 className="text-2xl font-bold text-white mb-2">Value-Based</h3>
-            <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-4">ROI-Aligned</p>
-            <p className="text-neutral-400 mb-8 leading-relaxed">
-              Skin in the game. Pricing tied to the business value we create together. Our incentives match yours.
-            </p>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Performance-based components
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Shared success metrics
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Strategic partnership model
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Long-term value focus
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Aligned incentives
-              </li>
-              <li className="flex items-center gap-3 text-neutral-300">
-                <span className="text-cyan-400">✦</span>
-                Outcome guarantees
-              </li>
-            </ul>
-            <a
-              href="#contact"
-              className="block w-full py-4 px-6 text-center border border-white/20 rounded-lg text-white font-medium transition-all duration-300 hover:bg-white/5 hover:border-cyan-500/50"
-            >
-              Explore Options
-            </a>
-          </div>
+                  <CardIcon className="mb-4 h-9 w-9 text-cyan-400 md:mb-6" strokeWidth={1.5} />
+                  <h3 className="mb-2 text-xl font-bold text-white md:text-2xl">{card.title}</h3>
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cyan-400 md:mb-4 md:text-sm">{card.eyebrow}</p>
+                  <p className="mb-6 text-sm leading-relaxed text-neutral-400 md:mb-8 md:text-base">
+                    {card.body}
+                  </p>
+                  <ul className="mb-6 space-y-3 md:mb-8 md:space-y-4">
+                    {card.pills.map((pill) => (
+                      <li key={pill} className="flex items-center gap-3 text-sm text-neutral-300 md:text-base">
+                        <Check className="h-4 w-4 shrink-0 text-cyan-400" strokeWidth={2} />
+                        {pill}
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href="#contact"
+                    className={`block w-full rounded-lg px-6 py-3 text-center text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 focus:ring-offset-neutral-950 md:py-4 md:text-base ${
+                      card.featured
+                        ? "bg-gradient-to-r from-cyan-400 to-teal-500 text-neutral-900 hover:shadow-[0_0_40px_rgba(0,212,255,0.4)]"
+                        : "border border-white/20 text-white hover:border-cyan-500/50 hover:bg-white/5"
+                    }`}
+                  >
+                    {card.cta}
+                  </a>
+                </TiltCard>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

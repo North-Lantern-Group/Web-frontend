@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import NLGLogo from "@/components/brand/NLGLogo";
 
 interface HeaderProps {
@@ -32,19 +33,21 @@ export default function Header({ isDarkMode }: HeaderProps) {
       }`}
     >
       <nav className="w-full flex items-center justify-between">
-        {/* Logo — icon + text lockup. Scales down when scrolled for compact floating header. */}
-        <a href="#" className="flex items-center">
+        {/* Logo with icon and text lockup. Scales down when scrolled for compact floating header. */}
+        <Link href="/" className="flex items-center" aria-label="North Lantern Group home">
           <div className={`relative ${scrolled ? 'h-11 md:h-14' : 'h-14 md:h-[4.5rem]'} w-auto transition-all duration-500 ${isDarkMode ? 'drop-shadow-[0_0_24px_rgba(0,150,180,0.3)]' : ''}`}>
             <NLGLogo
               variant="white"
+              hideTextOnMobile
               className={`${scrolled ? 'h-11 md:h-14' : 'h-14 md:h-[4.5rem]'} w-auto absolute inset-0 transition-all duration-500 ${isDarkMode ? 'opacity-100' : 'opacity-0'}`}
             />
             <NLGLogo
               variant="primary"
+              hideTextOnMobile
               className={`${scrolled ? 'h-11 md:h-14' : 'h-14 md:h-[4.5rem]'} w-auto transition-all duration-500 ${isDarkMode ? 'opacity-0' : 'opacity-100'}`}
             />
           </div>
-        </a>
+        </Link>
 
         {/* Navigation Links - Desktop */}
         <ul className="hidden lg:flex items-center gap-10 list-none">
@@ -85,7 +88,7 @@ export default function Header({ isDarkMode }: HeaderProps) {
           href="#contact"
           className="hidden md:inline-flex bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-5 lg:px-7 py-2.5 lg:py-3 rounded-lg font-semibold text-sm lg:text-[0.95rem] transition-all duration-300 hover:-translate-y-0.5 shadow-[0_0_30px_rgba(0,212,255,0.2)] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)]"
         >
-          Start a Project
+          Book a scoping call
         </a>
 
         {/* Mobile Menu Button */}
@@ -138,7 +141,7 @@ export default function Header({ isDarkMode }: HeaderProps) {
                   onClick={() => setMobileMenuOpen(false)}
                   className="block w-full text-center bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-6 py-3 rounded-lg font-semibold"
                 >
-                  Start a Project
+                  Book a scoping call
                 </a>
               </li>
             </ul>

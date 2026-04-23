@@ -6,13 +6,48 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-montserrat",
-  display: "swap",
+  display: "optional",
 });
 
 export const metadata: Metadata = {
-  title: "North Lantern Group | Illuminating Your Path to Digital Excellence",
-  description: "Expert Atlassian solutions, Business Intelligence, and Cloud Migration services. Transform your business with North Lantern Group.",
-  keywords: ["Atlassian", "Business Intelligence", "Cloud Migration", "Jira", "Power BI", "AWS", "Azure"],
+  metadataBase: new URL("https://www.northlanterngroup.com"),
+  title: "North Lantern Group | Atlassian Consulting and Operational Reporting",
+  description: "Canada-based firm for Atlassian systems, BI and operational reporting, automation, and integration. Founder-led scoping and senior delivery for teams that need the work to stick.",
+  alternates: {
+    canonical: "https://www.northlanterngroup.com/",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://www.northlanterngroup.com/",
+    siteName: "North Lantern Group",
+    title: "North Lantern Group | Atlassian Consulting and Operational Reporting",
+    description: "Canada-based firm for Atlassian systems, BI and operational reporting, automation, and integration.",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1536,
+        height: 1024,
+        alt: "North Lantern Group",
+      },
+    ],
+    locale: "en_CA",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "North Lantern Group | Atlassian Consulting and Operational Reporting",
+    description: "Canada-based firm for Atlassian systems, BI and operational reporting, automation, and integration.",
+    images: ["/logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -20,6 +55,37 @@ export const metadata: Metadata = {
       { url: "/brand/favicons/NLG-Favicon-16.png", sizes: "16x16", type: "image/png" },
     ],
   },
+};
+
+const professionalServiceJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "North Lantern Group Inc.",
+  url: "https://www.northlanterngroup.com/",
+  logo: "https://www.northlanterngroup.com/logo.png",
+  description: "Canada-based firm for Atlassian systems, BI and operational reporting, automation, and integration.",
+  email: "leads@northlanterngroup.com",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "400 Slater St.",
+    addressLocality: "Ottawa",
+    addressRegion: "ON",
+    postalCode: "K1R 7S7",
+    addressCountry: "CA",
+  },
+  areaServed: [
+    "Canada",
+    "Global markets",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "leads@northlanterngroup.com",
+    contactType: "sales",
+    availableLanguage: ["English"],
+  },
+  sameAs: [
+    "https://www.linkedin.com/company/northlanterngroup/",
+  ],
 };
 
 export default function RootLayout({
@@ -30,6 +96,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={montserrat.variable}>
       <body className="font-sans antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(professionalServiceJsonLd),
+          }}
+        />
         {children}
       </body>
     </html>

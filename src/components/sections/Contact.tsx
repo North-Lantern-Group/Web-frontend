@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useCallback, memo } from "react";
+import { useState, memo } from "react";
 import PhoneInput from "react-phone-number-input";
 import type { Country } from "react-phone-number-input";
 import { getExampleNumber } from "libphonenumber-js/mobile";
 import examples from "libphonenumber-js/mobile/examples";
+import flags from "react-phone-number-input/flags";
 import "react-phone-number-input/style.css";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { Clock, MapPin, UserCheck } from "lucide-react";
 
 function getPhoneFormatHint(country: Country | undefined): string {
   if (!country) return "";
@@ -25,6 +27,8 @@ interface ContactProps {
 
 // Inner component that uses the reCAPTCHA hook
 const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
+  const fieldClass = "w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-cyan-400/60 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 focus:shadow-[0_0_0_6px_rgba(0,212,255,0.12)] transition-all duration-[160ms] text-white placeholder-neutral-600";
+  const selectClass = "w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-cyan-400/60 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 focus:shadow-[0_0_0_6px_rgba(0,212,255,0.12)] transition-all duration-[160ms] text-white";
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -264,7 +268,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
 
       if (response.ok) {
         setFormStatus('success');
-        setFormMessage('Thank you! Your message has been sent successfully.');
+        setFormMessage('Thank you. We will respond within one business day in Canadian working hours.');
         setFormData({ firstName: '', lastName: '', company: '', companySize: '', email: '', service: '', message: '' });
         setPhoneValue(undefined);
         setPrivacyAccepted(false);
@@ -285,34 +289,50 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
       <div className="container mx-auto px-4 md:px-6">
         {/* Centered Header */}
         <div className="text-center mb-10 md:mb-16 reveal">
-          <h2 className="text-2xl md:text-5xl font-medium text-white tracking-tight">Let&apos;s Start a Conversation</h2>
+          <h2 className="text-2xl md:text-5xl font-medium text-white tracking-tight">Tell us what needs fixing.</h2>
+          <p className="mt-4 text-neutral-400 max-w-2xl mx-auto leading-relaxed">
+            We respond within one business day in Canadian working hours.
+          </p>
         </div>
 
         <div className="max-w-2xl mx-auto">
+          <div className="mb-6 flex flex-col gap-3 rounded-xl border border-white/10 bg-neutral-900/60 p-4 text-sm text-neutral-400 md:flex-row md:items-center md:justify-between md:gap-6">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-cyan-400" strokeWidth={1.5} />
+              <span>Atlassian consulting · Canada</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <UserCheck className="h-4 w-4 text-cyan-400" strokeWidth={1.5} />
+              <span>Senior delivery · No handoffs after scoping</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-cyan-400" strokeWidth={1.5} />
+              <span>Response within one business day</span>
+            </div>
+          </div>
+
           {/* Contact Form */}
           <form onSubmit={handleSubmit} className="p-5 md:p-8 rounded-xl bg-neutral-900 border border-white/10 reveal">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium mb-2 text-neutral-300">First Name <span className="text-red-500">*</span></label>
+                <label htmlFor="firstName" className="block text-sm font-medium mb-2 text-neutral-300">First name</label>
                 <input
                   type="text"
                   id="firstName"
-                  required
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600"
+                  className={fieldClass}
                   placeholder="John"
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium mb-2 text-neutral-300">Last Name <span className="text-red-500">*</span></label>
+                <label htmlFor="lastName" className="block text-sm font-medium mb-2 text-neutral-300">Last name</label>
                 <input
                   type="text"
                   id="lastName"
-                  required
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600"
+                  className={fieldClass}
                   placeholder="Doe"
                 />
               </div>
@@ -327,7 +347,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                   required
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600"
+                  className={fieldClass}
                   placeholder="Acme Corp"
                 />
               </div>
@@ -337,7 +357,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                   id="companySize"
                   value={formData.companySize}
                   onChange={(e) => setFormData({ ...formData, companySize: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
+                  className={selectClass}
                 >
                   <option value="">Select size</option>
                   <option value="1-10">1-10 employees</option>
@@ -351,7 +371,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium mb-2 text-neutral-300">Email <span className="text-red-500">*</span></label>
+              <label htmlFor="email" className="block text-sm font-medium mb-2 text-neutral-300">Work email <span className="text-red-500">*</span></label>
               <input
                 type="email"
                 id="email"
@@ -361,7 +381,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                   setFormData({ ...formData, email: e.target.value });
                   setEmailError('');
                 }}
-                className={`w-full px-4 py-3 rounded-lg bg-black border ${emailError ? 'border-red-500/50' : 'border-white/10'} focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600`}
+                className={`${fieldClass} ${emailError ? 'border-red-500/50' : ''}`}
                 placeholder="john@acme.com"
               />
               {emailError && (
@@ -374,6 +394,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
               <PhoneInput
                 international
                 defaultCountry="US"
+                flags={flags}
                 value={phoneValue}
                 onChange={(value) => {
                   setPhoneValue(value);
@@ -388,7 +409,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                 <p className="mt-1 text-xs text-red-400">
                   {phoneError}
                   {getPhoneFormatHint(selectedCountry) && (
-                    <span> — Format: {getPhoneFormatHint(selectedCountry)}</span>
+                    <span>, format: {getPhoneFormatHint(selectedCountry)}</span>
                   )}
                 </p>
               )}
@@ -401,27 +422,28 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                 required
                 value={formData.service}
                 onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white"
+                className={selectClass}
               >
                 <option value="" disabled>Select an area</option>
-                <option value="atlassian">Atlassian Implementation or Optimization</option>
-                <option value="cloud-migration">Cloud Migration</option>
-                <option value="analytics">Analytics & Dashboards</option>
-                <option value="integration">Systems Integration & Automation</option>
-                <option value="general">General Inquiry/Other</option>
-                <option value="consultant-recovery">Our Last Consultant Left Us Worse Off</option>
+                <option value="atlassian-systems">Atlassian Systems</option>
+                <option value="bi-operational-reporting">BI and Operational Reporting</option>
+                <option value="automation-integration">Automation and Integration</option>
+                <option value="consultant-recovery">Our last consultant left us worse off</option>
+                <option value="general">General inquiry</option>
               </select>
             </div>
 
             <div className="mb-4">
-              <label htmlFor="message" className="block text-sm font-medium mb-2 text-neutral-300">How can we help?</label>
+              <label htmlFor="message" className="block text-sm font-medium mb-2 text-neutral-300">What needs fixing? <span className="text-red-500">*</span></label>
               <textarea
                 id="message"
                 rows={4}
+                required
+                minLength={30}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg bg-black border border-white/10 focus:border-white/30 focus:outline-none transition-all text-white placeholder-neutral-600 resize-none"
-                placeholder="Tell us about your project or questions..."
+                className={`${fieldClass} resize-none`}
+                placeholder="Tell us what is broken, what changed, and what a useful first conversation needs to cover."
               />
             </div>
 
@@ -434,7 +456,7 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
                   className="mt-1 w-4 h-4 rounded border-white/10 bg-black text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
                 />
                 <span className="text-sm text-neutral-400">
-                  By submitting this form, I confirm that I have read and understood the North Lantern Group <a href="#" className="text-cyan-400 hover:underline">Privacy Statement</a>. <span className="text-red-500">*</span>
+                  By submitting this form, I confirm that I have read and understood the North Lantern Group <a href="/privacy" className="text-cyan-400 hover:underline">Privacy Statement</a>. <span className="text-red-500">*</span>
                 </span>
               </label>
             </div>
@@ -469,9 +491,9 @@ const ContactForm = memo(function ContactForm({ isDarkMode }: ContactProps) {
             <button
               type="submit"
               disabled={formStatus === 'submitting'}
-              className="w-full py-4 px-8 bg-white hover:bg-neutral-200 text-black font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="nlg-shimmer-button relative w-full overflow-hidden py-4 px-8 bg-gradient-to-br from-cyan-400 to-teal-600 text-neutral-950 font-semibold rounded-lg transition-all hover:shadow-[0_0_40px_rgba(0,212,255,0.35)] focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {formStatus === 'submitting' ? 'Sending...' : 'Request Free Consultation'}
+              <span className="relative z-10">{formStatus === 'submitting' ? 'Sending...' : 'Send message'}</span>
             </button>
           </form>
         </div>

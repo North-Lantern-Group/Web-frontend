@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 
 export default function ParticleCompass() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,6 +10,7 @@ export default function ParticleCompass() {
   const gradientPosRef = useRef({ x: 0, y: 0 });
   const animationRef = useRef<number>(0);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -60,7 +62,7 @@ export default function ParticleCompass() {
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    const animate = () => {
+    const draw = () => {
       ctx.clearRect(0, 0, width, height);
 
       const mouse = mouseRef.current;
@@ -82,17 +84,25 @@ export default function ParticleCompass() {
       gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
+    };
+
+    const animate = () => {
+      draw();
 
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    if (reducedMotion) {
+      draw();
+    } else {
+      animate();
+    }
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationRef.current);
     };
-  }, [dimensions]);
+  }, [dimensions, reducedMotion]);
 
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-full">
