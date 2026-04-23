@@ -37,7 +37,7 @@ const lanes = [
   {
     icon: Link2,
     title: "Automation and Integration",
-    body: "The layer between your systems is where manual work hides. We build cross-system integrations, AI-assisted internal tooling, operational automations, and internal apps that land with a clean " + "ownership model on day one.",
+    body: "The layer between your systems is where manual work hides. We build cross-system integrations, AI-assisted internal tooling, operational automations, and internal apps that land with defined ownership from day one.",
     capabilities: [
       { icon: Link2, label: "Atlassian to CRM and finance integration" },
       { icon: Bot, label: "AI-assisted internal tools" },

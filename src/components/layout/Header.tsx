@@ -52,31 +52,31 @@ export default function Header({ isDarkMode }: HeaderProps) {
         {/* Navigation Links - Desktop */}
         <ul className="hidden lg:flex items-center gap-10 list-none">
           <li>
-            <a href="#about" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <a href="#about" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               About
               <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
           </li>
           <li>
-            <a href="#services" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <a href="#services" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Services
               <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
           </li>
           <li>
-            <a href="#why-us" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <a href="#why-us" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Why Us
               <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
           </li>
           <li>
-            <a href="#pricing" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <a href="#pricing" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Pricing
               <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
           </li>
           <li>
-            <a href="#contact" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <a href="#contact" className={`text-[0.95rem] font-medium tracking-[0.01em] transition-colors duration-300 hover:text-cyan-500 relative group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Contact
               <span className="absolute bottom-[-4px] left-0 w-0 h-[2px] bg-cyan-500 transition-all duration-300 group-hover:w-full"></span>
             </a>
@@ -86,7 +86,7 @@ export default function Header({ isDarkMode }: HeaderProps) {
         {/* CTA Button - Desktop */}
         <a
           href="#contact"
-          className="hidden md:inline-flex bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-5 lg:px-7 py-2.5 lg:py-3 rounded-lg font-semibold text-sm lg:text-[0.95rem] transition-all duration-300 hover:-translate-y-0.5 shadow-[0_0_30px_rgba(0,212,255,0.2)] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)]"
+          className="hidden md:inline-flex bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-5 lg:px-7 py-2.5 lg:py-3 rounded-lg font-semibold text-sm lg:text-[0.95rem] transition-all duration-300 hover:-translate-y-0.5 shadow-[0_0_30px_rgba(0,212,255,0.2)] hover:shadow-[0_0_50px_rgba(0,212,255,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           Book a scoping call
         </a>
@@ -94,8 +94,10 @@ export default function Header({ isDarkMode }: HeaderProps) {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className={`lg:hidden p-2 rounded-lg transition-colors ${isDarkMode ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-black/10'}`}
+          className={`lg:hidden p-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black ${isDarkMode ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-black/10'}`}
           aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-nav"
         >
           {mobileMenuOpen ? (
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,35 +113,35 @@ export default function Header({ isDarkMode }: HeaderProps) {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className={`absolute top-full left-0 right-0 lg:hidden ${
+        <div id="mobile-nav" className={`absolute top-full left-0 right-0 lg:hidden ${
           scrolled ? 'mt-2 rounded-2xl border' : 'border-b'
         } ${
           isDarkMode
             ? `bg-[#0A1628]/92 ${scrolled ? 'border-white/[0.06] shadow-[0_8px_32px_rgba(0,20,40,0.5)]' : 'border-white/10'}`
             : `bg-[#F7FAFC]/95 ${scrolled ? 'border-[#E1E5EB]/60 shadow-[0_8px_32px_rgba(0,48,75,0.06)]' : 'border-black/10'}`
         } backdrop-blur-xl`}>
-          <nav className="container mx-auto px-4 py-6">
+          <nav className="container mx-auto px-4 py-6" aria-label="Mobile navigation">
             <ul className="flex flex-col gap-4">
               <li>
-                <a href="#about" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>About</a>
+                <a href="#about" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>About</a>
               </li>
               <li>
-                <a href="#services" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Services</a>
+                <a href="#services" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Services</a>
               </li>
               <li>
-                <a href="#why-us" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Why Us</a>
+                <a href="#why-us" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Why Us</a>
               </li>
               <li>
-                <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Pricing</a>
+                <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Pricing</a>
               </li>
               <li>
-                <a href="#contact" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Contact</a>
+                <a href="#contact" onClick={() => setMobileMenuOpen(false)} className={`block py-2 text-lg font-medium rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${isDarkMode ? 'text-gray-300 hover:text-cyan-400' : 'text-gray-600 hover:text-cyan-500'}`}>Contact</a>
               </li>
               <li className="pt-4">
                 <a
                   href="#contact"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block w-full text-center bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-6 py-3 rounded-lg font-semibold"
+                  className="block w-full text-center bg-gradient-to-br from-cyan-400 to-teal-600 text-[#0a0f1a] px-6 py-3 rounded-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   Book a scoping call
                 </a>
