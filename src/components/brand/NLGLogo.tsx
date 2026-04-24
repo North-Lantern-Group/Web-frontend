@@ -1,17 +1,17 @@
 /**
- * NLGLogo — Brand lockup: inline SVG icon + HTML text
+ * NLGLogo: Brand lockup with inline SVG icon and HTML text
  *
  * Splits the horizontal lockup into independently-sized elements:
- *   - Icon SVG (broken frame + N letterform + sparkle) — scales with container
- *   - "North Lantern Group" as real HTML text — Montserrat SemiBold, independently sized
+ *   - Icon SVG (broken frame + N letterform + sparkle) scales with container
+ *   - "North Lantern Group" as real HTML text, Montserrat SemiBold, independently sized
  *
  * This approach solves the text readability issue: in the original monolithic SVG,
  * the icon consumed ~93% of the vertical space, leaving text at ~7%. By splitting
  * them, the text can be sized for readability while the icon scales independently.
  *
  * Two variants:
- *   - "white"   — White icon + white text, for dark backgrounds (default)
- *   - "primary" — Brand gradient icon + gradient text, for light backgrounds
+ *   - "white": White icon + white text, for dark backgrounds (default)
+ *   - "primary": Brand gradient icon + gradient text, for light backgrounds
  *
  * Source of truth: NLG Brand Guidelines v1.0 (January 2026)
  * SVG icon paths from: public/brand/logos/{reversed,primary}/svg/NLG-Logo-Horizontal-*.svg
@@ -20,22 +20,23 @@
 interface NLGLogoProps {
   /** "white" for dark backgrounds, "primary" for light backgrounds */
   variant?: "white" | "primary";
-  /** Tailwind / CSS classes — height controls icon size, text is independent */
+  /** Tailwind / CSS classes. Height controls icon size, text is independent */
   className?: string;
+  /** Keep mobile LCP on the hero headline, while preserving the desktop wordmark */
+  hideTextOnMobile?: boolean;
 }
 
 export default function NLGLogo({
   variant = "white",
   className = "",
+  hideTextOnMobile = false,
 }: NLGLogoProps) {
-  if (variant === "primary") return <PrimaryLogo className={className} />;
-  return <WhiteLogo className={className} />;
+  if (variant === "primary") return <PrimaryLogo className={className} hideTextOnMobile={hideTextOnMobile} />;
+  return <WhiteLogo className={className} hideTextOnMobile={hideTextOnMobile} />;
 }
 
-/* ────────────────────────────────────────────────────────────────────────────
- * White (Reversed) variant — for dark backgrounds
- * ──────────────────────────────────────────────────────────────────────────── */
-function WhiteLogo({ className }: { className: string }) {
+/* White variant for dark backgrounds */
+function WhiteLogo({ className, hideTextOnMobile }: { className: string; hideTextOnMobile: boolean }) {
   return (
     <div className={`flex items-center gap-2.5 md:gap-3 ${className}`}>
       <svg
@@ -63,17 +64,15 @@ function WhiteLogo({ className }: { className: string }) {
           <path d="M47 146L49.1213 153.879L57 156L49.1213 158.121L47 166L44.8787 158.121L37 156L44.8787 153.879L47 146Z" fill="url(#nlg-w-sparkle)" />
         </g>
       </svg>
-      <span className="text-white font-semibold text-[0.9375rem] md:text-lg tracking-[-0.02em] whitespace-nowrap">
+      <span className={`text-white font-semibold text-[0.9375rem] md:text-lg tracking-[-0.02em] whitespace-nowrap ${hideTextOnMobile ? "hidden md:inline" : ""}`}>
         North Lantern Group
       </span>
     </div>
   );
 }
 
-/* ────────────────────────────────────────────────────────────────────────────
- * Primary (Full Color Gradient) variant — for light backgrounds
- * ──────────────────────────────────────────────────────────────────────────── */
-function PrimaryLogo({ className }: { className: string }) {
+/* Primary variant for light backgrounds */
+function PrimaryLogo({ className, hideTextOnMobile }: { className: string; hideTextOnMobile: boolean }) {
   return (
     <div className={`flex items-center gap-2.5 md:gap-3 ${className}`}>
       <svg
@@ -84,19 +83,19 @@ function PrimaryLogo({ className }: { className: string }) {
         aria-hidden="true"
       >
         <defs>
-          {/* Frame gradient: Teal → Deep Ocean → Dark Navy */}
+          {/* Frame gradient: Teal to Deep Ocean to Dark Navy */}
           <linearGradient id="nlg-p-frame" x1="103.919" y1="35.5283" x2="103.919" y2="172.131" gradientUnits="userSpaceOnUse">
             <stop stopColor="#0096B4" />
             <stop offset="0.5" stopColor="#1B4965" />
             <stop offset="1" stopColor="#0A1628" />
           </linearGradient>
-          {/* N letterform gradient: Cyan → Deep Ocean → Near Black */}
+          {/* N letterform gradient: Cyan to Deep Ocean to Near Black */}
           <linearGradient id="nlg-p-n" x1="101.404" y1="76.3665" x2="101.404" y2="126.3" gradientUnits="userSpaceOnUse">
             <stop stopColor="#00B4D8" />
             <stop offset="0.5" stopColor="#1B4965" />
             <stop offset="1" stopColor="#03071E" />
           </linearGradient>
-          {/* Sparkle gradient: Teal → Astronaut Blue */}
+          {/* Sparkle gradient: Teal to Astronaut Blue */}
           <linearGradient id="nlg-p-sparkle" x1="45.5" y1="146" x2="45.5" y2="166" gradientUnits="userSpaceOnUse">
             <stop stopColor="#0098B6" />
             <stop offset="1" stopColor="#00304B" />
@@ -114,7 +113,7 @@ function PrimaryLogo({ className }: { className: string }) {
           <path d="M45.5 146L47.3031 153.879L54 156L47.3031 158.121L45.5 166L43.6969 158.121L37 156L43.6969 153.879L45.5 146Z" fill="url(#nlg-p-sparkle)" />
         </g>
       </svg>
-      <span className="font-semibold text-[0.9375rem] md:text-lg tracking-[-0.02em] whitespace-nowrap bg-gradient-to-b from-[#00B4D8] to-[#03071E] bg-clip-text text-transparent">
+      <span className={`font-semibold text-[0.9375rem] md:text-lg tracking-[-0.02em] whitespace-nowrap bg-gradient-to-b from-[#00B4D8] to-[#03071E] bg-clip-text text-transparent ${hideTextOnMobile ? "hidden md:inline" : ""}`}>
         North Lantern Group
       </span>
     </div>

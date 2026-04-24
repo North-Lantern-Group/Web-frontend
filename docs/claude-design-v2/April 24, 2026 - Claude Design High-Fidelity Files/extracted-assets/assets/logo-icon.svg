@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" role="img" aria-label="North Lantern Group icon">
+  <defs>
+    <linearGradient id="nlg-n-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00EBF4"></stop>
+      <stop offset="50%" stop-color="#115C89"></stop>
+      <stop offset="100%" stop-color="#0A1628"></stop>
+    </linearGradient>
+    <linearGradient id="nlg-star-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00AEEF"></stop>
+      <stop offset="100%" stop-color="#00455F"></stop>
+    </linearGradient>
+  </defs>
+  
+  <g transform="translate(20 20)" fill="#00455F">
+    <path d="M -17.5 260 L -17.5 277.5 L 17.5 277.5 L 17.5 260 L 0 260 L -17.5 260 Z M 0 0 L 0 -17.5 L -17.5 -17.5 L -17.5 0 L 0 0 Z M 360 0 L 377.5 0 L 377.5 -17.5 L 360 -17.5 L 360 0 Z M 360 360 L 360 377.5 L 377.5 377.5 L 377.5 360 L 360 360 Z M 100 342.5 L 82.5 342.5 L 82.5 377.5 L 100 377.5 L 100 360 L 100 342.5 Z M 0 260 L 17.5 260 L 17.5 0 L 0 0 L -17.5 0 L -17.5 260 L 0 260 Z M 0 0 L 0 17.5 L 360 17.5 L 360 0 L 360 -17.5 L 0 -17.5 L 0 0 Z M 360 0 L 342.5 0 L 342.5 360 L 360 360 L 377.5 360 L 377.5 0 L 360 0 Z M 360 360 L 360 342.5 L 100 342.5 L 100 360 L 100 377.5 L 360 377.5 L 360 360 Z" fill-rule="nonzero"></path>
+  </g>
+  
+  <g transform="translate(136 130)" fill="url(#nlg-n-grad)">
+    <path d="M 0 140 L 0 0 L 26.8 0 L 109.4 100.8 L 96.4 100.8 L 96.4 0 L 128.4 0 L 128.4 140 L 101.8 140 L 19 39.2 L 32 39.2 L 32 140 L 0 140 Z" fill-rule="nonzero"></path>
+  </g>
+  
+  <g transform="translate(20 331)" fill="url(#nlg-star-grad)">
+    <path d="M 24.5 0 L 29.697 19.303 L 49 24.5 L 29.697 29.697 L 24.5 49 L 19.303 29.697 L 0 24.5 L 19.303 19.303 L 24.5 0 Z" fill-rule="nonzero"></path>
+  </g>
+</svg>
