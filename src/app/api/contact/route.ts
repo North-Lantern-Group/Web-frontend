@@ -2,17 +2,38 @@ import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 // Contact form API with CAPTCHA and email verification
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // Map service values to display names for email
 const serviceDisplayNames: Record<string, string> = {
-  'atlassian': 'Atlassian Implementation or Optimization',
-  'cloud-migration': 'Cloud Migration',
-  'analytics': 'Analytics & Dashboards',
-  'integration': 'Systems Integration & Automation',
-  'general': 'General Inquiry/Other',
-  'consultant-recovery': 'Our Last Consultant Left Us Worse Off',
+  'atlassian-platform': 'Atlassian Platform',
+  'bi-analytics': 'BI and Analytics',
+  'automation-integration': 'Automation and Integration',
+  'consultant-recovery': 'Our last consultant left us worse off',
+  'general': 'General inquiry',
+  // Legacy keys kept for backward compatibility with in-flight form submissions
+  'atlassian-systems': 'Atlassian Platform',
+  'bi-operational-reporting': 'BI and Analytics',
 };
+
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is not configured');
+  }
+  return new Resend(apiKey);
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function cleanHeaderValue(value: string) {
+  return value.replace(/[\r\n]+/g, ' ').trim();
+}
 
 // Verify email exists using ZeroBounce
 async function verifyEmailExists(email: string): Promise<{ valid: boolean; reason?: string }> {
@@ -130,14 +151,14 @@ async function verifyCaptcha(token: string): Promise<{ success: boolean; error?:
 export async function POST(request: Request) {
   try {
     interface ContactFormData {
-      firstName: string;
-      lastName: string;
-      company?: string;
+      firstName?: string;
+      lastName?: string;
+      company: string;
       companySize?: string;
       email: string;
       phone?: string;
       service: string;
-      message?: string;
+      message: string;
       captchaToken: string;
       website?: string;
     }
@@ -145,7 +166,7 @@ export async function POST(request: Request) {
     const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken, website: honeypot }: ContactFormData = await request.json();
 
     // Validate required fields
-    if (!firstName || !lastName || !email || !service) {
+    if (!company || !email || !service || !message || message.trim().length < 30) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -185,8 +206,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const fullName = `${firstName} ${lastName}`;
+    const fullName = `${firstName || ''} ${lastName || ''}`.trim() || email;
     const serviceDisplay = serviceDisplayNames[service] || service;
+    const safeFullName = escapeHtml(fullName);
+    const safeCompany = escapeHtml(company || 'Not provided');
+    const safeCompanySize = escapeHtml(companySize || 'Not provided');
+    const safeEmail = escapeHtml(email);
+    const safePhone = phone ? escapeHtml(phone) : '';
+    const safeServiceDisplay = escapeHtml(serviceDisplay);
+    const safeMessage = escapeHtml(message || 'No message provided');
 
     const emailContent = `
 New Contact Form Submission
@@ -223,31 +251,31 @@ Message: ${message || 'No message provided'}
     <div class="content">
       <div class="field">
         <p class="label">Name:</p>
-        <p class="value">${fullName}</p>
+        <p class="value">${safeFullName}</p>
       </div>
       <div class="field">
         <p class="label">Company:</p>
-        <p class="value">${company || 'Not provided'}</p>
+        <p class="value">${safeCompany}</p>
       </div>
       <div class="field">
         <p class="label">Company Size:</p>
-        <p class="value">${companySize || 'Not provided'}</p>
+        <p class="value">${safeCompanySize}</p>
       </div>
       <div class="field">
         <p class="label">Email:</p>
-        <p class="value"><a href="mailto:${email}">${email}</a></p>
+        <p class="value"><a href="mailto:${safeEmail}">${safeEmail}</a></p>
       </div>
       <div class="field">
         <p class="label">Phone:</p>
-        <p class="value">${phone ? `<a href="tel:${phone}">${phone}</a>` : 'Not provided'}</p>
+        <p class="value">${safePhone ? `<a href="tel:${safePhone}">${safePhone}</a>` : 'Not provided'}</p>
       </div>
       <div class="field">
         <p class="label">Area of Interest:</p>
-        <p class="value">${serviceDisplay}</p>
+        <p class="value">${safeServiceDisplay}</p>
       </div>
       <div class="field">
         <p class="label">Message:</p>
-        <p class="value">${message || 'No message provided'}</p>
+        <p class="value">${safeMessage}</p>
       </div>
     </div>
   </div>
@@ -255,15 +283,12 @@ Message: ${message || 'No message provided'}
 </html>
     `.trim();
 
+    const resend = getResendClient();
     const { data, error } = await resend.emails.send({
       from: 'North Lantern Group <noreply@northlanterngroup.com>',
-      to: [
-        'hamza@northlanterngroup.com',
-        'hello@northlanterngroup.com',
-        'osaed.chundrigar@gmail.com'
-      ],
-      replyTo: email,
-      subject: `New Inquiry from ${fullName} - ${serviceDisplay}`,
+      to: ['leads@northlanterngroup.com'],
+      replyTo: cleanHeaderValue(email),
+      subject: cleanHeaderValue(`New inquiry from ${fullName} - ${serviceDisplay}`),
       text: emailContent,
       html: htmlContent,
     });
