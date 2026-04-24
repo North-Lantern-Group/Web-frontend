@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 
 const FULL_TEXT =
-  "We work with teams of 5 to 500 that actually want the thing fixed. If you're looking for transformation theatre, 27 discovery workshops, a partner who says 'synergies' like it's a medical condition, and slide decks heavier than your laptop. We're probably not the right fit for you. But we hear Deloitte is accepting meetings. Tell them we said hi. We'll be here when you want it actually built.";
+  "We work with teams of 5 to 500 that actually want the thing fixed. If you're looking for transformation theatre, 27 discovery workshops, a partner who says 'synergies' like it's a medical condition, and slide decks heavier than your laptop \u2014 we're probably not the right fit for you. But we hear Deloitte is accepting meetings. Tell them we said hi. We'll be here when you want it actually built.";
 
 function getCharDelay(ch: string | undefined): number {
   if (!ch) return 20;
   if (ch === "." || ch === "?" || ch === "!") return 140;
+  if (ch === "\u2014") return 160;
   if (ch === ",") return 60;
   if (ch === ";" || ch === ":") return 80;
   if (ch === " ") return 14 + Math.random() * 8;
