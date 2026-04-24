@@ -1,4 +1,5 @@
 import NLGLogo from "@/components/brand/NLGLogo";
+import { IconLinkedIn } from "@/components/icons/PracticeIcons";
 
 export default function Footer() {
   return (
@@ -12,6 +13,16 @@ export default function Footer() {
             <p className="nlg-footer-tag">
               Senior-led consulting. Atlassian, BI, and automation work that sticks after we leave.
             </p>
+            <a
+              href="https://www.linkedin.com/company/northlanterngroup/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow North Lantern Group on LinkedIn"
+              className="nlg-footer-social"
+            >
+              <IconLinkedIn size={16} />
+              <span>Follow on LinkedIn</span>
+            </a>
           </div>
           <div className="nlg-footer-col">
             <h4>Practices</h4>
@@ -38,6 +49,15 @@ export default function Footer() {
               </li>
               <li>
                 <a href="#contact">Contact</a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/company/northlanterngroup/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  LinkedIn
+                </a>
               </li>
             </ul>
           </div>

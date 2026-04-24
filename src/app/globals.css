@@ -1269,7 +1269,24 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .nlg-footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
 }
 .nlg-footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-weight: 600; }
-.nlg-footer-tag { font-size: 13px; color: var(--fg-3); line-height: 1.5; max-width: 32ch; }
+.nlg-footer-tag { font-size: 13px; color: var(--fg-3); line-height: 1.5; max-width: 32ch; margin: 0 0 20px; }
+.nlg-footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--fg-2);
+  transition: color var(--dur-fb) var(--ease-fb), border-color var(--dur-fb) var(--ease-fb), background var(--dur-fb) var(--ease-fb);
+  background: transparent;
+}
+.nlg-footer-social:hover {
+  color: var(--fg-1);
+  border-color: var(--brand);
+  background: rgba(0, 174, 239, 0.06);
+}
 .nlg-footer-col h4 {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 11px;

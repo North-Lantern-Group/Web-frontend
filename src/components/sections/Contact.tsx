@@ -8,7 +8,7 @@ import examples from "libphonenumber-js/mobile/examples";
 import flags from "react-phone-number-input/flags";
 import "react-phone-number-input/style.css";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import { IconArrow, IconCalendar, IconMail } from "@/components/icons/PracticeIcons";
+import { IconArrow, IconCalendar, IconLinkedIn, IconMail } from "@/components/icons/PracticeIcons";
 
 function getPhoneFormatHint(country: Country | undefined): string {
   if (!country) return "";
@@ -343,6 +343,14 @@ function Contact() {
             </a>
             <a className="nlg-text-link" href="mailto:hello@northlanterngroup.com">
               <IconMail size={14} /> Email us directly <IconArrow size={14} />
+            </a>
+            <a
+              className="nlg-text-link"
+              href="https://www.linkedin.com/company/northlanterngroup/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconLinkedIn size={14} /> Connect on LinkedIn <IconArrow size={14} />
             </a>
           </div>
         </div>
