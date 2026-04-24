@@ -21,38 +21,41 @@ const PRACTICES: Practice[] = [
     id: "atlassian",
     icon: <IconLayers size={28} />,
     title: "Atlassian Platform",
-    desc: "Your Jira instance grew without rules. Your admin left. Your automation fires twice. We rebuild the structure and hand back a system your team actually understands.",
+    desc: "Atlassian that drifted. Jira instances that grew without rules. Confluence spaces nobody searches. JSM queues with inconsistent SLAs. Admin left, runbooks didn't. We rebuild the structure across the Atlassian stack: Jira, Confluence, JSM, and the governance, identity, discovery, and AI layers Atlassian has built on top. Then we hand back a system your team actually understands.",
     caps: [
       { k: "Rebuild", v: "Project, schema, and permission refactor" },
-      { k: "Install", v: "JSM queue, SLAs, escalation rules" },
+      { k: "Install", v: "JSM queues, SLAs, escalation rules" },
+      { k: "Extend", v: "Guard, Rovo, JPD, Compass where they fit" },
+      { k: "Migrate", v: "Data Center to Cloud, or instance consolidation" },
       { k: "Document", v: "Admin runbook for the next owner" },
     ],
     refusal:
-      "Won't do: junior-staffed admin work, migrations we cannot make stick, or 'Atlassian health checks' that turn out to be sales calls.",
+      `Won't do: junior-staffed admin work, migrations we cannot make stick, or "health checks" that turn out to be sales calls.`,
     cta: "How we rebuild Atlassian",
   },
   {
     id: "bi",
     icon: <IconChart size={28} />,
     title: "BI and Analytics",
-    desc: "Dashboards nobody opens. Reports leadership does not trust. We wire the reporting layer onto systems that agree with each other, and we define the metrics before we render the chart.",
+    desc: "Reporting leadership can't fully believe. Dashboards nobody opens. Three sources of truth for the same number. The real metric lives in someone's tab order. We model the data, define the metrics before anyone renders a chart, and ship a reporting layer leadership can read without a caveat, in Power BI, Tableau, or the Atlassian Data Lake.",
     caps: [
-      { k: "Model", v: "Revenue and delivery semantic layer" },
-      { k: "Ship", v: "Power BI or Tableau executive view" },
-      { k: "Govern", v: "Metric definitions and refresh owner" },
+      { k: "Model", v: "Semantic layer, metric definitions, refresh ownership" },
+      { k: "Pipe", v: "Source system integration and data quality" },
+      { k: "Ship", v: "Executive view in Power BI, Tableau, or Atlassian Data Lake" },
+      { k: "Govern", v: "Metric ownership, refresh cadence, change control" },
     ],
     refusal:
-      "Won't do: dashboards nobody opens twice, or metric definitions without a named owner.",
+      "Won't do: dashboards without a named owner, metrics defined after the chart, or BI rebuilds that skip the data layer underneath.",
     cta: "How we wire reporting",
   },
   {
     id: "automation",
     icon: <IconWorkflow size={28} />,
     title: "Automation and Integration",
-    desc: "The layer between your systems is where manual work hides. We build cross-system integrations, AI-assisted internal tooling, and operational automations that land with defined ownership from day one.",
+    desc: "The work hiding between your systems. CRM to billing. Ticket to invoice. Slack to Jira. Afternoon work that fills up because two systems don't talk and nobody scoped the integration. We build cross-system integrations, operational automations, and AI-assisted internal tooling that land with a named owner on day one.",
     caps: [
       { k: "Wire", v: "Cross-system integrations and webhooks" },
-      { k: "Build", v: "Operational internal tooling" },
+      { k: "Build", v: "Operational internal tooling, n8n, native, or custom" },
       { k: "Assign", v: "Named owner for every automation rule" },
     ],
     refusal:
@@ -72,7 +75,7 @@ export default function Practices() {
           <div>
             <h2>Three practices. One delivery standard.</h2>
             <p className="nlg-sub">
-              We take on instances, warehouses, and integration layers that have drifted. Every engagement ships with adoption: the people who own the work after we leave.
+              We rebuild Atlassian estates, reporting layers, and the automations between them. Every engagement ships with the named owner who runs it after we leave.
             </p>
           </div>
         </div>
@@ -115,7 +118,7 @@ export default function Practices() {
         <div className="nlg-adoption-note nlg-reveal">
           <div className="nlg-tag">Adoption</div>
           <p className="nlg-txt">
-            Adoption is a delivery principle, not a fourth practice. Every engagement lists the named owner on the client side, the runbook they will inherit, and the operating review they will run without us by the closing week.
+            Adoption is a delivery principle, not a fourth practice. Every engagement lists the named owner on the client side, the runbook they will inherit, and the operating review they will run without us.
           </p>
         </div>
       </div>
