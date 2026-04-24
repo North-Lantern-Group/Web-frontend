@@ -9,6 +9,7 @@ import flags from "react-phone-number-input/flags";
 import "react-phone-number-input/style.css";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { IconArrow, IconCalendar, IconLinkedIn, IconMail } from "@/components/icons/PracticeIcons";
+import { BOOKING_URL, LINKEDIN_URL, EMAIL_GENERAL } from "@/config/site";
 
 function getPhoneFormatHint(country: Country | undefined): string {
   if (!country) return "";
@@ -380,15 +381,20 @@ function Contact() {
             </span>
           </h2>
           <div className="nlg-contact-alt">
-            <a className="nlg-btn nlg-btn-primary nlg-btn-lg" href="#contact" data-note="cal.com-pending">
+            <a
+              className="nlg-btn nlg-btn-primary nlg-btn-lg"
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <IconCalendar size={16} /> Book a call
             </a>
-            <a className="nlg-text-link" href="mailto:hello@northlanterngroup.com">
+            <a className="nlg-text-link" href={`mailto:${EMAIL_GENERAL}`}>
               <IconMail size={14} /> Email us directly <IconArrow size={14} />
             </a>
             <a
               className="nlg-text-link"
-              href="https://www.linkedin.com/company/northlanterngroup/"
+              href={LINKEDIN_URL}
               target="_blank"
               rel="noopener noreferrer"
             >

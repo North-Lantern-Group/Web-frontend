@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { IconArrow } from "@/components/icons/PracticeIcons";
+import { BOOKING_URL } from "@/config/site";
 
 const OperationsConsole = dynamic(() => import("@/components/OperationsConsole"), {
   ssr: false,
@@ -32,7 +33,12 @@ export default function HeroV2() {
           </p>
 
           <div className="nlg-hero-actions">
-            <a className="nlg-btn nlg-btn-primary nlg-btn-lg" href="#cta" data-note="cal.com-pending">
+            <a
+              className="nlg-btn nlg-btn-primary nlg-btn-lg"
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Book a call <IconArrow size={16} />
             </a>
             <a className="nlg-btn nlg-btn-secondary nlg-btn-lg" href="#how-we-work">

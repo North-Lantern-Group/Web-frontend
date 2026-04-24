@@ -65,7 +65,7 @@ export default function Footer() {
             <h4>Writing</h4>
             <ul>
               <li>
-                <span className="nlg-placeholder">Index pending first essay</span>
+                <a href="#writing">Essays coming 2026</a>
               </li>
             </ul>
           </div>
