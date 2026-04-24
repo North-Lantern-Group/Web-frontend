@@ -781,6 +781,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   will-change: transform, opacity;
   transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
   animation: nlg-beacon-breath 5.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --beacon-glow: 0.5;
 }
 .nlg-beacon-visible { opacity: 1; }
 
@@ -791,13 +792,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .nlg-beacon-halo {
   position: absolute;
-  inset: -48px;
+  inset: -52px;
   background:
-    radial-gradient(ellipse at 50% 68%, rgba(0, 174, 239, 0.22) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 30%, rgba(0, 235, 244, 0.08) 0%, transparent 50%);
-  filter: blur(24px);
+    radial-gradient(ellipse at 50% 68%, rgba(0, 174, 239, calc(0.22 + var(--beacon-glow) * 0.18)) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 30%, rgba(0, 235, 244, calc(0.08 + var(--beacon-glow) * 0.1)) 0%, transparent 50%);
+  filter: blur(26px);
   pointer-events: none;
   animation: nlg-beacon-halo 6.5s ease-in-out infinite;
+  transition: background 200ms ease-out;
 }
 @keyframes nlg-beacon-halo {
   0%, 100% { opacity: 0.55; transform: scale(1); }
@@ -835,139 +837,140 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 
 /* Zones */
-.nlg-beacon-zone { position: absolute; left: 0; right: 0; pointer-events: none; }
-
-.nlg-beacon-zone-top {
-  top: 0;
-  height: 32%;
-  background:
-    radial-gradient(ellipse at 50% 70%, rgba(0, 235, 244, 0.13), transparent 60%),
-    repeating-linear-gradient(180deg,
-      rgba(0, 235, 244, 0.035) 0px,
-      rgba(0, 235, 244, 0.035) 1px,
-      transparent 1px,
-      transparent 4px);
-  animation: nlg-beacon-shimmer 7.2s ease-in-out infinite;
-  mix-blend-mode: screen;
+/* ── SVG content layer ── */
+.nlg-beacon-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
 }
-@keyframes nlg-beacon-shimmer {
-  0%, 100% { opacity: 0.65; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(-2px); }
+.beacon-mono {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-weight: 500;
 }
 
-.nlg-beacon-zone-mid {
-  top: 32%;
-  height: 28%;
-  background:
-    repeating-linear-gradient(0deg,
-      rgba(0, 174, 239, 0.06) 0px,
-      rgba(0, 174, 239, 0.06) 1px,
-      transparent 1px,
-      transparent 6px);
-  animation: nlg-beacon-bands 14s linear infinite;
-  mix-blend-mode: screen;
-}
-@keyframes nlg-beacon-bands {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 -36px; }
+/* Chrome: caption + run + timestamp */
+.beacon-caption { font-size: 9px; fill: rgba(0, 235, 244, 0.65); letter-spacing: 0.32em; }
+.beacon-timestamp { font-size: 7.5px; fill: rgba(255, 255, 255, 0.4); letter-spacing: 0.1em; }
+.beacon-run { font-size: 7.5px; fill: rgba(0, 235, 244, 0.55); letter-spacing: 0.12em; }
+
+/* Zone labels */
+.beacon-zone-label { font-size: 7.5px; fill: rgba(0, 174, 239, 0.45); letter-spacing: 0.16em; }
+.beacon-zone-label-active { fill: rgba(0, 235, 244, 0.7); }
+
+/* Top zone glyphs: independent breath */
+.beacon-glyph { animation: beacon-glyph-breath 6.4s ease-in-out infinite; }
+.beacon-glyph-p0 { animation-delay: 0s; animation-duration: 6s; }
+.beacon-glyph-p1 { animation-delay: -1.2s; animation-duration: 7s; }
+.beacon-glyph-p2 { animation-delay: -2.6s; animation-duration: 5.5s; }
+.beacon-glyph-p3 { animation-delay: -3.8s; animation-duration: 6.8s; }
+.beacon-glyph-p4 { animation-delay: -0.7s; animation-duration: 7.4s; }
+@keyframes beacon-glyph-breath {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.78; }
 }
 
-.nlg-beacon-zone-res {
-  top: 60%;
-  height: 40%;
-  background:
-    radial-gradient(ellipse at 50% 100%,
-      rgba(0, 235, 244, 0.3) 0%,
-      rgba(0, 174, 239, 0.16) 40%,
-      transparent 80%);
-  animation: nlg-beacon-reservoir 4.4s ease-in-out infinite;
-  mix-blend-mode: screen;
+/* Middle zone system rows: sequential sync pulse */
+.beacon-system { transform-origin: center; }
+.beacon-system-p0 { animation: beacon-row-sync 18s ease-in-out infinite 0s; }
+.beacon-system-p1 { animation: beacon-row-sync 18s ease-in-out infinite -3.6s; }
+.beacon-system-p2 { animation: beacon-row-sync 18s ease-in-out infinite -7.2s; }
+.beacon-system-p3 { animation: beacon-row-sync 18s ease-in-out infinite -10.8s; }
+.beacon-system-p4 { animation: beacon-row-sync 18s ease-in-out infinite -14.4s; }
+@keyframes beacon-row-sync {
+  0%, 10%, 100% { opacity: 0.55; }
+  5% { opacity: 1; filter: brightness(1.5); }
 }
-@keyframes nlg-beacon-reservoir {
-  0%, 100% { opacity: 0.78; }
+.beacon-system-name { font-size: 8.5px; fill: rgba(255, 255, 255, 0.72); letter-spacing: 0.03em; }
+.beacon-system-id { font-size: 7.5px; fill: rgba(255, 255, 255, 0.35); letter-spacing: 0.1em; }
+.beacon-system-dot { transition: fill 300ms ease; }
+.beacon-system-dot-ok { fill: #2E8B65; filter: drop-shadow(0 0 3px rgba(46, 139, 101, 0.7)); }
+.beacon-system-dot-amber { fill: #C97A17; filter: drop-shadow(0 0 3px rgba(201, 122, 23, 0.7)); }
+
+/* Reservoir grid: phase-staggered node pulse */
+.beacon-node { transform-origin: center; transform-box: fill-box; }
+.beacon-node-p0 { animation: beacon-node 3.2s ease-in-out infinite 0s; }
+.beacon-node-p1 { animation: beacon-node 3.2s ease-in-out infinite -0.4s; }
+.beacon-node-p2 { animation: beacon-node 3.2s ease-in-out infinite -0.8s; }
+.beacon-node-p3 { animation: beacon-node 3.2s ease-in-out infinite -1.2s; }
+.beacon-node-p4 { animation: beacon-node 3.2s ease-in-out infinite -1.6s; }
+.beacon-node-p5 { animation: beacon-node 3.2s ease-in-out infinite -2s; }
+.beacon-node-p6 { animation: beacon-node 3.2s ease-in-out infinite -2.4s; }
+.beacon-node-p7 { animation: beacon-node 3.2s ease-in-out infinite -2.8s; }
+.beacon-node-core-adj { fill: rgba(0, 235, 244, 0.85) !important; }
+@keyframes beacon-node {
+  0%, 100% { opacity: 0.45; }
   50% { opacity: 1; }
 }
 
-/* Rings */
-.nlg-beacon-ring {
-  position: absolute;
-  left: 0;
-  right: 0;
-  pointer-events: none;
+/* Reservoir core: concentric ring pulse */
+.beacon-core-group { transform-origin: 190px 528px; transform-box: view-box; }
+.beacon-core-halo { animation: beacon-core-halo 4s ease-in-out infinite; }
+.beacon-core-ring-outer { animation: beacon-core-ring 4s ease-in-out infinite -1.3s; }
+.beacon-core-ring-inner { animation: beacon-core-ring 4s ease-in-out infinite -0.6s; }
+.beacon-core-dot { animation: beacon-core-dot 2.6s ease-in-out infinite; }
+@keyframes beacon-core-halo {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
 }
-.nlg-beacon-ring-upper {
-  top: 32%;
-  height: 1px;
-  background: rgba(0, 174, 239, 0.55);
+@keyframes beacon-core-ring {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.08); }
 }
-.nlg-beacon-ring-lower {
-  top: 60%;
-  height: 1.5px;
-  background: rgba(0, 174, 239, 0.75);
-  box-shadow: 0 0 10px rgba(0, 174, 239, 0.5);
-}
-
-/* Vertical center spine with tick marks */
-.nlg-beacon-spine {
-  position: absolute;
-  left: 50%;
-  top: 4%;
-  bottom: 6%;
-  width: 1px;
-  margin-left: -0.5px;
-  pointer-events: none;
-  background: repeating-linear-gradient(180deg,
-    rgba(0, 174, 239, 0.3) 0px,
-    rgba(0, 174, 239, 0.3) 1px,
-    transparent 1px,
-    transparent 18px);
-  opacity: 0.75;
+@keyframes beacon-core-dot {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
 }
 
-/* Scan line on reservoir */
-.nlg-beacon-scan {
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(0, 235, 244, 0.5) 30%,
-    rgba(0, 235, 244, 0.85) 50%,
-    rgba(0, 235, 244, 0.5) 70%,
-    transparent 100%);
-  pointer-events: none;
-  animation: nlg-beacon-scan 9s linear infinite;
-  animation-delay: 2.5s;
+/* Edge labels around reservoir */
+.beacon-edge-label { font-size: 7px; fill: rgba(0, 174, 239, 0.4); letter-spacing: 0.18em; text-transform: uppercase; }
+
+/* Scan line sweep on reservoir */
+.beacon-scan-group {
+  transform: translateY(440px);
+  animation: beacon-scan 9.5s linear infinite 2s;
 }
-@keyframes nlg-beacon-scan {
-  0%, 88%, 100% { top: 62%; opacity: 0; }
-  8% { opacity: 0.9; }
-  72% { top: 98%; opacity: 0.25; }
+.beacon-scan-line { opacity: 0.9; }
+@keyframes beacon-scan {
+  0%, 88%, 100% { transform: translateY(440px); opacity: 0; }
+  6% { opacity: 1; }
+  80% { transform: translateY(600px); opacity: 0.35; }
 }
 
-/* Light packet traveling through the spine */
+/* Bottom chrome */
+.beacon-coord { font-size: 7px; fill: rgba(255, 255, 255, 0.32); letter-spacing: 0.16em; }
+.beacon-serial { font-size: 8px; fill: rgba(255, 255, 255, 0.4); letter-spacing: 0.22em; }
+
+/* Light packets on vertical spine: 3 staggered */
 .nlg-beacon-packet {
   position: absolute;
   left: 50%;
-  width: 14px;
-  height: 14px;
-  margin-left: -7px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
   border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(0, 235, 244, 0.95) 0%,
-    rgba(0, 235, 244, 0.4) 40%,
+    rgba(0, 235, 244, 1) 0%,
+    rgba(0, 235, 244, 0.5) 35%,
     transparent 72%);
-  box-shadow: 0 0 24px rgba(0, 235, 244, 0.8);
+  box-shadow:
+    0 0 16px rgba(0, 235, 244, 0.85),
+    0 0 32px rgba(0, 174, 239, 0.35);
   pointer-events: none;
-  animation: nlg-beacon-packet 8.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  opacity: 0;
 }
+.nlg-beacon-packet-1 { animation: nlg-beacon-packet 9.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.nlg-beacon-packet-2 { animation: nlg-beacon-packet 9.5s cubic-bezier(0.4, 0, 0.6, 1) infinite -3.2s; }
+.nlg-beacon-packet-3 { animation: nlg-beacon-packet 9.5s cubic-bezier(0.4, 0, 0.6, 1) infinite -6.4s; }
 @keyframes nlg-beacon-packet {
-  0% { bottom: 5%; opacity: 0; transform: scale(0.5); }
-  8% { opacity: 0.95; transform: scale(1); }
-  50% { bottom: 50%; opacity: 1; transform: scale(1.1); }
-  90% { bottom: 92%; opacity: 0.45; transform: scale(0.9); }
-  100% { bottom: 96%; opacity: 0; transform: scale(0.5); }
+  0% { bottom: 4%; opacity: 0; transform: scale(0.4); }
+  6% { opacity: 1; transform: scale(1); }
+  48% { bottom: 50%; transform: scale(1.1); }
+  54% { bottom: 52%; transform: scale(1); }
+  92% { bottom: 92%; opacity: 0.45; transform: scale(0.85); }
+  100% { bottom: 95%; opacity: 0; transform: scale(0.4); }
 }
 
 /* Corner brackets */
@@ -1003,84 +1006,37 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   padding: 1px;
 }
 
-/* Micro-caption at top */
-.nlg-beacon-caption {
-  position: absolute;
-  top: 16px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-family: var(--font-jetbrains-mono), monospace;
-  font-size: 9px;
-  letter-spacing: 0.32em;
-  color: rgba(0, 235, 244, 0.55);
-  pointer-events: none;
-}
+/* Beat-driven emphasis on the SVG content */
+.nlg-beacon-beat-hook .beacon-core-halo,
+.nlg-beacon-beat-hook .beacon-core-dot { animation: beacon-core-emphasis 2s ease-out !important; }
+.nlg-beacon-beat-hook .nlg-beacon-halo { animation: nlg-beacon-halo-emphasis 2s ease-out; }
 
-/* Serial engraving at bottom */
-.nlg-beacon-serial {
-  position: absolute;
-  bottom: 12px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-family: var(--font-jetbrains-mono), monospace;
-  font-size: 8.5px;
-  letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.32);
-  pointer-events: none;
-}
+.nlg-beacon-beat-transition .nlg-beacon-frame { animation: nlg-beacon-lift 2s ease-out; }
 
-/* Beat: hook, reservoir ignites */
-.nlg-beacon-beat-hook .nlg-beacon-zone-res {
-  animation: nlg-beacon-reservoir-emphasis 2s ease-out;
-}
-.nlg-beacon-beat-hook .nlg-beacon-halo {
-  animation: nlg-beacon-halo-emphasis 2s ease-out;
-}
+.nlg-beacon-beat-atlassian .beacon-glyphs .beacon-glyph { animation: beacon-glyph-surge 1.8s ease-out !important; }
+.nlg-beacon-beat-reporting .beacon-systems .beacon-system { animation: beacon-row-surge 1.6s ease-out !important; }
+.nlg-beacon-beat-automation .nlg-beacon-packet { animation-duration: 2s !important; animation-iteration-count: 1 !important; }
+.nlg-beacon-beat-rebuilt .beacon-grid .beacon-node,
+.nlg-beacon-beat-rebuilt .beacon-core-group { animation: beacon-reservoir-peak 2s ease-out !important; }
+.nlg-beacon-beat-rebuilt .nlg-beacon-halo { animation: nlg-beacon-halo-peak 2.4s ease-out; }
+.nlg-beacon-beat-refusal .beacon-glyphs,
+.nlg-beacon-beat-refusal .beacon-systems { opacity: 0.75; transition: opacity 1.5s ease-out; }
 
-/* Beat: transition, subtle lift across zones */
-.nlg-beacon-beat-transition .nlg-beacon-frame {
-  animation: nlg-beacon-lift 2s ease-out;
+@keyframes beacon-core-emphasis {
+  0%, 100% { opacity: 0.7; filter: brightness(1); }
+  40% { opacity: 1; filter: brightness(1.8) saturate(1.35); }
 }
-
-/* Beat: atlassian, top zone surges */
-.nlg-beacon-beat-atlassian .nlg-beacon-zone-top {
-  animation: nlg-beacon-shimmer-emphasis 1.8s ease-out;
+@keyframes beacon-glyph-surge {
+  0%, 100% { opacity: 0.45; filter: brightness(1); }
+  40% { opacity: 1; filter: brightness(1.5); }
 }
-
-/* Beat: reporting, middle bands thicken */
-.nlg-beacon-beat-reporting .nlg-beacon-zone-mid {
-  animation: nlg-beacon-bands-emphasis 1.6s ease-out;
+@keyframes beacon-row-surge {
+  0%, 100% { opacity: 0.65; filter: brightness(1); }
+  40% { opacity: 1; filter: brightness(1.45) saturate(1.2); }
 }
-
-/* Beat: automation, packet travels */
-.nlg-beacon-beat-automation .nlg-beacon-packet {
-  animation: nlg-beacon-packet-rapid 1.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Beat: rebuilt, reservoir goes to peak brightness */
-.nlg-beacon-beat-rebuilt .nlg-beacon-zone-res {
-  animation: nlg-beacon-reservoir-peak 2s ease-out;
-}
-.nlg-beacon-beat-rebuilt .nlg-beacon-halo {
-  animation: nlg-beacon-halo-peak 2.4s ease-out;
-}
-
-/* Beat: refusal, everything settles quietly */
-.nlg-beacon-beat-refusal .nlg-beacon-zone-top,
-.nlg-beacon-beat-refusal .nlg-beacon-zone-mid {
-  animation-duration: 16s;
-  opacity: 0.75;
-}
-
-@keyframes nlg-beacon-reservoir-emphasis {
-  0%, 100% { opacity: 0.78; filter: brightness(1); }
-  40% { opacity: 1; filter: brightness(1.65) saturate(1.25); }
-}
-@keyframes nlg-beacon-reservoir-peak {
-  0%, 100% { opacity: 0.82; filter: brightness(1); }
-  35% { opacity: 1; filter: brightness(1.95) saturate(1.4); }
+@keyframes beacon-reservoir-peak {
+  0%, 100% { filter: brightness(1); }
+  40% { filter: brightness(1.8) saturate(1.3); }
 }
 @keyframes nlg-beacon-halo-emphasis {
   0%, 100% { opacity: 0.6; transform: scale(1); }
@@ -1102,34 +1058,27 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     inset 0 -60px 90px -40px rgba(0, 235, 244, 0.28),
     0 34px 90px -32px rgba(0, 174, 239, 0.45); }
 }
-@keyframes nlg-beacon-shimmer-emphasis {
-  0%, 100% { opacity: 0.65; filter: brightness(1); }
-  40% { opacity: 1; filter: brightness(1.65) saturate(1.2); transform: translateY(-3px); }
-}
-@keyframes nlg-beacon-bands-emphasis {
-  0%, 100% { filter: brightness(1) contrast(1); }
-  45% { filter: brightness(1.5) contrast(1.3); }
-}
-@keyframes nlg-beacon-packet-rapid {
-  0% { bottom: 5%; opacity: 0; transform: scale(0.5); }
-  12% { opacity: 1; transform: scale(1.2); }
-  100% { bottom: 96%; opacity: 0; transform: scale(0.5); }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .nlg-beacon,
   .nlg-beacon-halo,
-  .nlg-beacon-zone-top,
-  .nlg-beacon-zone-mid,
-  .nlg-beacon-zone-res,
-  .nlg-beacon-scan,
-  .nlg-beacon-packet { animation: none !important; }
-  .nlg-beacon-beat-hook .nlg-beacon-zone-res,
-  .nlg-beacon-beat-atlassian .nlg-beacon-zone-top,
-  .nlg-beacon-beat-reporting .nlg-beacon-zone-mid,
-  .nlg-beacon-beat-automation .nlg-beacon-packet,
-  .nlg-beacon-beat-rebuilt .nlg-beacon-zone-res,
-  .nlg-beacon-beat-transition .nlg-beacon-frame { animation: none !important; }
+  .nlg-beacon-packet,
+  .nlg-beacon-packet-1,
+  .nlg-beacon-packet-2,
+  .nlg-beacon-packet-3,
+  .beacon-glyph,
+  .beacon-system,
+  .beacon-node,
+  .beacon-core-halo,
+  .beacon-core-ring-inner,
+  .beacon-core-ring-outer,
+  .beacon-core-dot,
+  .beacon-scan-group { animation: none !important; }
+  .nlg-beacon-packet,
+  .nlg-beacon-packet-1,
+  .nlg-beacon-packet-2,
+  .nlg-beacon-packet-3 { opacity: 0 !important; }
+  .beacon-scan-group { opacity: 0 !important; }
 }
 
 /* ───────── Practices ───────── */
