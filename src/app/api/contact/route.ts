@@ -4,11 +4,14 @@ import { NextResponse } from 'next/server';
 
 // Map service values to display names for email
 const serviceDisplayNames: Record<string, string> = {
-  'atlassian-systems': 'Atlassian Systems',
-  'bi-operational-reporting': 'BI and Operational Reporting',
+  'atlassian-platform': 'Atlassian Platform',
+  'bi-analytics': 'BI and Analytics',
   'automation-integration': 'Automation and Integration',
   'consultant-recovery': 'Our last consultant left us worse off',
   'general': 'General inquiry',
+  // Legacy keys kept for backward compatibility with in-flight form submissions
+  'atlassian-systems': 'Atlassian Platform',
+  'bi-operational-reporting': 'BI and Analytics',
 };
 
 function getResendClient() {

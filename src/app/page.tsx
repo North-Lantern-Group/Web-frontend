@@ -6,7 +6,7 @@ import Practices from "@/components/sections/Practices";
 import HowWeWork from "@/components/sections/HowWeWork";
 import Writing from "@/components/sections/Writing";
 import BuyerQualifier from "@/components/sections/BuyerQualifier";
-import ClosingCTA from "@/components/sections/ClosingCTA";
+import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -23,7 +23,7 @@ export default function Home() {
         <HowWeWork />
         <Writing />
         <BuyerQualifier />
-        <ClosingCTA />
+        <Contact />
       </main>
       <Footer />
     </div>

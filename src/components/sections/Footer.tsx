@@ -37,7 +37,7 @@ export default function Footer() {
                 <a href="#belief">About</a>
               </li>
               <li>
-                <a href="mailto:hello@northlanterngroup.com">Contact</a>
+                <a href="#contact">Contact</a>
               </li>
             </ul>
           </div>

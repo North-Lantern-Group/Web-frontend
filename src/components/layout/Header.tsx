@@ -1,14 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import NLGLogo from "@/components/brand/NLGLogo";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="nlg-nav">
+    <header className={`nlg-nav ${scrolled ? "nlg-scrolled" : ""}`}>
       <div className="nlg-nav-in">
         <Link href="/" className="nlg-nav-brand" aria-label="North Lantern Group home">
           <NLGLogo variant="white" className="h-9 md:h-10" hideTextOnMobile />
@@ -30,10 +38,10 @@ export default function Header() {
         </ul>
 
         <div className="nlg-nav-right">
-          <a className="nlg-btn nlg-btn-ghost" href="mailto:hello@northlanterngroup.com">
+          <a className="nlg-btn nlg-btn-ghost" href="#contact">
             Contact
           </a>
-          <a className="nlg-btn nlg-btn-primary" href="#cta" data-note="cal.com-pending">
+          <a className="nlg-btn nlg-btn-primary" href="#contact" data-note="cal.com-pending">
             Book a call
           </a>
           <button
@@ -73,13 +81,13 @@ export default function Header() {
                 <a href="#belief" onClick={() => setMobileMenuOpen(false)}>About</a>
               </li>
               <li>
-                <a href="mailto:hello@northlanterngroup.com" onClick={() => setMobileMenuOpen(false)}>
+                <a href="#contact" onClick={() => setMobileMenuOpen(false)}>
                   Contact
                 </a>
               </li>
               <li className="nlg-mobile-cta">
                 <a
-                  href="#cta"
+                  href="#contact"
                   onClick={() => setMobileMenuOpen(false)}
                   className="nlg-btn nlg-btn-primary"
                   data-note="cal.com-pending"
