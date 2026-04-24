@@ -161,9 +161,10 @@ export async function POST(request: Request) {
       message: string;
       captchaToken: string;
       website?: string;
+      marketingConsent?: boolean;
     }
 
-    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken, website: honeypot }: ContactFormData = await request.json();
+    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken, website: honeypot, marketingConsent }: ContactFormData = await request.json();
 
     // Validate required fields
     if (!company || !email || !service || !message || message.trim().length < 30) {
@@ -215,6 +216,8 @@ export async function POST(request: Request) {
     const safePhone = phone ? escapeHtml(phone) : '';
     const safeServiceDisplay = escapeHtml(serviceDisplay);
     const safeMessage = escapeHtml(message || 'No message provided');
+    const marketingConsentLabel = marketingConsent ? 'Yes (marketing updates opt-in)' : 'No';
+    const safeMarketingConsent = escapeHtml(marketingConsentLabel);
 
     const emailContent = `
 New Contact Form Submission
@@ -225,6 +228,7 @@ Company Size: ${companySize || 'Not provided'}
 Email: ${email}
 Phone: ${phone || 'Not provided'}
 Area of Interest: ${serviceDisplay}
+Marketing consent: ${marketingConsentLabel}
 Message: ${message || 'No message provided'}
     `.trim();
 
@@ -272,6 +276,10 @@ Message: ${message || 'No message provided'}
       <div class="field">
         <p class="label">Area of Interest:</p>
         <p class="value">${safeServiceDisplay}</p>
+      </div>
+      <div class="field">
+        <p class="label">Marketing consent:</p>
+        <p class="value">${safeMarketingConsent}</p>
       </div>
       <div class="field">
         <p class="label">Message:</p>
