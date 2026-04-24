@@ -955,10 +955,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   gap: 8px;
 }
 
-/* ───────── Buyer qualifier ───────── */
+/* ───────── Buyer qualifier (terminal typewriter) ───────── */
 .nlg-buyer-qualifier {
-  padding: 56px 0 40px;
-  text-align: center;
+  padding: 72px 0 56px;
+  position: relative;
+}
+.nlg-buyer-qualifier .nlg-wrap {
+  max-width: 860px;
   position: relative;
 }
 .nlg-buyer-qualifier::before {
@@ -967,22 +970,80 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
+  width: 96px;
   height: 1px;
   background: var(--line-2);
 }
 .nlg-bq-text {
+  position: relative;
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 16.5px;
-  line-height: 1.7;
-  color: var(--fg-3);
-  max-width: 64ch;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--fg-2);
+  max-width: 62ch;
   margin: 0 auto;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  border: 1px solid var(--line-1);
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, rgba(0, 174, 239, 0.04), rgba(0, 174, 239, 0) 60%),
+    rgba(10, 22, 40, 0.45);
+  box-shadow: 0 20px 50px -30px rgba(0, 174, 239, 0.18);
+  white-space: pre-wrap;
+  word-break: normal;
   text-wrap: pretty;
 }
+.nlg-bq-prompt {
+  color: var(--brand-hi);
+  font-weight: 600;
+  user-select: none;
+  line-height: inherit;
+}
+.nlg-bq-typed {
+  color: var(--fg-2);
+  min-height: calc(1.75em * 6);
+}
+.nlg-bq-caret {
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--brand-hi);
+  font-weight: 600;
+  transform: translateY(1px);
+  animation: nlg-caret-blink 1.05s step-end infinite;
+  text-shadow: 0 0 10px rgba(0, 235, 244, 0.55);
+}
+.nlg-bq-caret-idle { animation: nlg-caret-blink 1.35s step-end infinite; }
+@keyframes nlg-caret-blink {
+  0%, 55% { opacity: 1; }
+  55.01%, 100% { opacity: 0; }
+}
+.nlg-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 @media (max-width: 720px) {
-  .nlg-buyer-qualifier { padding: 48px 0 24px; }
-  .nlg-bq-text { font-size: 14.5px; line-height: 1.65; }
+  .nlg-buyer-qualifier { padding: 56px 0 32px; }
+  .nlg-bq-text {
+    font-size: 14.5px;
+    line-height: 1.7;
+    padding: 16px 18px;
+    gap: 10px;
+  }
+  .nlg-bq-typed { min-height: calc(1.7em * 7); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nlg-bq-caret, .nlg-bq-caret-idle { animation: none !important; opacity: 1; }
 }
 
 /* ───────── Contact (CTA + form merged) ───────── */
