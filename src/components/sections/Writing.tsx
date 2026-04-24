@@ -49,7 +49,7 @@ export default function Writing() {
               <p className="nlg-essay-teaser">{e.teaser}</p>
               <div className="nlg-essay-footer">
                 <span>ESSAY.0{i + 1}</span>
-                <span aria-hidden="true">· draft</span>
+                <span aria-hidden="true">· in progress</span>
               </div>
             </article>
           ))}

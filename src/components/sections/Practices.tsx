@@ -90,7 +90,8 @@ export default function Practices() {
               <article
                 className="nlg-practice-card nlg-reveal"
                 key={p.id}
-                style={{ transitionDelay: `${i * 60}ms` }}
+                id={p.id}
+                style={{ transitionDelay: `${i * 60}ms`, scrollMarginTop: "96px" }}
               >
                 <span className="nlg-practice-num" aria-hidden="true">
                   {num}
@@ -110,7 +111,7 @@ export default function Practices() {
                   <div className="nlg-constraint-eyebrow">CONSTRAINT</div>
                   <p className="nlg-practice-refusal">{p.refusal}</p>
                 </div>
-                <a className="nlg-practice-link" href={`#${p.id}`}>
+                <a className="nlg-practice-link" href="#contact">
                   {p.cta} <IconArrow size={14} />
                 </a>
               </article>

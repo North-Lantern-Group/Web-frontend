@@ -53,8 +53,8 @@ export default function HowWeWork() {
         </p>
 
         <div className="nlg-steps-link">
-          <a className="nlg-text-link" href="#cta">
-            Full engagement model <IconArrow size={14} />
+          <a className="nlg-text-link" href="#contact">
+            Start a conversation <IconArrow size={14} />
           </a>
         </div>
       </div>

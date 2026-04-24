@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import NLGLogo from "@/components/brand/NLGLogo";
+import { BOOKING_URL } from "@/config/site";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,7 +42,12 @@ export default function Header() {
           <a className="nlg-btn nlg-btn-ghost" href="#contact">
             Contact
           </a>
-          <a className="nlg-btn nlg-btn-primary" href="#contact" data-note="cal.com-pending">
+          <a
+            className="nlg-btn nlg-btn-primary"
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Book a call
           </a>
           <button
@@ -87,10 +93,11 @@ export default function Header() {
               </li>
               <li className="nlg-mobile-cta">
                 <a
-                  href="#contact"
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setMobileMenuOpen(false)}
                   className="nlg-btn nlg-btn-primary"
-                  data-note="cal.com-pending"
                 >
                   Book a call
                 </a>
