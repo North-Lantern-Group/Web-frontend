@@ -1,72 +1,62 @@
-"use client";
+import NLGLogo from "@/components/brand/NLGLogo";
 
-import { memo } from "react";
-import Image from "next/image";
-
-function Footer() {
+export default function Footer() {
   return (
-    <footer className="border-t border-white/5 pt-10 md:pt-16 pb-6 md:pb-8">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr] gap-8 md:gap-12 mb-8 md:mb-12">
-          {/* Brand Column */}
-          <div className="col-span-2 md:col-span-1">
-            <div className="mb-4 md:mb-6">
-              <Image
-                src="/logo.png"
-                alt="North Lantern Group"
-                width={200}
-                height={60}
-                className="h-10 md:h-14 w-auto"
-              />
-            </div>
-            <p className="text-neutral-400 text-sm md:text-base leading-relaxed mb-4 md:mb-6">
-              Canadian consultancy rebuilding Atlassian, reporting, and the integration layer between the tools your team depends on.
-            </p>
-            <div className="flex gap-3">
-              <a
-                href="https://www.linkedin.com/company/northlanterngroup/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 md:w-10 h-9 md:h-10 bg-white/5 rounded-lg flex items-center justify-center text-neutral-300 hover:bg-cyan-400 hover:text-neutral-900 transition-all text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                aria-label="LinkedIn"
-              >
-                in
-              </a>
-            </div>
-          </div>
-
-          {/* Services Column */}
+    <footer className="nlg-footer">
+      <div className="nlg-wrap">
+        <div className="nlg-footer-grid">
           <div>
-            <h4 className="text-white font-semibold text-base md:text-lg mb-4 md:mb-6">Services</h4>
-            <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
-              <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Atlassian Systems</a></li>
-              <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">BI and Operational Reporting</a></li>
-              <li><a href="#services" className="text-neutral-400 hover:text-cyan-400 transition-colors">Automation and Integration</a></li>
+            <div className="nlg-footer-brand">
+              <NLGLogo variant="white" className="h-8" />
+            </div>
+            <p className="nlg-footer-tag">
+              Senior-led consulting. Atlassian, BI, and automation work that sticks after we leave.
+            </p>
+          </div>
+          <div className="nlg-footer-col">
+            <h4>Practices</h4>
+            <ul>
+              <li>
+                <a href="#atlassian">Atlassian Platform</a>
+              </li>
+              <li>
+                <a href="#bi">BI and Analytics</a>
+              </li>
+              <li>
+                <a href="#automation">Automation and Integration</a>
+              </li>
             </ul>
           </div>
-
-          {/* Company Column */}
-          <div>
-            <h4 className="text-white font-semibold text-base md:text-lg mb-4 md:mb-6">Company</h4>
-            <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
-              <li><a href="#about" className="text-neutral-400 hover:text-cyan-400 transition-colors">About</a></li>
-              <li><a href="#why-us" className="text-neutral-400 hover:text-cyan-400 transition-colors">How we work</a></li>
-              <li><a href="#pricing" className="text-neutral-400 hover:text-cyan-400 transition-colors">Engagements</a></li>
-              <li><a href="#contact" className="text-neutral-400 hover:text-cyan-400 transition-colors">Contact</a></li>
+          <div className="nlg-footer-col">
+            <h4>Firm</h4>
+            <ul>
+              <li>
+                <a href="#how-we-work">How we work</a>
+              </li>
+              <li>
+                <a href="#belief">About</a>
+              </li>
+              <li>
+                <a href="mailto:hello@northlanterngroup.com">Contact</a>
+              </li>
+            </ul>
+          </div>
+          <div className="nlg-footer-col">
+            <h4>Writing</h4>
+            <ul>
+              <li>
+                <span className="nlg-placeholder">Index pending first essay</span>
+              </li>
             </ul>
           </div>
         </div>
-
-        {/* Footer Bottom */}
-        <div className="border-t border-white/5 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-neutral-400 text-xs md:text-sm">&copy; 2026 North Lantern Group Inc. All rights reserved.</p>
-          <div className="flex gap-6 md:gap-8">
-            <a href="/privacy" className="text-neutral-400 text-xs md:text-sm hover:text-cyan-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded">Privacy Policy</a>
-          </div>
+        <div className="nlg-legal">
+          <span>
+            North Lantern Group Inc. · Ontario, Canada · <a href="/privacy">Privacy</a> · © 2026
+          </span>
+          <span>hello@northlanterngroup.com</span>
         </div>
       </div>
     </footer>
   );
 }
-
-export default memo(Footer);

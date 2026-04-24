@@ -1,18 +1,32 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-montserrat",
-  display: "optional",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.northlanterngroup.com"),
-  title: "North Lantern Group | Atlassian Consulting and Operational Reporting",
-  description: "Canada-based firm for Atlassian systems, BI and operational reporting, automation, and integration. Founder-led scoping and senior delivery for teams that need the work to stick.",
+  title: "North Lantern Group | Results that endure.",
+  description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
   alternates: {
     canonical: "https://www.northlanterngroup.com/",
   },
@@ -20,8 +34,8 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://www.northlanterngroup.com/",
     siteName: "North Lantern Group",
-    title: "North Lantern Group | Atlassian Consulting and Operational Reporting",
-    description: "Canada-based firm for Atlassian systems, BI and operational reporting, automation, and integration.",
+    title: "North Lantern Group | Results that endure.",
+    description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
     images: [
       {
         url: "/logo.png",
@@ -34,8 +48,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "North Lantern Group | Atlassian Consulting and Operational Reporting",
-    description: "Canada-based firm for Atlassian systems, BI and operational reporting, automation, and integration.",
+    title: "North Lantern Group | Results that endure.",
+    description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
     images: ["/logo.png"],
   },
   robots: {
@@ -63,8 +77,8 @@ const professionalServiceJsonLd = {
   name: "North Lantern Group Inc.",
   url: "https://www.northlanterngroup.com/",
   logo: "https://www.northlanterngroup.com/logo.png",
-  description: "Canada-based firm for Atlassian systems, BI and operational reporting, automation, and integration.",
-  email: "leads@northlanterngroup.com",
+  description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
+  email: "hello@northlanterngroup.com",
   address: {
     "@type": "PostalAddress",
     streetAddress: "400 Slater St.",
@@ -79,7 +93,7 @@ const professionalServiceJsonLd = {
   ],
   contactPoint: {
     "@type": "ContactPoint",
-    email: "leads@northlanterngroup.com",
+    email: "hello@northlanterngroup.com",
     contactType: "sales",
     availableLanguage: ["English"],
   },
@@ -94,8 +108,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={montserrat.variable}>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${montserrat.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+      <body className="font-sans antialiased bg-nlg-bg-0 text-nlg-fg-1">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

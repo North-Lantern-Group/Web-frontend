@@ -4,11 +4,11 @@ import { useEffect } from "react";
 
 export default function ScrollReveal() {
   useEffect(() => {
-    const reveals = document.querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger");
+    const targets = document.querySelectorAll(".nlg-reveal");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reducedMotion) {
-      reveals.forEach((el) => el.classList.add("active"));
+      targets.forEach((el) => el.classList.add("nlg-in"));
       return;
     }
 
@@ -16,19 +16,17 @@ export default function ScrollReveal() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("active");
+            entry.target.classList.add("nlg-in");
             observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
     );
 
-    reveals.forEach((el) => observer.observe(el));
+    targets.forEach((el) => observer.observe(el));
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   return null;

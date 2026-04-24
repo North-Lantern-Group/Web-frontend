@@ -1,0 +1,2392 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>North Lantern Group: Results that endure.</title>
+<meta name="description" content="Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.">
+<link rel="icon" href="assets/logo-icon.svg">
+<style>/* North Lantern Group : Colors & Type Tokens
+   Source of truth for all brand surfaces. */
+
+/* ───────────────────────── Fonts ───────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ─── Brand Primary (enforced hex) ─── */
+  --nlg-astronaut:   #00455F;  /* primary solid, dark UI, primary buttons */
+  --nlg-chathams:    #115C89;  /* secondary navy, supporting surfaces    */
+  --nlg-cerulean:    #00AEEF;  /* interactive accent, links, focus rings */
+  --nlg-cyan:        #00EBF4;  /* gradient highlight, emphasis only      */
+  --nlg-link-water:  #EAF3F9;  /* cool alternating light surface tint    */
+  --nlg-navy:        #0A1628;  /* text on light, deepest bg              */
+  --nlg-white:       #FFFFFF;
+
+  /* ─── Neutral scale (use these, not arbitrary grays) ─── */
+  --nlg-n-50:  #F8FAFB;
+  --nlg-n-100: #EEF2F5;
+  --nlg-n-200: #D4DCE2;
+  --nlg-n-500: #8B98A2;
+  --nlg-n-700: #526470;
+  --nlg-n-900: #2A3540;
+
+  /* ─── Signature 3-stop brand gradient ─── */
+  --nlg-gradient-icon:  linear-gradient(135deg, #00EBF4 0%, #00AEEF 45%, #00455F 100%);
+  --nlg-gradient-hero:  linear-gradient(180deg, #00EBF4 0%, #00AEEF 45%, #00455F 100%);
+
+  /* ─── Semantic surface tokens (light) ─── */
+  --surface-1:   #FFFFFF;
+  --surface-2:   #F8FAFB;
+  --surface-3:   #EEF2F5;
+  --surface-alt: #EAF3F9;     /* Link Water : alt section wash */
+  --surface-inverse: #0A1628; /* deepest */
+
+  --fg-1: #0A1628;            /* body text on light */
+  --fg-2: #2A3540;            /* secondary text     */
+  --fg-3: #526470;            /* tertiary / labels  */
+  --fg-4: #8B98A2;            /* muted / captions   */
+  --fg-inverse: #FFFFFF;
+
+  --border-1: rgba(10, 22, 40, 0.08);
+  --border-2: rgba(10, 22, 40, 0.12);
+  --border-strong: rgba(10, 22, 40, 0.24);
+
+  --accent:         #00AEEF;   /* Cerulean: links, focus */
+  --accent-hover:   #0096D6;
+  --accent-press:   #007FBA;
+  --brand-solid:    #00455F;   /* Astronaut Blue primary CTA */
+  --brand-hover:    #083A54;
+  --brand-press:    #04293D;
+
+  --success: #2E8B65;
+  --warning: #C97A17;
+  --danger:  #C0392B;
+  --info:    #00AEEF;
+
+  /* ─── Spacing (8 base) ─── */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+  --sp-9: 96px; --sp-10: 128px;
+
+  /* ─── Radii ─── */
+  --r-input:  4px;
+  --r-btn:    6px;
+  --r-card:   8px;
+  --r-lg:     12px;
+  --r-pill:   999px;
+
+  /* ─── Shadows (restrained) ─── */
+  --shadow-0: none;
+  --shadow-1: 0 1px 2px rgba(10,22,40,0.04), 0 0 0 1px rgba(10,22,40,0.04);
+  --shadow-2: 0 2px 6px rgba(10,22,40,0.06), 0 0 0 1px rgba(10,22,40,0.05);
+  --shadow-3: 0 10px 30px -12px rgba(10,22,40,0.18), 0 0 0 1px rgba(10,22,40,0.06);
+  --shadow-glow: 0 0 0 3px rgba(0,174,239,0.28);
+
+  /* ─── Type families ─── */
+  --font-display: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:    'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body-sm: 'Inter', 'Montserrat', -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* ─── Type scale (rem, base 16px) ─── */
+  --fs-12: 0.75rem;  --fs-14: 0.875rem; --fs-16: 1rem;    --fs-18: 1.125rem;
+  --fs-20: 1.25rem;  --fs-24: 1.5rem;   --fs-30: 1.875rem;--fs-36: 2.25rem;
+  --fs-48: 3rem;     --fs-60: 3.75rem;  --fs-72: 4.5rem;  --fs-96: 6rem;
+
+  /* ─── Line heights ─── */
+  --lh-display: 1.05;
+  --lh-head:    1.15;
+  --lh-tight:   1.25;
+  --lh-body:    1.5;
+  --lh-long:    1.7;
+
+  /* ─── Motion ─── */
+  --ease-in:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.7, 0, 0.84, 0);
+  --dur-micro: 150ms;
+  --dur-page:  300ms;
+  --dur-hero:  600ms;
+}
+
+/* Dark mode (first class on every surface) */
+[data-theme="dark"], .theme-dark {
+  --surface-1:   #0A1628;
+  --surface-2:   #0E2135;
+  --surface-3:   #12293F;
+  --surface-alt: #0B1B2C;
+  --surface-inverse: #FFFFFF;
+
+  --fg-1: #F8FAFB;
+  --fg-2: #D4DCE2;
+  --fg-3: #8B98A2;
+  --fg-4: #526470;
+  --fg-inverse: #0A1628;
+
+  --border-1: rgba(255,255,255,0.06);
+  --border-2: rgba(255,255,255,0.10);
+  --border-strong: rgba(255,255,255,0.22);
+
+  --brand-solid: #00AEEF;   /* brand flips to cerulean on dark CTAs */
+  --brand-hover: #00C4FF;
+  --brand-press: #0096D6;
+}
+
+/* ───────────────── Semantic utility classes ───────────────── */
+
+html, body { font-family: var(--font-body); color: var(--fg-1); background: var(--surface-1); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+.display, h1.display {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2.75rem, 5.2vw, var(--fs-96));
+  line-height: var(--lh-display); letter-spacing: -0.02em; color: var(--fg-1);
+}
+h1, .h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-48); line-height: var(--lh-head); letter-spacing: -0.02em; }
+h2, .h2 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-36); line-height: var(--lh-head); letter-spacing: -0.015em; }
+h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-24); line-height: var(--lh-tight); letter-spacing: -0.01em; }
+h4, .h4 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-20); line-height: var(--lh-tight); }
+
+p, .body  { font-size: var(--fs-16); line-height: var(--lh-body); color: var(--fg-2); }
+.body-lg  { font-size: var(--fs-18); line-height: var(--lh-body); color: var(--fg-2); }
+.body-sm  { font-size: var(--fs-14); line-height: var(--lh-body); color: var(--fg-3); font-family: var(--font-body-sm); }
+.prose    { font-size: var(--fs-18); line-height: var(--lh-long); color: var(--fg-2); max-width: 68ch; text-wrap: pretty; }
+
+.eyebrow  { font-family: var(--font-body-sm); font-size: var(--fs-12); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-3); }
+.mono     { font-family: var(--font-mono); font-size: var(--fs-14); }
+
+code, .code {
+  font-family: var(--font-mono); font-size: 0.92em;
+  background: var(--surface-3); padding: 0.15em 0.4em; border-radius: 4px;
+  color: var(--fg-1); border: 1px solid var(--border-1);
+}
+
+a { color: var(--accent); text-decoration: none; text-underline-offset: 3px; transition: color var(--dur-micro) var(--ease-in); }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+::selection { background: rgba(0,174,239,0.28); color: var(--fg-1); }
+
+/* Focus ring : Astronaut Blue 2px offset per brief */
+:focus-visible {
+  outline: 2px solid var(--brand-solid);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+</style><style>/* ============================================================
+   NLG Homepage v2: dark-first
+   Operations console hero.
+   ============================================================ */
+
+/* Dark-first: apply dark tokens at root, no toggle */
+:root {
+  color-scheme: dark;
+
+  --bg-0: #05101F;       /* page base, a touch deeper than navy */
+  --bg-1: #0A1628;       /* primary surface */
+  --bg-2: #0E2135;       /* card surface */
+  --bg-3: #12293F;       /* elevated surface */
+  --bg-tile: #0C1E32;    /* console tile */
+
+  --fg-1: #F1F6F9;
+  --fg-2: #C7D2DB;
+  --fg-3: #8B98A2;
+  --fg-4: #5A6A78;
+  --fg-5: #3E4B58;
+
+  --line-1: rgba(255,255,255,0.06);
+  --line-2: rgba(255,255,255,0.10);
+  --line-3: rgba(255,255,255,0.18);
+
+  --brand: #00AEEF;       /* cerulean */
+  --brand-hi: #00EBF4;    /* cyan highlight */
+  --brand-deep: #00455F;  /* astronaut */
+  --brand-hover: #00C4FF;
+
+  --success: #2E8B65;
+  --warning: #C97A17;
+  --danger:  #C0392B;
+
+  --font-display: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:    'Montserrat', 'Inter', -apple-system, sans-serif;
+  --font-body-sm: 'Inter', 'Montserrat', -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  --container: 1280px;
+  --gutter: 32px;
+
+  --ease-fb: cubic-bezier(0.25, 1, 0.5, 1);       /* UI feedback */
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);   /* entrances */
+  --dur-fb: 180ms;
+  --dur-reveal: 500ms;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg-0); color: var(--fg-1); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { overflow-x: hidden; }
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+
+/* ───────── focus ───────── */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ───────── layout ───────── */
+.wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+@media (max-width: 720px) { :root { --gutter: 20px; } }
+
+/* ───────── type ───────── */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.eyebrow-muted {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--fg-4);
+}
+.mono { font-family: var(--font-mono); }
+
+/* ───────── nav ───────── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(5, 16, 31, 0.72);
+  border-bottom: 1px solid var(--line-1);
+}
+.nav-in {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; letter-spacing: -0.01em; color: var(--fg-1); }
+.nav-brand img { width: 22px; height: 22px; }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+  font-size: 14px; color: var(--fg-2);
+  transition: color var(--dur-fb) var(--ease-fb);
+}
+.nav-links a:hover { color: var(--fg-1); }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+@media (max-width: 900px) { .nav-links { display: none; } }
+
+/* ───────── buttons ───────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 0 18px; min-height: 44px;
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  letter-spacing: -0.005em;
+  border-radius: 6px;
+  transition: background var(--dur-fb) var(--ease-fb),
+              border-color var(--dur-fb) var(--ease-fb),
+              color var(--dur-fb) var(--ease-fb),
+              transform var(--dur-fb) var(--ease-fb);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--brand); color: #04141E; }
+.btn-primary:hover { background: var(--brand-hover); }
+.btn-secondary {
+  background: transparent;
+  color: var(--fg-1);
+  border: 1.5px solid var(--line-3);
+}
+.btn-secondary:hover { border-color: var(--fg-2); background: rgba(255,255,255,0.03); }
+.btn-lg { min-height: 48px; padding: 0 22px; font-size: 15px; }
+.btn-ghost { color: var(--fg-2); padding: 0 12px; }
+.btn-ghost:hover { color: var(--fg-1); }
+
+.text-link {
+  color: var(--brand);
+  font-size: 14px; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: color var(--dur-fb) var(--ease-fb), gap var(--dur-fb) var(--ease-fb);
+}
+.text-link:hover { color: var(--brand-hover); gap: 10px; }
+
+/* ───────── hero ───────── */
+.hero {
+  position: relative;
+  padding: 72px 0 48px;
+  overflow: hidden;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 64px;
+  align-items: center;
+}
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+  .hero { padding: 56px 0 32px; }
+}
+.hero-left { max-width: 620px; }
+.hero-eyebrow {
+  display: inline-block;
+  margin-bottom: 28px;
+}
+.h1-switcher { margin-bottom: 24px; }
+.h1-variant {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--fg-1);
+  margin: 0;
+  text-wrap: balance;
+}
+.h1-variant .accent { color: var(--brand-hi); }
+.h1-variant .muted  { color: var(--fg-3); }
+
+.hero-sub {
+  font-size: 18px; line-height: 1.55;
+  color: var(--fg-2);
+  max-width: 56ch;
+  margin: 0 0 32px;
+  text-wrap: pretty;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* H1 variant picker (secondary UI) */
+.variant-picker {
+  display: inline-flex; gap: 4px;
+  margin-top: 32px;
+  padding: 4px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--line-1);
+  border-radius: 8px;
+}
+.variant-picker-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-4);
+  padding: 8px 10px 8px 12px;
+  display: inline-flex; align-items: center;
+}
+.variant-btn {
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-3);
+  border-radius: 5px;
+  transition: all var(--dur-fb) var(--ease-fb);
+}
+.variant-btn:hover { color: var(--fg-1); }
+.variant-btn.active { background: rgba(0,174,239,0.14); color: var(--brand-hi); }
+
+/* ───────── Operations Console (hero right): elite build ───────── */
+.console {
+  position: relative;
+  max-width: 560px;
+  margin-left: auto;
+  padding: 18px 18px 18px;
+  background:
+    radial-gradient(120% 80% at 80% 0%, rgba(0,174,239,0.10), transparent 55%),
+    linear-gradient(180deg, #0B1A2C 0%, #081528 100%);
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  box-shadow:
+    0 30px 80px -40px rgba(0,174,239,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+}
+/* Subtle grid pattern */
+.console::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(0,174,239,0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,174,239,0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(120% 100% at 50% 0%, #000 40%, transparent 85%);
+  pointer-events: none;
+  z-index: 0;
+}
+.console > * { position: relative; z-index: 1; }
+
+/* Corner brackets */
+.corner {
+  position: absolute; width: 14px; height: 14px;
+  border: 1px solid rgba(0,174,239,0.45);
+  pointer-events: none; z-index: 2;
+}
+.corner.tl { top: 6px;    left: 6px;    border-right: 0; border-bottom: 0; border-top-left-radius: 3px; }
+.corner.tr { top: 6px;    right: 6px;   border-left: 0;  border-bottom: 0; border-top-right-radius: 3px; }
+.corner.bl { bottom: 6px; left: 6px;    border-right: 0; border-top: 0;    border-bottom-left-radius: 3px; }
+.corner.br { bottom: 6px; right: 6px;   border-left: 0;  border-top: 0;    border-bottom-right-radius: 3px; }
+
+/* Scan sweep */
+.scan-sweep {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,235,244,0.35) 50%, transparent 100%);
+  pointer-events: none; z-index: 3;
+  animation: scan-y 9s linear infinite;
+  opacity: 0.7;
+}
+@keyframes scan-y {
+  0%   { transform: translateY(0);     opacity: 0; }
+  5%   { opacity: 0.7; }
+  95%  { opacity: 0.7; }
+  100% { transform: translateY(calc(var(--console-h, 560px))); opacity: 0; }
+}
+
+/* ── Chrome ── */
+.console-chrome {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line-1);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--fg-4);
+}
+.cc-left, .cc-right { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.cc-right { justify-content: flex-end; }
+.cc-center { text-align: center; }
+.cc-title { color: var(--fg-1); font-weight: 600; letter-spacing: 0.12em; }
+.cc-sep   { color: var(--fg-5); }
+.cc-sub   { color: var(--fg-4); font-size: 9.5px; }
+.cc-clock { color: var(--fg-1); font-size: 11px; letter-spacing: 0.08em; }
+.cc-clock .n { display: inline-block; min-width: 1.2ch; text-align: center; }
+.cc-zone  { color: var(--fg-5); font-size: 9px; margin-left: 6px; letter-spacing: 0.15em; }
+.cc-health { display: inline-block; width: 42px; }
+.cc-status { display: inline-flex; align-items: center; gap: 4px; color: var(--success); font-size: 9.5px; letter-spacing: 0.12em; }
+.cc-status .ok-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--success); box-shadow: 0 0 6px rgba(79,191,148,0.6); }
+.hb { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(46,139,101,0.18); animation: pulse-dot 2.4s ease-in-out infinite; }
+.hb.off { animation: none; opacity: 0.4; }
+
+.console-pause {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--fg-3);
+  padding: 3px 8px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  letter-spacing: 0.08em;
+  transition: color var(--dur-fb) var(--ease-fb), border-color var(--dur-fb) var(--ease-fb), background var(--dur-fb) var(--ease-fb);
+  background: transparent;
+  min-height: 22px;
+}
+.console-pause:hover { color: var(--fg-1); border-color: var(--brand); background: rgba(0,174,239,0.06); }
+
+/* ── Grid ── */
+.console-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: minmax(230px, auto);
+  gap: 10px;
+}
+.tile {
+  background:
+    linear-gradient(180deg, rgba(12,30,50,0.92) 0%, rgba(10,26,44,0.96) 100%);
+  border: 1px solid var(--line-1);
+  border-radius: 8px;
+  padding: 12px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.025);
+}
+.tile::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,174,239,0.08), transparent 30%);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ── Tile head/foot ── */
+.tile-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-4);
+  flex: 0 0 auto;
+}
+.tile-head .tag {
+  padding: 2px 6px;
+  background: rgba(0,174,239,0.10);
+  color: var(--brand);
+  border-radius: 3px;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(0,174,239,0.22);
+}
+.tile-head .tag-ok { background: rgba(79,191,148,0.10); color: var(--success); border-color: rgba(79,191,148,0.22); }
+.tile-head .tag-ok.running { background: rgba(0,174,239,0.12); color: var(--brand-hi); border-color: rgba(0,174,239,0.3); }
+.tile-head .tag-live { display: inline-flex; align-items: center; gap: 4px; background: rgba(0,235,244,0.08); color: var(--brand-hi); border-color: rgba(0,235,244,0.25); }
+.live-dot-sm { width: 4px; height: 4px; border-radius: 50%; background: var(--brand-hi); box-shadow: 0 0 4px var(--brand-hi); animation: pulse-dot 1.6s ease-in-out infinite; }
+
+.tile-body {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.tile-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line-1);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-5);
+  flex: 0 0 auto;
+}
+.tile-foot .foot-v { color: var(--fg-1); font-variant-numeric: tabular-nums; }
+
+.n { font-variant-numeric: tabular-nums; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ── Tile 1: Atlassian — service list ── */
+.tile-atlassian .tile-body { justify-content: stretch; }
+.svc-list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 2px;
+}
+.svc-row {
+  display: grid;
+  grid-template-columns: 6px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 2px;
+  border-radius: 3px;
+  transition: background 300ms var(--ease-reveal), transform 300ms var(--ease-reveal);
+}
+.svc-row.syncing {
+  background: linear-gradient(90deg, rgba(0,174,239,0.08), transparent 80%);
+  animation: flash-row 1.6s var(--ease-reveal);
+}
+.svc-dot { width: 6px; height: 6px; border-radius: 50%; }
+.svc-dot.ok    { background: var(--success); box-shadow: 0 0 6px rgba(79,191,148,0.5); }
+.svc-dot.amber { background: var(--warning); box-shadow: 0 0 6px rgba(212,176,74,0.5); }
+.svc-name   { color: var(--fg-1); font-size: 10.5px; letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.svc-spark  { width: 60px; height: 12px; display: inline-block; }
+.svc-metric { color: var(--fg-3); font-size: 9.5px; text-align: right; min-width: 48px; }
+.svc-last   { color: var(--fg-5); font-size: 9.5px; min-width: 30px; text-align: right; }
+.svc-row.amber .svc-name { color: var(--fg-2); }
+
+@keyframes flash-row {
+  0%   { background: rgba(0,174,239,0.18); }
+  100% { background: transparent; }
+}
+
+/* ── Tile 2: Pipeline ── */
+.run-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 10.5px; }
+.run-head .run-id  { color: var(--fg-1); }
+.run-head .run-eta { color: var(--fg-4); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.pipe {
+  position: relative;
+  height: 6px;
+  background: var(--line-1);
+  border-radius: 2px;
+  overflow: visible;
+  margin: 2px 0 6px;
+}
+.pipe-fill {
+  position: absolute; left: 0; top: 0; height: 100%;
+  background: linear-gradient(90deg, var(--brand) 0%, var(--brand-hi) 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(0,235,244,0.45);
+  transition: width 200ms linear;
+}
+.pipe-fill::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+  animation: shimmer 1.6s linear infinite;
+}
+.pipe-ticks { position: absolute; inset: 0; }
+.pipe-tick  { position: absolute; top: -2px; width: 1px; height: 10px; background: rgba(255,255,255,0.12); }
+.pipe-head {
+  position: absolute; top: -3px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: radial-gradient(circle, var(--brand-hi) 0%, rgba(0,235,244,0) 70%);
+  transform: translateX(-6px);
+  pointer-events: none;
+  transition: left 200ms linear;
+}
+
+.stage-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: 10.5px; }
+.stage {
+  display: grid; grid-template-columns: 14px 1fr auto; align-items: center; gap: 8px;
+  padding: 2px 0;
+  color: var(--fg-4);
+  transition: color 200ms var(--ease-reveal);
+}
+.stage-glyph { width: 14px; text-align: center; font-size: 10px; }
+.stage-name  { letter-spacing: 0.04em; }
+.stage-time  { font-size: 9.5px; color: var(--fg-5); }
+.stage.done     { color: var(--success); }
+.stage.done .stage-glyph { color: var(--success); }
+.stage.done .stage-time  { color: var(--fg-4); }
+.stage.active   { color: var(--fg-1); }
+.stage.active .stage-glyph { color: var(--brand-hi); animation: blink 1.1s ease-in-out infinite; }
+.stage.active .stage-time  { color: var(--brand-hi); }
+.stage.pending .stage-glyph { color: var(--fg-5); }
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.run-foot {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line-1);
+}
+.rf-item { display: flex; flex-direction: column; gap: 1px; }
+.rf-k { font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-5); }
+.rf-v { font-size: 12px; color: var(--fg-1); font-variant-numeric: tabular-nums; }
+.rf-unit { color: var(--fg-4); font-size: 9.5px; margin-left: 2px; }
+
+/* ── Tile 3: Agent Log ── */
+.log {
+  display: flex; flex-direction: column; gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px; line-height: 1.45;
+  color: var(--fg-3);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.log-line {
+  display: grid;
+  grid-template-columns: 54px 14px 1fr auto;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 500ms var(--ease-reveal), transform 500ms var(--ease-reveal), color 500ms;
+  min-width: 0;
+}
+.log-line.in { opacity: 1; transform: translateY(0); }
+.log-line.latest { color: var(--fg-1); }
+.log-line.warn   { color: var(--warning); }
+.log-line.latest.warn { color: var(--warning); }
+
+.lg-time  { color: var(--fg-5); font-size: 9.5px; }
+.lg-glyph {
+  width: 14px; height: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--brand-hi);
+  border: 1px solid rgba(0,235,244,0.25);
+  border-radius: 3px;
+  background: rgba(0,235,244,0.05);
+}
+.log-line.warn .lg-glyph { color: var(--warning); border-color: rgba(212,176,74,0.3); background: rgba(212,176,74,0.06); }
+.lg-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lg-conf { display: inline-flex; align-items: center; gap: 5px; }
+.conf-bar {
+  width: 28px; height: 3px;
+  background: var(--line-1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.conf-fill {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, var(--brand) 0%, var(--brand-hi) 100%);
+  transition: width 300ms var(--ease-reveal);
+}
+.log-line.warn .conf-fill { background: linear-gradient(90deg, var(--warning), #E8C560); }
+.conf-n  { font-size: 9px; color: var(--fg-4); letter-spacing: 0.02em; }
+
+/* ── Tile 4: Reporting ── */
+.rep-stat { display: flex; flex-direction: column; gap: 2px; }
+.rep-stat-top { display: flex; align-items: baseline; justify-content: space-between; }
+.rep-name { font-size: 10px; color: var(--fg-4); letter-spacing: 0.08em; }
+.rep-delta { display: inline-flex; align-items: baseline; gap: 2px; color: var(--success); font-size: 10.5px; font-variant-numeric: tabular-nums; }
+.rep-arrow { font-size: 8px; }
+.rep-val { color: var(--fg-1); font-size: 15px; letter-spacing: -0.01em; font-weight: 500; line-height: 1.2; }
+.rep-lbl { color: var(--fg-5); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; }
+.rep-chart { margin: 2px -4px 0; flex: 1 1 auto; min-height: 0; display: flex; align-items: flex-end; overflow: hidden; }
+.rep-foot { margin-top: 4px; }
+
+.tile-reporting .tile-body { gap: 4px; }
+.tile-reporting .rep-stat { gap: 1px; }
+.tile-reporting .rep-lbl { display: none; }
+@keyframes tile-flash {
+  0%   { box-shadow: inset 0 0 0 1px rgba(0,235,244,0.5), 0 0 24px rgba(0,235,244,0.2); }
+  100% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.025); }
+}
+
+.tile-reporting.refreshing { animation: tile-flash 900ms ease-out; }
+
+/* Sparkline component wrapper */
+.sl { display: block; width: 100%; }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .console { min-height: auto; }
+}
+@media (max-width: 720px) {
+  .console { padding: 14px; }
+  .cc-center { display: none; }
+  .console-chrome { grid-template-columns: 1fr auto; }
+  .svc-row { grid-template-columns: 6px 1fr auto auto; }
+}
+
+/* ── Keyframes ── */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(46,139,101,0.18); }
+  50%      { box-shadow: 0 0 0 6px rgba(46,139,101,0.04); }
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Legacy sparkline (kept for any reference) */
+.spark { width: 100%; height: 38px; }
+.spark path.line { stroke: var(--brand-hi); stroke-width: 1.5; fill: none; }
+.spark path.fill { fill: url(#sparkGrad); opacity: 0.35; }
+
+/* Hide legacy globe (if referenced) */
+.ambient-globe { display: none !important; }
+
+/* Reduced motion: disable all console motion */
+@media (prefers-reduced-motion: reduce) {
+  .scan-sweep,
+  .pipe-fill::after,
+  .hb,
+  .live-dot-sm,
+  .stage.active .stage-glyph {
+    animation: none !important;
+  }
+  .svc-row.syncing { animation: none !important; }
+  .tile-reporting.refreshing { animation: none !important; }
+}
+
+/* Fallback hero */
+.hero.fallback .console-wrap { display: none; }
+.hero.fallback {
+  background:
+    radial-gradient(60% 50% at 50% 20%, rgba(0,174,239,0.16), transparent 70%),
+    radial-gradient(40% 40% at 80% 60%, rgba(0,235,244,0.08), transparent 70%);
+}
+.hero.fallback::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  pointer-events: none;
+}
+.hero.fallback .hero-grid { grid-template-columns: minmax(0, 1fr); }
+.hero.fallback .hero-left { max-width: 780px; margin: 0 auto; text-align: left; padding: 40px 0; }
+
+/* ───────── trust strip ───────── */
+.trust-strip {
+  border-top: 1px solid var(--line-1);
+  border-bottom: 1px solid var(--line-1);
+  padding: 20px 0;
+  background: rgba(255,255,255,0.015);
+}
+.trust-strip-in {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+}
+.trust-item {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  padding: 4px 28px;
+  border-right: 1px solid var(--line-2);
+}
+.trust-item:last-child { border-right: 0; }
+@media (max-width: 720px) {
+  .trust-item { border-right: 0; padding: 6px 12px; font-size: 10.5px; }
+}
+
+/* ───────── generic section ───────── */
+.section { padding: 112px 0; position: relative; }
+@media (max-width: 720px) { .section { padding: 72px 0; } }
+
+.section-head {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+.section-head .eyebrow-col { padding-top: 10px; }
+.section-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.4vw, 44px);
+  line-height: 1.1; letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--fg-1);
+  margin: 0 0 12px;
+  text-wrap: balance;
+}
+.section-head .sub {
+  font-size: 17px; color: var(--fg-3); line-height: 1.5;
+  max-width: 58ch; margin: 0;
+}
+@media (max-width: 720px) {
+  .section-head { grid-template-columns: 1fr; gap: 12px; margin-bottom: 32px; }
+  .section-head .eyebrow-col { padding: 0; }
+}
+
+/* ───────── belief (v3) ───────── */
+.belief {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 48px;
+}
+.belief-section { padding: 120px 0; }
+.belief .eyebrow-col { padding-top: 14px; }
+.belief-body { max-width: 58ch; }
+.belief-headline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(36px, 4.4vw, 56px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+  margin: 0 0 32px;
+  display: flex; flex-direction: column;
+  text-wrap: balance;
+}
+.belief-headline > span { display: block; }
+.belief-p {
+  font-size: 20px;
+  line-height: 1.5;
+  color: #FFFFFF;
+  margin: 0 0 24px;
+  max-width: 58ch;
+}
+.belief-p.muted { color: rgba(255,255,255,0.6); }
+.belief-p:last-child { margin-bottom: 0; }
+.belief-close { margin-top: 8px; }
+@media (max-width: 720px) {
+  .belief-section { padding: 80px 0; }
+  .belief { grid-template-columns: 1fr; gap: 16px; }
+  .belief .eyebrow-col { padding: 0; }
+  .belief-headline { font-size: 32px; margin-bottom: 24px; }
+  .belief-p { font-size: 18px; margin-bottom: 20px; }
+}
+
+/* ───────── practices ───────── */
+.practices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 960px) { .practices { grid-template-columns: 1fr; } }
+
+.practice-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line-1);
+  border-radius: 10px;
+  padding: 28px;
+  transition:
+    border-color var(--dur-fb) var(--ease-fb),
+    background var(--dur-fb) var(--ease-fb),
+    transform var(--dur-reveal) var(--ease-reveal);
+  display: flex; flex-direction: column;
+  min-height: 440px;
+}
+.practice-card:hover {
+  border-color: var(--line-3);
+  background: var(--bg-3);
+}
+.practice-icon {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  background: rgba(0,174,239,0.08);
+  border: 1px solid rgba(0,174,239,0.22);
+  display: grid; place-items: center;
+  color: var(--brand-hi);
+  margin-bottom: 28px;
+}
+.practice-title {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--fg-1);
+  margin: 0 0 10px;
+}
+.practice-desc {
+  font-size: 15px; line-height: 1.55;
+  color: var(--fg-2);
+  margin: 0 0 24px;
+}
+.practice-caps {
+  list-style: none;
+  padding: 0; margin: 0 0 auto;
+  display: flex; flex-direction: column; gap: 10px;
+  border-top: 1px solid var(--line-1);
+  padding-top: 20px;
+}
+.practice-caps li {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px; line-height: 1.5;
+  color: var(--fg-2);
+  align-items: baseline;
+}
+.practice-caps li .k {
+  color: var(--fg-4);
+  font-weight: 500;
+}
+.practice-caps li .marker { color: var(--fg-4); }
+.practice-link {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--brand);
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: gap var(--dur-fb) var(--ease-fb);
+}
+.practice-card:hover .practice-link { gap: 10px; }
+
+/* Adoption principle call-out */
+.adoption-note {
+  margin-top: 32px;
+  padding: 20px 24px;
+  border: 1px dashed var(--line-2);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: center;
+}
+.adoption-note .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand);
+  padding: 6px 10px;
+  border: 1px solid rgba(0,174,239,0.3);
+  border-radius: 4px;
+}
+.adoption-note .txt {
+  font-size: 14px; color: var(--fg-2); line-height: 1.55; margin: 0;
+}
+
+/* ───────── how we work ───────── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--line-1);
+  border: 1px solid var(--line-1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+@media (max-width: 960px) { .steps { grid-template-columns: 1fr; } }
+.step {
+  background: var(--bg-1);
+  padding: 32px 28px;
+  display: flex; flex-direction: column; gap: 16px;
+  min-height: 200px;
+}
+.step-num {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--brand);
+  letter-spacing: 0.08em;
+}
+.step-title {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--fg-1);
+  margin: 0;
+}
+.step-desc {
+  font-size: 14.5px; line-height: 1.55;
+  color: var(--fg-2);
+  margin: 0;
+}
+.steps-link {
+  margin-top: 32px;
+  text-align: left;
+}
+
+/* ───────── writing ───────── */
+.essays {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 960px) { .essays { grid-template-columns: 1fr; } }
+.essay-card {
+  background: transparent;
+  border: 1px solid var(--line-1);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex; flex-direction: column;
+  min-height: 220px;
+  transition: border-color var(--dur-fb) var(--ease-fb), background var(--dur-fb) var(--ease-fb);
+}
+.essay-card:hover { border-color: var(--line-3); background: rgba(255,255,255,0.02); }
+.essay-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--fg-4);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.essay-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--fg-5); }
+.essay-title {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--fg-1);
+  line-height: 1.25;
+  margin: 0 0 12px;
+  text-wrap: balance;
+}
+.essay-teaser {
+  font-size: 14px; color: var(--fg-3); line-height: 1.55;
+  margin: 0;
+}
+.essay-footer {
+  margin-top: auto;
+  padding-top: 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-5);
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ───────── closing CTA ───────── */
+.cta {
+  padding: 140px 0;
+  border-top: 1px solid var(--line-1);
+  position: relative;
+  overflow: hidden;
+}
+.cta::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(45% 70% at 15% 50%, rgba(0,174,239,0.10), transparent 70%);
+  pointer-events: none;
+}
+.cta-text {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.8vw, 52px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  color: var(--fg-1);
+  max-width: 22ch;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+.cta-text .dim { color: var(--fg-3); font-weight: 500; font-size: 0.78em; letter-spacing: -0.015em; display: block; margin-top: 16px; max-width: 30ch; }
+.cta-actions { position: relative; display: flex; align-items: center; gap: 20px; margin-top: 40px; flex-wrap: wrap; }
+
+/* ───────── footer ───────── */
+.footer {
+  border-top: 1px solid var(--line-1);
+  padding: 64px 0 40px;
+  background: #040C18;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+.footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-weight: 600; }
+.footer-brand img { width: 22px; height: 22px; }
+.footer-tag { font-size: 13px; color: var(--fg-3); line-height: 1.5; max-width: 32ch; }
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-4);
+  margin: 0 0 16px;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.footer-col a {
+  font-size: 14px;
+  color: var(--fg-2);
+  transition: color var(--dur-fb) var(--ease-fb);
+}
+.footer-col a:hover { color: var(--fg-1); }
+.footer-col .placeholder {
+  font-size: 13px;
+  color: var(--fg-4);
+  font-style: italic;
+}
+.legal {
+  padding-top: 24px;
+  border-top: 1px solid var(--line-1);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--fg-4);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.legal a { color: var(--fg-4); }
+.legal a:hover { color: var(--fg-2); }
+
+/* ───────── reveal on scroll ───────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms var(--ease-reveal), transform 500ms var(--ease-reveal);
+}
+.reveal.in { opacity: 1; transform: none; }
+
+/* ───────── tweaks panel ───────── */
+.tweaks {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 50;
+  width: 300px;
+  background: rgba(10, 22, 40, 0.92);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--line-3);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,0.6);
+  display: none;
+}
+.tweaks.open { display: block; }
+.tweaks h5 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-4);
+  margin: 0 0 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.tweaks h5 .close { color: var(--fg-3); cursor: pointer; }
+.tweaks .grp { margin-bottom: 16px; }
+.tweaks .grp:last-child { margin-bottom: 0; }
+.tweaks .lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin-bottom: 8px;
+}
+.tweaks .seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 3px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--line-1);
+  border-radius: 6px;
+}
+.tweaks .seg button {
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-2);
+  border-radius: 4px;
+}
+.tweaks .seg button.active { background: rgba(0,174,239,0.14); color: var(--brand-hi); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+
+/* ───────── v2 refinement additions ───────── */
+.practice-card { position: relative; }
+.practice-num {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.3);
+  pointer-events: none;
+}
+.practice-constraint {
+  margin: 16px 0 0;
+  border-left: 1px solid rgba(0,174,239,0.25);
+  padding: 0 0 0 12px;
+  border-top: 1px dashed var(--line-1);
+  padding-top: 14px;
+}
+.constraint-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(0,174,239,0.7);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.practice-constraint .practice-refusal {
+  margin: 0;
+  border-top: 0;
+  padding-top: 0;
+}
+.practice-refusal {
+  margin: 16px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--fg-4);
+}
+.delivery-commitment {
+  margin: 28px 0 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+  line-height: 1.5;
+}
+.buyer-qualifier {
+  padding: 120px 0 40px;
+  text-align: center;
+  position: relative;
+}
+.bq-text {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--fg-3);
+  max-width: 62ch;
+  margin: 0 auto;
+  text-wrap: pretty;
+}
+@media (max-width: 720px) {
+  .buyer-qualifier { padding: 72px 0 24px; }
+  .bq-text { font-size: 13.5px; }
+}
+</style>
+</head><body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel">
+/* Lucide-style line icons, 1.5px stroke. Monochrome. */
+const Icon = ({ children, size = 24, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.5"
+       strokeLinecap="round" strokeLinejoin="round"
+       className={className}>
+    {children}
+  </svg>
+);
+
+/* Atlassian Platform: stacked layers */
+const IconLayers = (p) => (
+  <Icon {...p}>
+    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+    <path d="M2 12l10 5 10-5"/>
+    <path d="M2 17l10 5 10-5"/>
+  </Icon>
+);
+
+/* BI and Analytics: chart */
+const IconChart = (p) => (
+  <Icon {...p}>
+    <path d="M3 3v18h18"/>
+    <path d="M7 14l4-4 4 3 5-6"/>
+    <circle cx="7" cy="14" r="1"/>
+    <circle cx="11" cy="10" r="1"/>
+    <circle cx="15" cy="13" r="1"/>
+    <circle cx="20" cy="7" r="1"/>
+  </Icon>
+);
+
+/* Automation and Integration: workflow nodes */
+const IconWorkflow = (p) => (
+  <Icon {...p}>
+    <rect x="3" y="3" width="6" height="6" rx="1"/>
+    <rect x="15" y="3" width="6" height="6" rx="1"/>
+    <rect x="9" y="15" width="6" height="6" rx="1"/>
+    <path d="M6 9v3a2 2 0 0 0 2 2h4"/>
+    <path d="M18 9v3a2 2 0 0 1-2 2h-4"/>
+  </Icon>
+);
+
+const IconArrow = (p) => (
+  <Icon {...p}>
+    <path d="M5 12h14"/>
+    <path d="M13 6l6 6-6 6"/>
+  </Icon>
+);
+
+const IconPause = (p) => (
+  <Icon {...p}>
+    <rect x="6" y="5" width="4" height="14" rx="1"/>
+    <rect x="14" y="5" width="4" height="14" rx="1"/>
+  </Icon>
+);
+
+const IconPlay = (p) => (
+  <Icon {...p}>
+    <path d="M7 5l12 7-12 7V5z"/>
+  </Icon>
+);
+
+const IconCheck = (p) => (
+  <Icon {...p}>
+    <path d="M20 6L9 17l-5-5"/>
+  </Icon>
+);
+
+const IconMail = (p) => (
+  <Icon {...p}>
+    <rect x="2" y="4" width="20" height="16" rx="2"/>
+    <path d="M2 7l10 6 10-6"/>
+  </Icon>
+);
+
+const IconCalendar = (p) => (
+  <Icon {...p}>
+    <rect x="3" y="4" width="18" height="18" rx="2"/>
+    <path d="M16 2v4M8 2v4M3 10h18"/>
+  </Icon>
+);
+
+Object.assign(window, {
+  Icon, IconLayers, IconChart, IconWorkflow,
+  IconArrow, IconPause, IconPlay, IconCheck,
+  IconMail, IconCalendar
+});
+
+/* Operations Console: hero right panel
+   An elite-feeling live systems view. Four tiles, choreographed by a
+   central clock that emits "sync" events every few seconds. Each event
+   cascades across tiles with small flash / glow moments to telegraph
+   cause and effect.
+
+   Design notes:
+   - All numbers are tabular-nums so rows never reflow.
+   - Reduced-motion: continuous animation is suspended; the tiles show
+     a last-known snapshot.
+   - Pause button halts all clocks (user control).
+*/
+
+const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+function usePrefersReducedMotion() {
+  const [reduce, setReduce] = useState(false);
+  useEffect(() => {
+    const m = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handler = () => setReduce(m.matches);
+    handler();
+    m.addEventListener?.('change', handler);
+    return () => m.removeEventListener?.('change', handler);
+  }, []);
+  return reduce;
+}
+
+/* Central tick: emits an incrementing integer every `ms` ms unless paused.
+   Tiles subscribe to it to stay in-phase without their own timers. */
+function useHeartbeat(ms, paused) {
+  const [t, setT] = useState(0);
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setT(x => x + 1), ms);
+    return () => clearInterval(id);
+  }, [ms, paused]);
+  return t;
+}
+
+/* Seeded PRNG so sparklines render identically on every mount. */
+function seededRand(seed) {
+  let s = seed | 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) | 0;
+    return ((s >>> 0) % 10000) / 10000;
+  };
+}
+
+/* Small sparkline component. Accepts a data array (0..1) and animates
+   in new points by shifting existing points left. */
+function Sparkline({ data, stroke = "var(--brand-hi)", fill = true, height = 28 }) {
+  const w = 100, h = height;
+  const step = data.length > 1 ? w / (data.length - 1) : w;
+  const pts = data.map((v, i) => `${(i * step).toFixed(2)},${(h - 2 - v * (h - 4)).toFixed(2)}`);
+  const line = `M${pts.join(" L")}`;
+  const area = `${line} L${w},${h} L0,${h} Z`;
+  const gid = useMemo(() => `sg-${Math.random().toString(36).slice(2, 8)}`, []);
+  return (
+    <svg className="sl" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" aria-hidden="true" style={{ height }}>
+      <defs>
+        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={stroke} stopOpacity="0.35"/>
+          <stop offset="100%" stopColor={stroke} stopOpacity="0"/>
+        </linearGradient>
+      </defs>
+      {fill && <path d={area} fill={`url(#${gid})`}/>}
+      <path d={line} fill="none" stroke={stroke} strokeWidth="1.25" strokeLinejoin="round" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+/* ─────────────────────── Console chrome ─────────────────────── */
+function ConsoleChrome({ paused, setPaused, tick }) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, [paused]);
+
+  const hh = String(now.getUTCHours()).padStart(2, '0');
+  const mm = String(now.getUTCMinutes()).padStart(2, '0');
+  const ss = String(now.getUTCSeconds()).padStart(2, '0');
+
+  // Health sparkline jitters subtly with each heartbeat
+  const health = useMemo(() => {
+    const rand = seededRand(1337 + tick);
+    return Array.from({ length: 18 }, (_, i) => 0.55 + Math.sin((tick + i) * 0.7) * 0.15 + rand() * 0.12);
+  }, [tick]);
+
+  return (
+    <div className="console-chrome">
+      <div className="cc-left">
+        <span className={`hb ${paused ? 'off' : ''}`} aria-hidden="true"></span>
+        <span className="cc-title">NLG.OPS</span>
+        <span className="cc-sep">//</span>
+        <span className="cc-sub">production · read-only demo</span>
+      </div>
+      <div className="cc-center" aria-live="off">
+        <span className="cc-clock">
+          <span className="n">{hh}</span>:<span className="n">{mm}</span>:<span className="n">{ss}</span>
+        </span>
+        <span className="cc-zone">UTC</span>
+      </div>
+      <div className="cc-right">
+        <span className="cc-health" aria-label="System health">
+          <Sparkline data={health} stroke="var(--success)" fill={false} height={14}/>
+        </span>
+        <span className="cc-status"><span className="ok-dot" aria-hidden="true"></span>nominal</span>
+        <button className="console-pause"
+                onClick={() => setPaused(p => !p)}
+                aria-label={paused ? "Resume log updates" : "Pause log updates"}>
+          {paused ? "resume" : "pause"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────── Tile 1: Atlassian Sync ─────────────────────── */
+const ATL_SERVICES = [
+  { id: "JIRA-04",    label: "jira.04",     tag: "Jira Cloud",     baseLast: 12, baseMetric: "142/s",  trend: [0.4, 0.45, 0.5, 0.42, 0.55, 0.6, 0.58, 0.65, 0.62, 0.7, 0.68, 0.75] },
+  { id: "JSM-QUEUE",  label: "jsm.queue",   tag: "Service Mgmt",   baseLast: 3,  baseMetric: "4 open", trend: [0.3, 0.35, 0.4, 0.38, 0.42, 0.45, 0.43, 0.48, 0.46, 0.5, 0.48, 0.52] },
+  { id: "CONF-OPS",   label: "conf.ops",    tag: "Confluence",     baseLast: 27, baseMetric: "clean",  trend: [0.5, 0.55, 0.52, 0.58, 0.6, 0.55, 0.62, 0.6, 0.65, 0.63, 0.68, 0.7] },
+  { id: "AUTO-17",    label: "auto.17",     tag: "Automation",     baseLast: 8,  baseMetric: "1 retry", trend: [0.3, 0.28, 0.35, 0.32, 0.4, 0.5, 0.7, 0.4, 0.35, 0.4, 0.38, 0.42], amber: true },
+];
+
+function TileAtlassian({ tick, pulse }) {
+  // `pulse` is the index of the service currently syncing this heartbeat
+  const eventsPerMin = 128 + (tick * 3) % 40;
+  return (
+    <div className="tile tile-atlassian" role="group" aria-label="Atlassian sync status">
+      <div className="tile-head">
+        <span>atlassian · sync</span>
+        <span className="tag">4 services</span>
+      </div>
+      <div className="tile-body">
+        <ul className="svc-list">
+          {ATL_SERVICES.map((s, i) => {
+            const last = (s.baseLast + tick * 2) % 60;
+            const isSyncing = pulse === i;
+            return (
+              <li key={s.id} className={`svc-row ${isSyncing ? 'syncing' : ''} ${s.amber ? 'amber' : ''}`}>
+                <span className={`svc-dot ${s.amber ? 'amber' : 'ok'}`} aria-hidden="true"></span>
+                <span className="svc-name">{s.label}</span>
+                <span className="svc-metric">{s.baseMetric}</span>
+                <span className="svc-last"><span className="n">{String(last).padStart(2,'0')}</span>s</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <div className="tile-foot">
+        <span className="foot-k">events/min</span>
+        <span className="foot-v n">{eventsPerMin}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────── Tile 2: Pipeline ─────────────────────── */
+const STAGES = ["extract", "transform", "load"];
+
+function TilePipeline({ paused, tick }) {
+  // 10-second run cycle; stages light at 0%, 33%, 66%, done at 100%, then new run
+  const runLen = 10000;
+  const [progress, setProgress] = useState(0);
+  const [runId, setRunId] = useState(4832);
+  const [throughput, setThroughput] = useState(18432);
+  const startedAt = useRef(performance.now());
+
+  useEffect(() => {
+    if (paused) return;
+    let raf;
+    const tickRAF = (t) => {
+      const elapsed = (t - startedAt.current) % runLen;
+      const p = elapsed / runLen;
+      setProgress(p);
+      if (p < 0.01 && performance.now() - startedAt.current > 500) {
+        setRunId(r => r + 1);
+        setThroughput(Math.floor(15000 + Math.random() * 7000));
+        startedAt.current = t;
+      }
+      setThroughput(th => th + Math.floor(3 + Math.random() * 8));
+      raf = requestAnimationFrame(tickRAF);
+    };
+    raf = requestAnimationFrame(tickRAF);
+    return () => cancelAnimationFrame(raf);
+  }, [paused]);
+
+  const activeStage = progress < 0.33 ? 0 : progress < 0.66 ? 1 : 2;
+  const etaMs = Math.max(0, runLen - progress * runLen);
+  const etaSec = Math.ceil(etaMs / 1000);
+  const rate = 1100 + ((tick * 31) % 400);
+
+  return (
+    <div className="tile tile-pipeline" role="group" aria-label="ETL pipeline run status">
+      <div className="tile-head">
+        <span>etl_revenue</span>
+        <span className={`tag tag-ok ${progress < 0.99 ? 'running' : ''}`}>
+          {progress < 0.98 ? "running" : "ok"}
+        </span>
+      </div>
+      <div className="tile-body">
+        <div className="run-head">
+          <span className="run-id">run <span className="n">#{runId}</span></span>
+          <span className="run-eta">eta <span className="n">{String(Math.floor(etaSec / 60)).padStart(2,'0')}:{String(etaSec % 60).padStart(2,'0')}</span></span>
+        </div>
+
+        <div className="pipe" aria-hidden="true">
+          <div className="pipe-fill" style={{ width: `${(progress * 100).toFixed(2)}%` }}></div>
+          <div className="pipe-ticks">
+            {STAGES.map((_, i) => <span key={i} className="pipe-tick" style={{ left: `${(i / STAGES.length) * 100}%` }}></span>)}
+          </div>
+          <div className="pipe-head" style={{ left: `${(progress * 100).toFixed(2)}%` }}></div>
+        </div>
+
+        <ul className="stage-list">
+          {STAGES.map((s, i) => (
+            <li key={s} className={`stage ${i < activeStage ? 'done' : i === activeStage ? 'active' : 'pending'}`}>
+              <span className="stage-glyph" aria-hidden="true">
+                {i < activeStage ? "✓" : i === activeStage ? "▸" : "·"}
+              </span>
+              <span className="stage-name">{s}</span>
+              <span className="stage-time n">
+                {i < activeStage ? "done" : i === activeStage ? `${Math.floor((progress - i/3) * 300)}s` : "—"}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="run-foot">
+          <div className="rf-item">
+            <span className="rf-k">rows</span>
+            <span className="rf-v n">{throughput.toLocaleString()}</span>
+          </div>
+          <div className="rf-item">
+            <span className="rf-k">rate</span>
+            <span className="rf-v n">{rate.toLocaleString()}<span className="rf-unit">/s</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────── Tile 3: Agent Log ─────────────────────── */
+const LOG_LINES = [
+  { type: "link",     t: "linked epic to initiative roadmap",          c: 0.93 },
+  { type: "classify", t: "classifying inbound ticket #8842",           c: 0.91 },
+  { type: "route",    t: "routed to JSM queue SUPPORT-T2",             c: 0.88 },
+  { type: "summarize",t: "summarized confluence page 2F8E21",          c: 0.94 },
+  { type: "draft",    t: "drafted reply on ticket #8841",              c: 0.82 },
+  { type: "flag",     t: "flagged duplicate project: PLAT vs PLATO",   c: 0.77, warn: true },
+  { type: "merge",    t: "proposed merge of duplicate automation",     c: 0.85 },
+  { type: "classify", t: "classified ticket #8843 as incident·p2",     c: 0.89 },
+  { type: "route",    t: "routed to JSM queue INFRA-T1",               c: 0.87 },
+  { type: "draft",    t: "drafted changelog for CONF-9821",            c: 0.81 },
+  { type: "review",   t: "held for human review: policy change",       c: 0.62, warn: true },
+];
+
+const TYPE_GLYPH = {
+  link:      "⇌",
+  classify:  "◆",
+  route:     "⇢",
+  summarize: "≡",
+  draft:     "✎",
+  flag:      "!",
+  merge:     "⊕",
+  review:    "?",
+};
+
+function TileAgent({ paused }) {
+  const [lines, setLines] = useState(() => LOG_LINES.slice(0, 6).map((l, i) => ({ ...l, ts: Date.now() - (6 - i) * 3200, id: i })));
+  const cursor = useRef(6);
+  const actionCount = useRef(1247);
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      const next = LOG_LINES[cursor.current % LOG_LINES.length];
+      cursor.current += 1;
+      actionCount.current += 1;
+      setLines(prev => [...prev.slice(-5), { ...next, ts: Date.now(), id: cursor.current }]);
+    }, 3200);
+    return () => clearInterval(id);
+  }, [paused]);
+
+  return (
+    <div className="tile tile-agent" role="group" aria-label="AI agent activity log">
+      <div className="tile-head">
+        <span>agent · log</span>
+        <span className="tag tag-live"><span className="live-dot-sm" aria-hidden="true"></span>live</span>
+      </div>
+      <div className="log" role="log" aria-live="polite" aria-atomic="false">
+        {lines.map((l, i) => {
+          const isLatest = i === lines.length - 1;
+          const d = new Date(l.ts);
+          const stamp = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+          return (
+            <div key={l.id} className={`log-line in ${isLatest ? 'latest' : ''} ${l.warn ? 'warn' : ''}`}>
+              <span className="lg-time n">{stamp}</span>
+              <span className={`lg-glyph ${l.type}`} aria-hidden="true">{TYPE_GLYPH[l.type]}</span>
+              <span className="lg-text">{l.t}</span>
+              <span className="lg-conf">
+                <span className="conf-bar">
+                  <span className="conf-fill" style={{ width: `${Math.round(l.c * 100)}%` }}></span>
+                </span>
+                <span className="conf-n n">{l.c.toFixed(2)}</span>
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="tile-foot">
+        <span className="foot-k">actions today</span>
+        <span className="foot-v n">{actionCount.current.toLocaleString()}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────── Tile 4: Reporting ─────────────────────── */
+function TileReporting({ paused, tick }) {
+  // Rolling sparkline: 24 points; push new, shift old
+  const [data, setData] = useState(() => {
+    const r = seededRand(42);
+    return Array.from({ length: 24 }, (_, i) => 0.3 + r() * 0.5 + Math.sin(i * 0.35) * 0.1);
+  });
+  const [delta, setDelta] = useState(12.4);
+  const [refreshAge, setRefreshAge] = useState(31);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const pointId = setInterval(() => {
+      setData(prev => {
+        const r = seededRand(prev.length * 100 + Date.now());
+        const last = prev[prev.length - 1];
+        const drift = (r() - 0.45) * 0.12;
+        const next = Math.max(0.15, Math.min(0.95, last + drift));
+        return [...prev.slice(1), next];
+      });
+    }, 1500);
+
+    const ageId = setInterval(() => {
+      setRefreshAge(a => {
+        if (a >= 60) {
+          setRefreshing(true);
+          setTimeout(() => {
+            setRefreshing(false);
+            setDelta(d => +(10 + Math.random() * 6).toFixed(1));
+          }, 900);
+          return 0;
+        }
+        return a + 1;
+      });
+    }, 1000);
+
+    return () => { clearInterval(pointId); clearInterval(ageId); };
+  }, [paused]);
+
+  const last = data[data.length - 1];
+  const next = 60 - refreshAge;
+
+  return (
+    <div className={`tile tile-reporting ${refreshing ? 'refreshing' : ''}`} role="group" aria-label="Reporting workspace refresh">
+      <div className="tile-head">
+        <span>reporting · refresh</span>
+        <span className="tag">Power BI</span>
+      </div>
+      <div className="tile-body">
+        <div className="rep-stat">
+          <div className="rep-stat-top">
+            <span className="rep-name">ops_weekly</span>
+            <span className="rep-delta">
+              <span className="rep-arrow" aria-hidden="true">▲</span>
+              <span className="n">{delta.toFixed(1)}</span>%
+            </span>
+          </div>
+        </div>
+
+        <div className="rep-chart">
+          <Sparkline data={data} stroke="var(--brand-hi)" fill={true} height={34}/>
+        </div>
+
+        <div className="run-foot rep-foot">
+          <div className="rf-item">
+            <span className="rf-k">refreshed</span>
+            <span className="rf-v n">{refreshing ? "now" : `${String(Math.floor(refreshAge / 60)).padStart(2,'0')}:${String(refreshAge % 60).padStart(2,'0')}`}</span>
+          </div>
+          <div className="rf-item">
+            <span className="rf-k">next</span>
+            <span className="rf-v n">{String(Math.floor(next / 60)).padStart(2,'0')}:{String(Math.max(0, next) % 60).padStart(2,'0')}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────── Composed Console ─────────────────────── */
+function OperationsConsole() {
+  const reduce = usePrefersReducedMotion();
+  const [paused, setPaused] = useState(false);
+  const effectivePaused = paused || reduce;
+  const tick = useHeartbeat(2500, effectivePaused);
+
+  // Cross-tile choreography: which service is "syncing" this heartbeat
+  const pulseIdx = tick % ATL_SERVICES.length;
+
+  return (
+    <div className="console-wrap">
+      <div className="console" aria-label="Live operations console, illustrative demo">
+        {/* Corner brackets */}
+        <span className="corner tl" aria-hidden="true"></span>
+        <span className="corner tr" aria-hidden="true"></span>
+        <span className="corner bl" aria-hidden="true"></span>
+        <span className="corner br" aria-hidden="true"></span>
+
+        {/* Scan sweep */}
+        <span className="scan-sweep" aria-hidden="true"></span>
+
+        <ConsoleChrome paused={effectivePaused} setPaused={setPaused} tick={tick}/>
+
+        <div className="console-grid">
+          <TileAtlassian tick={tick} pulse={pulseIdx}/>
+          <TilePipeline paused={effectivePaused} tick={tick}/>
+          <TileAgent paused={effectivePaused}/>
+          <TileReporting paused={effectivePaused} tick={tick}/>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { OperationsConsole, usePrefersReducedMotion });
+
+/* Page sections */
+
+const { useState: useStateS, useEffect: useEffectS } = React;
+
+/* ───────── Nav ───────── */
+function Nav() {
+  return (
+    <header className="nav">
+      <div className="wrap nav-in">
+        <a className="nav-brand" href="#top">
+          <img src="assets/logo-icon.svg" alt=""/>
+          <span>North Lantern</span>
+        </a>
+        <nav className="nav-links" aria-label="Primary">
+          <a href="#practices">Practices</a>
+          <a href="#how-we-work">How we work</a>
+          <a href="#writing">Writing</a>
+          <a href="#about">About</a>
+        </nav>
+        <div className="nav-right">
+          <a className="btn btn-ghost" href="mailto:hello@northlanterngroup.com">Contact</a>
+          <a className="btn btn-primary" href="#cta">Book a call</a>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ───────── Hero ───────── */
+const H1_VARIANTS = [
+  {
+    key: "A",
+    lines: (
+      <>The <span className="accent">senior team</span> your Atlassian, BI, and automation work deserves.</>
+    ),
+  },
+  {
+    key: "B",
+    lines: (
+      <>We inherit the Atlassian instances <span className="accent">that went wrong.</span></>
+    ),
+  },
+  {
+    key: "C",
+    lines: (
+      <>Senior operators. No pass-downs. <span className="accent">Work that sticks.</span></>
+    ),
+  },
+];
+
+function Hero({ heroMode, variantKey, onVariantChange }) {
+  const variant = H1_VARIANTS.find(v => v.key === variantKey) || H1_VARIANTS[0];
+  return (
+    <section className={`hero ${heroMode === 'fallback' ? 'fallback' : ''}`} id="top">
+      <div className="wrap hero-grid">
+        <div className="hero-left">
+          <div className="hero-eyebrow eyebrow">Results that endure.</div>
+
+          <div className="h1-switcher">
+            <h1 className="h1-variant">{variant.lines}</h1>
+          </div>
+
+          <p className="hero-sub">
+            Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.
+          </p>
+
+          <div className="hero-actions">
+            <a className="btn btn-primary btn-lg" href="#cta">
+              Book a call <IconArrow size={16}/>
+            </a>
+            <a className="btn btn-secondary btn-lg" href="#how-we-work">How we work</a>
+          </div>
+
+          <div className="variant-picker" role="group" aria-label="Headline variant">
+            <span className="variant-picker-label">H1 variant</span>
+            {H1_VARIANTS.map(v => (
+              <button key={v.key}
+                      className={`variant-btn ${variantKey === v.key ? 'active' : ''}`}
+                      onClick={() => onVariantChange(v.key)}
+                      aria-pressed={variantKey === v.key}>
+                {v.key}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {heroMode === 'console' && <OperationsConsole/>}
+      </div>
+    </section>
+  );
+}
+
+/* ───────── Trust strip ───────── */
+function TrustStrip() {
+  return (
+    <section className="trust-strip" aria-label="How we operate">
+      <div className="wrap trust-strip-in">
+        <div className="trust-item">Senior operators. No junior handoffs.</div>
+        <div className="trust-item">Same team, scope to handover.</div>
+        <div className="trust-item">Work that sticks after handover.</div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── Section 3: Belief ───────── */
+function Belief() {
+  return (
+    <section className="section belief-section" id="belief">
+      <div className="wrap belief reveal">
+        <div className="eyebrow-col">
+          <div className="eyebrow-muted">01 / Belief</div>
+        </div>
+        <div className="belief-body">
+          <h2 className="belief-headline">
+            <span>Your systems aren't broken.</span>
+            <span>They're being tolerated.</span>
+          </h2>
+          <p className="belief-p muted">
+            The dashboard loads. The workflow runs. The automation fires. And still, someone exports the data to Excel, pings the one person who knows the real process, and sends leadership a number with a caveat.
+          </p>
+          <p className="belief-p">
+            North Lantern Group rebuilds the operational systems your team has learned to work around: Atlassian, reporting, workflows, automations, integrations, and the governance underneath. We stay until your team can run them without us.
+          </p>
+          <p className="belief-p belief-close">
+            No decks masquerading as delivery. No staff augmentation dressed up as expertise. No juniors shipping what seniors sold.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── Section 4: Practices ───────── */
+const PRACTICES = [
+  {
+    id: "atlassian",
+    icon: "layers",
+    title: "Atlassian Platform",
+    desc: "Your Jira instance grew without rules. Your admin left. Your automation fires twice. We rebuild the structure and hand back a system your team actually understands.",
+    caps: [
+      { k: "Rebuild", v: "Project, schema, and permission refactor" },
+      { k: "Install", v: "JSM queue, SLAs, escalation rules" },
+      { k: "Document", v: "Admin runbook for the next owner" },
+    ],
+    refusal: "Won't do: junior-staffed admin work, migrations we cannot make stick, or 'Atlassian health checks' that turn out to be sales calls.",
+  },
+  {
+    id: "bi",
+    icon: "chart",
+    title: "BI and Analytics",
+    desc: "Dashboards nobody opens. Reports leadership does not trust. We wire the reporting layer onto systems that agree with each other, and we define the metrics before we render the chart.",
+    caps: [
+      { k: "Model", v: "Revenue and delivery semantic layer" },
+      { k: "Ship", v: "Power BI or Tableau executive view" },
+      { k: "Govern", v: "Metric definitions and refresh owner" },
+    ],
+    refusal: "Won't do: dashboards nobody opens twice, or metric definitions without a named owner.",
+  },
+  {
+    id: "automation",
+    icon: "workflow",
+    title: "Automation and Integration",
+    desc: "The layer between your systems is where manual work hides. We build cross-system integrations, AI-assisted internal tooling, and operational automations that land with defined ownership from day one.",
+    caps: [
+      { k: "Wire", v: "Cross-system integrations and webhooks" },
+      { k: "Build", v: "Operational internal tooling" },
+      { k: "Assign", v: "Named owner for every automation rule" },
+    ],
+    refusal: "Won't do: automation rules without named owners, or AI tooling that fires without an audit log.",
+  },
+];
+
+function PracticeIcon({ kind }) {
+  if (kind === "layers")   return <IconLayers   size={28}/>;
+  if (kind === "chart")    return <IconChart    size={28}/>;
+  if (kind === "workflow") return <IconWorkflow size={28}/>;
+  return null;
+}
+
+function Practices() {
+  return (
+    <section className="section" id="practices" style={{paddingTop: 40}}>
+      <div className="wrap">
+        <div className="section-head reveal">
+          <div className="eyebrow-col"><div className="eyebrow-muted">02 / Practices</div></div>
+          <div>
+            <h2>Three practices. One delivery standard.</h2>
+            <p className="sub">
+              We take on instances, warehouses, and integration layers that have drifted.
+              Every engagement ships with adoption: the people who own the work after we leave.
+            </p>
+          </div>
+        </div>
+
+        <div className="practices">
+          {PRACTICES.map((p, i) => {
+            const nums = ["NO. 01", "NO. 02", "NO. 03"];
+            const ctas = ["How we rebuild Atlassian", "How we wire reporting", "How we ship automations"];
+            return (
+              <article className="practice-card reveal" key={p.id} style={{transitionDelay: `${i * 60}ms`}}>
+                <span className="practice-num" aria-hidden="true">{nums[i]}</span>
+                <div className="practice-icon"><PracticeIcon kind={p.icon}/></div>
+                <h3 className="practice-title">{p.title}</h3>
+                <p className="practice-desc">{p.desc}</p>
+                <ul className="practice-caps">
+                  {p.caps.map((c, idx) => (
+                    <li key={idx}>
+                      <span className="k">{c.k}</span>
+                      <span>{c.v}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="practice-constraint">
+                  <div className="constraint-eyebrow">CONSTRAINT</div>
+                  <p className="practice-refusal">{p.refusal}</p>
+                </div>
+                <a className="practice-link" href={`#${p.id}`}>
+                  {ctas[i]} <IconArrow size={14}/>
+                </a>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="adoption-note reveal">
+          <div className="tag">Adoption</div>
+          <p className="txt">
+            Adoption is a delivery principle, not a fourth practice.
+            Every engagement lists the named owner on the client side, the runbook they will inherit, and the operating review they will run without us by the closing week.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── Section 5: How we work ───────── */
+const STEPS = [
+  {
+    n: "01 / Scope",
+    title: "Scope",
+    desc: "You get a written plan naming the broken system, the owner after handover, and the weeks it will take. The senior operators who will do the build sit on the scoping call.",
+  },
+  {
+    n: "02 / Build",
+    title: "Build",
+    desc: "You get working systems shipped in-instance, not slideware. The people who scoped it do the configuration, the data modelling, and the automation wiring themselves.",
+  },
+  {
+    n: "03 / Hand back",
+    title: "Hand back",
+    desc: "You get a runbook, a named internal owner, and a review cadence your team runs without us. The same operators stay through the first two review cycles before leaving.",
+  },
+];
+
+function HowWeWork() {
+  return (
+    <section className="section" id="how-we-work" style={{paddingTop: 40}}>
+      <div className="wrap">
+        <div className="section-head reveal">
+          <div className="eyebrow-col"><div className="eyebrow-muted">03 / Process</div></div>
+          <div>
+            <h2>How engagements run.</h2>
+            <p className="sub">
+              Three phases. One team across all three. No delivery pod you meet in week two.
+            </p>
+          </div>
+        </div>
+
+        <div className="steps">
+          {STEPS.map((s, i) => (
+            <div className="step reveal" key={s.title} style={{transitionDelay: `${i * 80}ms`}}>
+              <div className="step-num">{s.n}</div>
+              <h3 className="step-title">{s.title}</h3>
+              <p className="step-desc">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <p className="delivery-commitment">The operators who scope the work are the ones who build and hand it back. No split pitch-and-delivery team.</p>
+
+        <div className="steps-link">
+          <a className="text-link" href="/how-we-work">
+            Full engagement model <IconArrow size={14}/>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── Section 6: Writing ───────── */
+const ESSAYS = [
+  {
+    date: "Coming 2026",
+    read: "6 min read",
+    title: "The Jira instance that ate itself, and the two rules that stopped it.",
+    teaser: "Project sprawl is rarely a Jira problem. It is a permission problem nobody was paid to own.",
+  },
+  {
+    date: "Coming 2026",
+    read: "8 min read",
+    title: "One metric layer, four source systems, zero arguments in the executive review.",
+    teaser: "Dashboards do not fail on the rendering step. They fail three systems upstream, where definitions drift.",
+  },
+  {
+    date: "Coming 2026",
+    read: "5 min read",
+    title: "Why the automation you shipped last year is the manual work of this year.",
+    teaser: "Automations without named owners are technical debt with a cron schedule.",
+  },
+];
+
+function Writing() {
+  return (
+    <section className="section" id="writing" style={{paddingTop: 40}}>
+      <div className="wrap">
+        <div className="section-head reveal">
+          <div className="eyebrow-col"><div className="eyebrow-muted">04 / Writing</div></div>
+          <div>
+            <h2>Writing.</h2>
+            <p className="sub">Long pieces on what we see, one argument each.</p>
+          </div>
+        </div>
+
+        <div className="essays">
+          {ESSAYS.map((e, i) => (
+            <article className="essay-card reveal" key={i} style={{transitionDelay: `${i * 80}ms`}}>
+              <div className="essay-meta">
+                <span>{e.date}</span>
+                <span className="dot" aria-hidden="true"></span>
+                <span>{e.read}</span>
+              </div>
+              <h3 className="essay-title">{e.title}</h3>
+              <p className="essay-teaser">{e.teaser}</p>
+              <div className="essay-footer">
+                <span>ESSAY.0{i + 1}</span>
+                <span aria-hidden="true">· draft</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── Buyer qualifier ( above CTA ) ───────── */
+function BuyerQualifier() {
+  return (
+    <section className="buyer-qualifier" aria-label="Who we work with">
+      <div className="wrap">
+        <p className="bq-text">
+          We work with teams of 5 to 500 that actually want the thing fixed. If you're looking for transformation theatre, 27 discovery workshops, a partner who says “synergies” like it's a medical condition, and slide decks heavier than your laptop, we're probably not the right fit for you. But we hear Deloitte is accepting meetings. Tell them we said hi. We'll be here when you want the system built.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── Section 7: CTA ───────── */
+function ClosingCTA() {
+  return (
+    <section className="cta" id="cta">
+      <div className="wrap">
+        <h2 className="cta-text reveal">
+          Tell us what is broken, or what you are planning.
+          <span className="dim">We reply within one business day, with a short note. Not a 47-slide proposal deck.</span>
+        </h2>
+        <div className="cta-actions reveal">
+          <a className="btn btn-primary btn-lg" href="#contact" data-note="cal.com-pending">
+            <IconCalendar size={16}/> Book a call
+          </a>
+          <a className="text-link" href="mailto:hello@northlanterngroup.com">
+            <IconMail size={14}/> Email us directly <IconArrow size={14}/>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── Section 8: Footer ───────── */
+function Footer() {
+  return (
+    <footer className="footer">
+      <div className="wrap">
+        <div className="footer-grid">
+          <div>
+            <div className="footer-brand">
+              <img src="assets/logo-icon.svg" alt=""/>
+              <span>North Lantern Group</span>
+            </div>
+            <p className="footer-tag">
+              Senior-led consulting. Atlassian, BI, and automation work that sticks after we leave.
+            </p>
+          </div>
+          <div className="footer-col">
+            <h4>Practices</h4>
+            <ul>
+              <li><a href="#atlassian">Atlassian Platform</a></li>
+              <li><a href="#bi">BI and Analytics</a></li>
+              <li><a href="#automation">Automation and Integration</a></li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h4>Firm</h4>
+            <ul>
+              <li><a href="#how-we-work">How we work</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="mailto:hello@northlanterngroup.com">Contact</a></li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h4>Writing</h4>
+            <ul>
+              <li><span className="placeholder">Index pending first essay</span></li>
+            </ul>
+          </div>
+        </div>
+        <div className="legal">
+          <span>North Lantern Group Inc. · Ontario, Canada · <a href="#privacy">Privacy</a> · © 2026</span>
+          <span>hello@northlanterngroup.com</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+Object.assign(window, { Nav, Hero, TrustStrip, Belief, Practices, HowWeWork, Writing, BuyerQualifier, ClosingCTA, Footer });
+
+/* Tweaks panel: hero mode + H1 default */
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "heroMode": "console",
+  "h1Default": "A"
+}/*EDITMODE-END*/;
+
+function TweaksPanel({ state, setState }) {
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      if (!e.data || typeof e.data !== 'object') return;
+      if (e.data.type === '__activate_edit_mode')   setOpen(true);
+      if (e.data.type === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const persist = (edits) => {
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+  };
+
+  const set = (k, v) => {
+    setState(s => ({ ...s, [k]: v }));
+    persist({ [k]: v });
+  };
+
+  return (
+    <div className={`tweaks ${open ? 'open' : ''}`} role="dialog" aria-label="Tweaks">
+      <h5>
+        <span>Tweaks</span>
+        <span className="close" onClick={() => setOpen(false)} role="button" aria-label="Close tweaks">×</span>
+      </h5>
+      <div className="grp">
+        <div className="lbl">Hero mode</div>
+        <div className="seg">
+          <button className={state.heroMode === 'console' ? 'active' : ''}
+                  onClick={() => set('heroMode', 'console')}>console</button>
+          <button className={state.heroMode === 'fallback' ? 'active' : ''}
+                  onClick={() => set('heroMode', 'fallback')}>fallback</button>
+        </div>
+      </div>
+      <div className="grp">
+        <div className="lbl">H1 default variant</div>
+        <div className="seg" style={{gridTemplateColumns:'1fr 1fr 1fr'}}>
+          <button className={state.h1Default === 'A' ? 'active' : ''}
+                  onClick={() => set('h1Default', 'A')}>A</button>
+          <button className={state.h1Default === 'B' ? 'active' : ''}
+                  onClick={() => set('h1Default', 'B')}>B</button>
+          <button className={state.h1Default === 'C' ? 'active' : ''}
+                  onClick={() => set('h1Default', 'C')}>C</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { TweaksPanel, TWEAK_DEFAULTS });
+
+/* App root */
+
+function App() {
+  const [heroMode, setHeroMode] = React.useState(window.TWEAK_DEFAULTS.heroMode);
+  const [h1Default, setH1Default] = React.useState(window.TWEAK_DEFAULTS.h1Default);
+  const [variantKey, setVariantKey] = React.useState(window.TWEAK_DEFAULTS.h1Default);
+
+  // When default variant changes via tweaks, reset the active variant.
+  React.useEffect(() => { setVariantKey(h1Default); }, [h1Default]);
+
+  // Scroll reveal
+  React.useEffect(() => {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    return () => io.disconnect();
+  }, [heroMode]);
+
+  const tweakState = { heroMode, h1Default };
+  const setTweakState = (updater) => {
+    const next = typeof updater === 'function' ? updater(tweakState) : updater;
+    if ('heroMode' in next) setHeroMode(next.heroMode);
+    if ('h1Default' in next) setH1Default(next.h1Default);
+  };
+
+  return (
+    <>
+      <Nav/>
+      <main>
+        <Hero heroMode={heroMode}
+              variantKey={variantKey}
+              onVariantChange={setVariantKey}/>
+        <TrustStrip/>
+        <Belief/>
+        <Practices/>
+        <HowWeWork/>
+        <Writing/>
+        <BuyerQualifier/>
+        <ClosingCTA/>
+      </main>
+      <Footer/>
+      <TweaksPanel state={tweakState} setState={setTweakState}/>
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App/>);
+
+</script></body></html>
