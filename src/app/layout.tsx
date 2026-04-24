@@ -36,21 +36,12 @@ export const metadata: Metadata = {
     siteName: "North Lantern Group",
     title: "North Lantern Group | Results that endure.",
     description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
-    images: [
-      {
-        url: "/logo.png",
-        width: 1536,
-        height: 1024,
-        alt: "North Lantern Group",
-      },
-    ],
     locale: "en_CA",
   },
   twitter: {
     card: "summary_large_image",
     title: "North Lantern Group | Results that endure.",
     description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
-    images: ["/logo.png"],
   },
   robots: {
     index: true,
