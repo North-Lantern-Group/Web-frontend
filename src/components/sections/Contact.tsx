@@ -38,6 +38,7 @@ const ContactForm = memo(function ContactForm() {
   const [selectedCountry, setSelectedCountry] = useState<Country>("CA");
   const [emailError, setEmailError] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(false);
   const [honeypot, setHoneypot] = useState("");
 
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -107,6 +108,7 @@ const ContactForm = memo(function ContactForm() {
           phone: phoneValue,
           captchaToken,
           website: honeypot,
+          marketingConsent,
         }),
       });
       const data = await response.json();
@@ -124,6 +126,7 @@ const ContactForm = memo(function ContactForm() {
         });
         setPhoneValue(undefined);
         setPrivacyAccepted(false);
+        setMarketingConsent(false);
       } else {
         setFormStatus("error");
         setFormMessage(data.error || "Something went wrong. Please try again.");
@@ -286,8 +289,26 @@ const ContactForm = memo(function ContactForm() {
             onChange={(e) => setPrivacyAccepted(e.target.checked)}
           />
           <span>
-            {"I have read the North Lantern Group "}
-            <a href="/privacy">privacy statement</a>. <span className="nlg-req">*</span>
+            I have read the North Lantern Group{" "}
+            <a href="/privacy">Privacy Policy</a> and{" "}
+            <a href="/terms">Terms of Use</a>, and I consent to NLG
+            processing the information I submit here to respond to my
+            inquiry. <span className="nlg-req">*</span>
+          </span>
+        </label>
+      </div>
+
+      <div className="nlg-field nlg-privacy">
+        <label>
+          <input
+            type="checkbox"
+            checked={marketingConsent}
+            onChange={(e) => setMarketingConsent(e.target.checked)}
+          />
+          <span>
+            Optional: I would like to receive occasional NLG updates about
+            Atlassian, BI, and automation practice. I can unsubscribe at any
+            time.
           </span>
         </label>
       </div>
@@ -319,8 +340,29 @@ const ContactForm = memo(function ContactForm() {
       </button>
 
       <p className="nlg-form-captcha-note">
-        Protected by invisible reCAPTCHA v3. By submitting, you agree to Google&apos;s
-        terms and our privacy statement.
+        This form is protected by invisible Google reCAPTCHA v3 and uses
+        ZeroBounce to validate email addresses. Use is subject to
+        Google&apos;s{" "}
+        <a
+          href="https://policies.google.com/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          privacy policy
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://policies.google.com/terms"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          terms of service
+        </a>
+        . For privacy questions, email{" "}
+        <a href="mailto:privacy@northlanterngroup.com">
+          privacy@northlanterngroup.com
+        </a>
+        .
       </p>
     </form>
   );

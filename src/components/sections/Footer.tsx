@@ -72,7 +72,13 @@ export default function Footer() {
         </div>
         <div className="nlg-legal">
           <span>
-            North Lantern Group Inc. · Ontario, Canada · <a href="/privacy">Privacy</a> · © 2026
+            North Lantern Group Inc. · Ontario, Canada ·{" "}
+            <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> ·
+            Privacy requests:{" "}
+            <a href="mailto:privacy@northlanterngroup.com">
+              privacy@northlanterngroup.com
+            </a>{" "}
+            · © 2026
           </span>
           <span>hello@northlanterngroup.com</span>
         </div>
