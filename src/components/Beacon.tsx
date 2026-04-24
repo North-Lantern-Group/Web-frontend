@@ -14,28 +14,28 @@ const SYSTEMS: System[] = [
 ];
 
 const GLYPHS: Glyph[] = [
-  { x: 40, y: 46, w: 34, h: 18 },
-  { x: 110, y: 68, w: 34, h: 18 },
-  { x: 186, y: 46, w: 34, h: 18 },
-  { x: 258, y: 72, w: 34, h: 18 },
-  { x: 70, y: 118, w: 34, h: 18 },
-  { x: 146, y: 142, w: 34, h: 18 },
-  { x: 228, y: 122, w: 34, h: 18 },
-  { x: 296, y: 146, w: 34, h: 18 },
+  { x: 48, y: 54, w: 40, h: 22 },
+  { x: 148, y: 80, w: 40, h: 22 },
+  { x: 246, y: 54, w: 40, h: 22 },
+  { x: 340, y: 82, w: 40, h: 22 },
+  { x: 98, y: 134, w: 40, h: 22 },
+  { x: 196, y: 160, w: 40, h: 22 },
+  { x: 292, y: 134, w: 40, h: 22 },
+  { x: 388, y: 162, w: 40, h: 22 },
 ];
 
 const SPARK_PATHS = [
-  "M2,14 L8,8 L14,11 L20,5 L26,9 L32,4",
-  "M2,10 L8,13 L14,6 L20,9 L26,4 L32,8",
-  "M2,6 L8,10 L14,4 L20,11 L26,7 L32,12",
-  "M2,11 L8,4 L14,9 L20,6 L26,12 L32,7",
+  "M2,16 L9,9 L16,13 L23,5 L30,10 L37,4",
+  "M2,11 L9,15 L16,7 L23,10 L30,4 L37,9",
+  "M2,6 L9,12 L16,4 L23,13 L30,8 L37,14",
+  "M2,12 L9,4 L16,10 L23,6 L30,13 L37,7",
 ];
 
 const GRID_COLS = 11;
 const GRID_ROWS = 6;
-const GRID_X = 50;
-const GRID_Y = 440;
-const GRID_CELL = 24;
+const GRID_X = 90;
+const GRID_Y = 472;
+const GRID_CELL = 28;
 
 export default function Beacon() {
   const ref = useRef<HTMLDivElement>(null);
@@ -206,7 +206,7 @@ export default function Beacon() {
 
         <svg
           className="nlg-beacon-svg"
-          viewBox="0 0 380 640"
+          viewBox="0 0 460 680"
           preserveAspectRatio="xMidYMid meet"
           role="img"
           aria-hidden="true"
@@ -238,22 +238,22 @@ export default function Beacon() {
               <stop offset="40%" stopColor="rgba(0, 235, 244, 0.55)" />
               <stop offset="100%" stopColor="rgba(0, 235, 244, 0)" />
             </radialGradient>
-            <pattern id="beacon-midlines" x="0" y="0" width="380" height="5" patternUnits="userSpaceOnUse">
-              <line x1="0" y1="2" x2="380" y2="2" stroke="rgba(0, 174, 239, 0.06)" strokeWidth="0.5" />
+            <pattern id="beacon-midlines" x="0" y="0" width="460" height="5" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="2" x2="460" y2="2" stroke="rgba(0, 174, 239, 0.06)" strokeWidth="0.5" />
             </pattern>
           </defs>
 
-          <rect x="0" y="0" width="380" height="205" fill="url(#beacon-zone-top)" />
-          <rect x="0" y="205" width="380" height="180" fill="url(#beacon-zone-mid)" />
-          <rect x="0" y="205" width="380" height="180" fill="url(#beacon-midlines)" className="beacon-midlines" />
-          <rect x="0" y="385" width="380" height="255" fill="url(#beacon-zone-res)" />
+          <rect x="0" y="0" width="460" height="220" fill="url(#beacon-zone-top)" />
+          <rect x="0" y="220" width="460" height="190" fill="url(#beacon-zone-mid)" />
+          <rect x="0" y="220" width="460" height="190" fill="url(#beacon-midlines)" className="beacon-midlines" />
+          <rect x="0" y="410" width="460" height="270" fill="url(#beacon-zone-res)" />
 
           <g className="beacon-chrome">
-            <text className="beacon-caption beacon-mono" x="190" y="22" textAnchor="middle">NLG.LAYER</text>
+            <text className="beacon-caption beacon-mono" x="230" y="22" textAnchor="middle">NLG.LAYER</text>
             <text
               ref={timestampRef}
               className="beacon-timestamp beacon-mono"
-              x="358"
+              x="438"
               y="22"
               textAnchor="end"
             >
@@ -270,9 +270,9 @@ export default function Beacon() {
           </g>
 
           <g className="beacon-zone-labels beacon-mono">
-            <text x="22" y="200" className="beacon-zone-label">01 · SURFACES</text>
-            <text x="22" y="380" className="beacon-zone-label">02 · SYSTEMS</text>
-            <text x="22" y="414" className="beacon-zone-label beacon-zone-label-active">03 · FOUNDATION</text>
+            <text x="22" y="215" className="beacon-zone-label">01 · SURFACES</text>
+            <text x="22" y="405" className="beacon-zone-label">02 · SYSTEMS</text>
+            <text x="22" y="438" className="beacon-zone-label beacon-zone-label-active">03 · FOUNDATION</text>
           </g>
 
           <g className="beacon-glyphs">
@@ -289,13 +289,13 @@ export default function Beacon() {
                   height={g.h}
                   fill="rgba(0, 174, 239, 0.04)"
                   stroke="rgba(0, 174, 239, 0.28)"
-                  strokeWidth="0.5"
-                  rx="1"
+                  strokeWidth="0.6"
+                  rx="1.5"
                 />
                 <path
                   d={SPARK_PATHS[i % SPARK_PATHS.length]}
                   stroke="rgba(0, 235, 244, 0.55)"
-                  strokeWidth="0.75"
+                  strokeWidth="0.85"
                   fill="none"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -306,26 +306,26 @@ export default function Beacon() {
 
           <g className="beacon-systems beacon-mono">
             {SYSTEMS.map((s, i) => {
-              const y = 238 + i * 24;
+              const y = 254 + i * 26;
               return (
                 <g key={s.id} className={`beacon-system beacon-system-p${i}`}>
                   <circle
-                    cx="52"
+                    cx="68"
                     cy={y}
-                    r="2.5"
+                    r="3"
                     className={`beacon-system-dot beacon-system-dot-${s.status}`}
                   />
-                  <text x="62" y={y + 3} className="beacon-system-name">{s.name}</text>
+                  <text x="82" y={y + 3} className="beacon-system-name">{s.name}</text>
                   <line
-                    x1="130"
+                    x1="174"
                     y1={y}
-                    x2="280"
+                    x2="358"
                     y2={y}
                     stroke="rgba(0, 174, 239, 0.1)"
                     strokeWidth="0.5"
                     strokeDasharray="1 3"
                   />
-                  <text x="325" y={y + 3} className="beacon-system-id" textAnchor="end">{s.id}</text>
+                  <text x="410" y={y + 3} className="beacon-system-id" textAnchor="end">{s.id}</text>
                 </g>
               );
             })}
@@ -347,35 +347,35 @@ export default function Beacon() {
                   key={i}
                   cx={x}
                   cy={y}
-                  r={nearCenter ? 1.6 : 1.2}
+                  r={nearCenter ? 1.9 : 1.4}
                   className={`beacon-node beacon-node-p${phase}${nearCenter ? " beacon-node-core-adj" : ""}`}
                 />
               );
             })}
           </g>
 
-          <g className="beacon-core-group" transform="translate(190, 528)">
-            <circle r="26" fill="url(#beacon-core)" className="beacon-core-halo" />
-            <circle r="16" fill="none" stroke="rgba(0, 235, 244, 0.35)" strokeWidth="0.75" className="beacon-core-ring-outer" />
-            <circle r="10" fill="none" stroke="rgba(0, 235, 244, 0.55)" strokeWidth="0.75" className="beacon-core-ring-inner" />
-            <circle r="2.5" fill="rgba(0, 235, 244, 0.95)" className="beacon-core-dot" />
+          <g className="beacon-core-group" transform="translate(230, 556)">
+            <circle r="32" fill="url(#beacon-core)" className="beacon-core-halo" />
+            <circle r="20" fill="none" stroke="rgba(0, 235, 244, 0.35)" strokeWidth="0.85" className="beacon-core-ring-outer" />
+            <circle r="13" fill="none" stroke="rgba(0, 235, 244, 0.55)" strokeWidth="0.85" className="beacon-core-ring-inner" />
+            <circle r="3" fill="rgba(0, 235, 244, 0.95)" className="beacon-core-dot" />
           </g>
 
           <g className="beacon-edge-labels beacon-mono">
-            <text x="70" y="425" className="beacon-edge-label">governance</text>
-            <text x="188" y="425" textAnchor="middle" className="beacon-edge-label">rbac</text>
-            <text x="320" y="425" textAnchor="end" className="beacon-edge-label">contracts</text>
-            <text x="190" y="620" textAnchor="middle" className="beacon-edge-label">lifecycle · runbooks · review</text>
+            <text x="88" y="452" className="beacon-edge-label">governance</text>
+            <text x="230" y="452" textAnchor="middle" className="beacon-edge-label">rbac</text>
+            <text x="372" y="452" textAnchor="end" className="beacon-edge-label">contracts</text>
+            <text x="230" y="654" textAnchor="middle" className="beacon-edge-label">lifecycle · runbooks · review</text>
           </g>
 
           <g className="beacon-spine">
             <line
-              x1="190"
+              x1="230"
               y1="36"
-              x2="190"
-              y2="390"
+              x2="230"
+              y2="408"
               stroke="rgba(0, 174, 239, 0.22)"
-              strokeWidth="0.5"
+              strokeWidth="0.6"
               strokeDasharray="2 4"
             />
           </g>
@@ -383,19 +383,19 @@ export default function Beacon() {
           <g className="beacon-rings">
             <line
               x1="16"
-              y1="205"
-              x2="364"
-              y2="205"
+              y1="220"
+              x2="444"
+              y2="220"
               stroke="rgba(0, 174, 239, 0.5)"
               strokeWidth="1"
             />
             <line
               x1="12"
-              y1="385"
-              x2="368"
-              y2="385"
+              y1="410"
+              x2="448"
+              y2="410"
               stroke="rgba(0, 174, 239, 0.78)"
-              strokeWidth="1.4"
+              strokeWidth="1.5"
               className="beacon-ring-lower"
             />
           </g>
@@ -404,7 +404,7 @@ export default function Beacon() {
             <line
               x1="20"
               y1="0"
-              x2="360"
+              x2="440"
               y2="0"
               stroke="url(#beacon-scan)"
               strokeWidth="1"
@@ -413,9 +413,9 @@ export default function Beacon() {
           </g>
 
           <g className="beacon-bottom-chrome beacon-mono">
-            <text x="22" y="626" className="beacon-coord">4A.2E</text>
-            <text x="358" y="626" textAnchor="end" className="beacon-coord">1B.7F</text>
-            <text x="190" y="634" textAnchor="middle" className="beacon-serial">
+            <text x="22" y="664" className="beacon-coord">4A.2E</text>
+            <text x="438" y="664" textAnchor="end" className="beacon-coord">1B.7F</text>
+            <text x="230" y="672" textAnchor="middle" className="beacon-serial">
               LNT-03 · REV 2.4.1 · 2026
             </text>
           </g>
