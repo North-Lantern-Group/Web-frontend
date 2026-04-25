@@ -2,7 +2,7 @@
 
 **Scope:** northlanterngroup.com and the Next.js codebase in this repo.
 **Owner:** North Lantern Group Privacy Office — privacy@northlanterngroup.com
-**Last reviewed:** April 24, 2026
+**Last reviewed:** April 26, 2026
 **Status:** Internal working document. Requires legal counsel review before
 launch and on any material change. Not a certification and not legal advice.
 
@@ -29,7 +29,7 @@ approved." All of those require human sign-off.
 | 1.6 | Marketing consent — separate, optional, unchecked by default (CASL express-consent capture, not bundled with service consent) | ✅ Done | `Contact.tsx` |
 | 1.7 | reCAPTCHA v3 use disclosed on the form with links to Google privacy and terms | ✅ Done | `Contact.tsx` |
 | 1.8 | ZeroBounce email validation disclosed on the form | ✅ Done | `Contact.tsx` |
-| 1.9 | Honeypot + server-side reCAPTCHA verification + ZeroBounce + signed Google Sheets backup in the API route | ✅ Done in code; deployment pending | `src/app/api/contact/route.ts`, `integrations/google-apps-script/lead-intake/Code.gs` |
+| 1.9 | Honeypot + server-side reCAPTCHA verification + ZeroBounce + signed Google Sheets backup in the API route | ✅ Done in code; live workbook verified | `src/app/api/contact/route.ts`, `integrations/google-apps-script/lead-intake/Code.gs` |
 | 1.10 | No advertising cookies, no analytics trackers, no third-party marketing pixels | ✅ Verified | Repo grep: clean |
 | 1.11 | External links use `rel="noopener noreferrer"` | ✅ Verified | Footer, Contact |
 | 1.12 | Working legal nav in the footer: /privacy, /terms, privacy contact | ✅ Done | `Footer.tsx` |

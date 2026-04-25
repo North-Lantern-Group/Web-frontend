@@ -30,10 +30,12 @@ This gives the business:
 ## Plain-English Summary
 
 A visitor submits the website form. The website server checks spam protection,
-validates the email, tries to send the lead email, then also sends a signed
-backup copy to Google. Google Apps Script checks the signature and writes the
-lead to the private Sheet. If the same lead is submitted twice with the same
-lead ID, the Sheet does not get a duplicate row.
+validates the email, tries to send the lead email to
+`leads@northlanterngroup.com`, then also sends a signed backup copy to Google.
+Google Apps Script checks the signature and writes the lead to the private
+Sheet. Operators use the `Dashboard` for a quick latest-leads view and `Raw
+Leads` for the complete history. If the same lead is submitted twice with the
+same lead ID, the Sheet does not get a duplicate raw lead row.
 
 ## What "Google Apps Script Web App" Means
 
@@ -122,35 +124,53 @@ are preserved.
 4. reCAPTCHA v3 runs server-side verification.
 5. ZeroBounce email validation blocks clearly invalid, spamtrap, and disposable
    addresses.
-6. The API generates a unique lead ID.
-7. Resend email is sent with the lead ID as the idempotency key.
+6. The API generates a unique lead ID in `lead_<uuid>` format.
+7. Resend email is sent to `leads@northlanterngroup.com` with the lead ID as
+   the idempotency key, the submitter email as `replyTo`, and the lead ID in
+   the email body.
 8. The backup helper builds an exact JSON payload string and signs it with
    HMAC-SHA256.
 9. Apps Script verifies the signature before trusting the payload.
 10. Apps Script rejects expired signed payloads using a replay window.
 11. Apps Script deduplicates by lead ID through the `Lead Index` sheet.
-12. Apps Script writes accepted leads to `Raw Leads` and operational events to
-    `Integration Events`.
+12. Apps Script writes accepted leads to `Raw Leads`, adds the lead ID to
+    `Lead Index`, and records operational events in `Integration Events`.
+13. If email failed but the Sheet backup succeeds, Apps Script can send a
+    fallback alert to `ALERT_EMAIL`.
 
 ## Outputs
 
 ### Email Output
 
 The `leads@northlanterngroup.com` inbox receives the lead notification when
-Resend succeeds. The email includes the lead ID so operators can match it to the
-Google Sheet row.
+Resend succeeds. The email is sent from the verified NLG sending domain through
+Resend, uses the submitter email as `replyTo`, and includes the lead ID so
+operators can match it to the Google Sheet row.
 
 ### Sheet Output
 
-The Google Sheet contains:
+The Google Sheet contains four operating tabs:
 
 - `Dashboard`: branded operating view with lead counts, the latest 12 leads,
   data health, and usage notes. It is intentionally bounded so it never grows
-  into the lower operating blocks.
-- `Raw Leads`: one row per accepted lead.
-- `Lead Index`: dedupe/index data keyed by lead ID.
+  into the lower operating blocks. It is not the database.
+- `Raw Leads`: the full source-of-truth register, with one row per accepted
+  lead and all intake fields, delivery status, follow-up fields, and
+  `retention_until`.
+- `Lead Index`: internal dedupe/index data keyed by lead ID. It maps each lead
+  ID to its raw row and should normally be left alone.
 - `Integration Events`: storage, duplicate, rejection, and fallback-alert
-  events.
+  events. This is the append-only audit/debug log.
+
+The `Dashboard` latest-leads block is capped at 12 rows by design. When a 13th
+lead arrives, the oldest dashboard row drops out of the dashboard view, but it
+remains in `Raw Leads`. The dashboard table is bounded to the latest-leads area
+and should not spill into the lower operating notes or data-health blocks.
+
+The workbook design helper pre-formats the operating tabs through 1000 rows and
+adds dropdown validation to the `Raw Leads` consent/status columns. If the Sheet
+eventually approaches that row count, rerun `applyLeadIntakeWorkbookDesign()` or
+extend the helper before relying on rows beyond the formatted range.
 
 ### API Output
 
@@ -172,8 +192,9 @@ The browser receives an error only when both email and backup paths fail.
 | Email fails, backup succeeds | Success | Sheet contains lead marked `email_status=failed`; Apps Script can send fallback alert |
 | Email fails, backup fails | Error | No durable lead path succeeded; server logs error |
 | Duplicate signed request | Success | Apps Script returns `duplicate`; no duplicate raw lead row |
-| Invalid signature | Failed Apps Script response | No row is written |
-| Expired signed request | Failed Apps Script response | No row is written |
+| Invalid signature | Failed Apps Script response | No raw lead row is written; a best-effort `rejected` event is logged |
+| Expired signed request | Failed Apps Script response | No raw lead row is written; a best-effort `rejected` event is logged |
+| Fallback alert fails | Success if backup stored | Lead remains in `Raw Leads`; `fallback_alert_failed` is logged |
 
 ## Security Controls
 
@@ -266,6 +287,11 @@ Before considering this integration healthy:
 8. The lead ID in email matches the lead ID in the Sheet.
 9. Vercel production deployment is complete after env changes.
 10. The privacy policy still describes the actual vendors and data flow.
+11. `Dashboard` shows `Latest 12 leads`, and the latest-leads table stays
+    bounded above the lower operating blocks.
+12. `Raw Leads`, `Lead Index`, and `Integration Events` have filters and
+    pre-formatted operating rows beyond current data.
+13. `Raw Leads` consent/status fields show dropdown validation.
 
 ## HMAC Secret Rotation SOP
 
@@ -310,12 +336,58 @@ For normal operations:
    weekly lead review.
 3. Use `Dashboard` as the normal first view for counts, the latest 12 leads,
    and data health. Use `Raw Leads` for the full history.
-4. Use `lead_status`, `owner`, `next_action`, and `notes` in the Sheet for light
+4. Use `lead_status`, `owner`, `next_action`, and `notes` in `Raw Leads` for light
    follow-up tracking until a dedicated CRM exists.
 5. Treat the Sheet as a backup/lightweight intake register, not as a permanent
    full CRM.
 6. Review rows older than the retention policy during quarterly privacy hygiene
    reviews.
+
+## Manual Editing Rules
+
+Operators may edit these `Raw Leads` fields during normal follow-up:
+
+- `lead_status`
+- `owner`
+- `next_action`
+- `notes`
+
+Operators should not normally edit system-generated fields such as `lead_id`,
+`created_at_utc`, `schema_version`, `email_status`, `resend_message_id`,
+`email_error`, `backup_status`, or `retention_until`. Consent fields
+(`marketing_consent` and `privacy_accepted`) should only be corrected with a
+clear evidence trail because they are compliance records.
+
+Do not manually edit `Dashboard` formulas or layout. If the dashboard is damaged
+or stale, rerun `applyLeadIntakeWorkbookDesign()` from Apps Script. This updates
+workbook formatting and dashboard formulas only; it does not deploy a new Web
+App endpoint.
+
+Do not manually edit `Lead Index` except during controlled cleanup or repair,
+because it is the dedupe register. Do not manually edit `Integration Events`
+except during controlled cleanup of known test data, because it is the
+operational audit/debug log.
+
+## Smoke-Test/Fake Lead Cleanup SOP
+
+Smoke-test leads are useful before launch, but fake records should not remain in
+the production operating register. A complete cleanup removes the same fake lead
+from all places where it was written:
+
+1. Identify the fake lead by lead ID, test email, company, and timestamp.
+2. Find the matching row in `Raw Leads`.
+3. Find the matching row in `Lead Index`.
+4. Find relevant rows in `Integration Events`, usually `stored`, `duplicate`,
+   `rejected`, or `fallback_alert_failed` events tied to that test lead.
+5. Confirm the selected rows are only smoke-test data and not real submissions.
+6. Ask for explicit action-time confirmation before deleting any Sheet rows.
+7. After confirmation, delete the matched rows from `Raw Leads`, `Lead Index`,
+   and relevant `Integration Events` rows.
+8. Recheck `Dashboard` and `Raw Leads` to confirm the fake lead no longer
+   appears and no unrelated lead was removed.
+
+Never delete cloud Sheet records as an implied cleanup step. The operator must
+explicitly approve the exact deletion scope at action time.
 
 ## Incident SOP
 
@@ -349,6 +421,10 @@ The following was implemented:
 - Google Sheets workbook design helper that repurposes an empty `Sheet1` into a
   branded `Dashboard` and styles the functional intake tabs without changing
   intake behavior.
+- Dashboard hardening so the latest-leads block shows only the latest 12 leads,
+  while `Raw Leads` remains the full register.
+- Pre-formatted operating rows and dropdown validation for the Sheet fields
+  operators are most likely to review or update.
 - Privacy policy updates to disclose the restricted Google Sheets backup and
   source/referrer metadata.
 - Infrastructure and compliance documentation updates.
