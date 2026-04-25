@@ -144,6 +144,8 @@ Google Sheet row.
 
 The Google Sheet contains:
 
+- `Dashboard`: branded operating view with lead counts, latest leads, data
+  health, and usage notes.
 - `Raw Leads`: one row per accepted lead.
 - `Lead Index`: dedupe/index data keyed by lead ID.
 - `Integration Events`: storage, duplicate, rejection, and fallback-alert
@@ -234,16 +236,19 @@ Use this only when rebuilding the integration or moving ownership.
 7. Add the script properties listed above.
 8. Run `setupLeadIntakeWorkbook()` once from Apps Script.
 9. Complete Google's authorization flow as the Workspace owner.
-10. Confirm the Sheet has `Raw Leads`, `Lead Index`, and `Integration Events`.
-11. Deploy as a Web App:
+10. Run `applyLeadIntakeWorkbookDesign()` once from Apps Script to create the
+    branded `Dashboard`, reorder tabs, and apply formatting.
+11. Confirm the Sheet has `Dashboard`, `Raw Leads`, `Lead Index`, and
+    `Integration Events`.
+12. Deploy as a Web App:
     - Execute as: Me
     - Who has access: Anyone
-12. Copy the Web App URL into Vercel as `LEAD_BACKUP_WEB_APP_URL`.
-13. Generate a long random HMAC secret and set the same value in Vercel and Apps
+13. Copy the Web App URL into Vercel as `LEAD_BACKUP_WEB_APP_URL`.
+14. Generate a long random HMAC secret and set the same value in Vercel and Apps
     Script properties.
-14. Set `LEAD_BACKUP_ENABLED=true` in Vercel.
-15. Redeploy the Vercel site so the new env vars are visible to the runtime.
-16. Run the validation checklist below.
+15. Set `LEAD_BACKUP_ENABLED=true` in Vercel.
+16. Redeploy the Vercel site so the new env vars are visible to the runtime.
+17. Run the validation checklist below.
 
 ## Validation Checklist
 
@@ -301,11 +306,13 @@ For normal operations:
 1. Monitor `leads@northlanterngroup.com` for new submissions.
 2. Check the `Raw Leads` Sheet when a lead email seems missing or when doing
    weekly lead review.
-3. Use `lead_status`, `owner`, `next_action`, and `notes` in the Sheet for light
+3. Use `Dashboard` as the normal first view for counts, latest leads, and data
+   health.
+4. Use `lead_status`, `owner`, `next_action`, and `notes` in the Sheet for light
    follow-up tracking until a dedicated CRM exists.
-4. Treat the Sheet as a backup/lightweight intake register, not as a permanent
+5. Treat the Sheet as a backup/lightweight intake register, not as a permanent
    full CRM.
-5. Review rows older than the retention policy during quarterly privacy hygiene
+6. Review rows older than the retention policy during quarterly privacy hygiene
    reviews.
 
 ## Incident SOP
@@ -337,6 +344,9 @@ The following was implemented:
 - Google Apps Script lead intake endpoint with HMAC verification, replay window,
   dedupe index, raw lead rows, event logs, fallback alert support, and formula
   injection hardening.
+- Google Sheets workbook design helper that repurposes an empty `Sheet1` into a
+  branded `Dashboard` and styles the functional intake tabs without changing
+  intake behavior.
 - Privacy policy updates to disclose the restricted Google Sheets backup and
   source/referrer metadata.
 - Infrastructure and compliance documentation updates.

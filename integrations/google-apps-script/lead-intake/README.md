@@ -32,3 +32,8 @@ Deploy settings:
 - Who has access: Anyone
 
 The public URL is safe to expose only because every write must include a signed HMAC payload created by the server-side Next.js route. Do not call this endpoint from client-side code.
+
+Admin helpers:
+
+- `setupLeadIntakeWorkbook()`: creates/repairs the required functional tabs and headers.
+- `applyLeadIntakeWorkbookDesign()`: applies the NLG dashboard, tab order, column widths, filters, freeze panes, and conditional formatting. This is visual/operational polish only; it does not change the intake endpoint behavior.
