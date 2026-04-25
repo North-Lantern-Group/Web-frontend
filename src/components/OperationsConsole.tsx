@@ -32,23 +32,51 @@ function seededRand(seed: number) {
   };
 }
 
+function buildPath(
+  pts: Array<[number, number]>,
+  smooth: boolean,
+): string {
+  if (pts.length === 0) return "";
+  if (pts.length === 1) return `M${pts[0]![0]},${pts[0]![1]}`;
+  if (!smooth) {
+    return `M${pts.map((p) => `${p[0]},${p[1]}`).join(" L")}`;
+  }
+  // Catmull-Rom to cubic Bezier (tension ~0.5, no overshoot).
+  let d = `M${pts[0]![0].toFixed(2)},${pts[0]![1].toFixed(2)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)]!;
+    const p1 = pts[i]!;
+    const p2 = pts[i + 1]!;
+    const p3 = pts[Math.min(pts.length - 1, i + 2)]!;
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C${cp1x.toFixed(2)},${cp1y.toFixed(2)} ${cp2x.toFixed(2)},${cp2y.toFixed(2)} ${p2[0].toFixed(2)},${p2[1].toFixed(2)}`;
+  }
+  return d;
+}
+
 function Sparkline({
   data,
   stroke = "var(--brand-hi)",
   fill = true,
   height = 28,
+  smooth = false,
 }: {
   data: number[];
   stroke?: string;
   fill?: boolean;
   height?: number;
+  smooth?: boolean;
 }) {
   const w = 100;
   const h = height;
   const step = data.length > 1 ? w / (data.length - 1) : w;
-  const pts = data.map((v, i) => `${(i * step).toFixed(2)},${(h - 2 - v * (h - 4)).toFixed(2)}`);
-  const line = `M${pts.join(" L")}`;
-  const area = `${line} L${w},${h} L0,${h} Z`;
+  const pts: Array<[number, number]> = data.map((v, i) => [i * step, h - 2 - v * (h - 4)]);
+  const line = buildPath(pts, smooth);
+  const lastX = pts.length ? pts[pts.length - 1]![0] : w;
+  const area = pts.length ? `${line} L${lastX},${h} L0,${h} Z` : "";
   const gid = useMemo(() => `nlg-sg-${Math.random().toString(36).slice(2, 8)}`, []);
   return (
     <svg
@@ -179,25 +207,39 @@ function TilePipeline({ paused, tick }: { paused: boolean; tick: number }) {
   const [progress, setProgress] = useState(0);
   const [runId, setRunId] = useState(4832);
   const [throughput, setThroughput] = useState(18432);
-  const startedAt = useRef(0);
+  // Accumulated elapsed time within the current run, advanced only while not paused.
+  const elapsedRef = useRef(0);
+  const lastFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    startedAt.current = performance.now();
-  }, []);
-
-  useEffect(() => {
-    if (paused) return;
+    if (paused) {
+      lastFrameRef.current = null;
+      return;
+    }
     let raf = 0;
+    let lastThroughputAt = 0;
     const tickRAF = (t: number) => {
-      const elapsed = (t - startedAt.current) % runLen;
-      const p = elapsed / runLen;
-      setProgress(p);
-      if (p < 0.01 && performance.now() - startedAt.current > 500) {
+      if (lastFrameRef.current == null) {
+        lastFrameRef.current = t;
+        lastThroughputAt = t;
+      }
+      const dt = t - lastFrameRef.current;
+      lastFrameRef.current = t;
+
+      const next = elapsedRef.current + dt;
+      const looped = next >= runLen;
+      elapsedRef.current = looped ? next - runLen : next;
+      setProgress(elapsedRef.current / runLen);
+
+      if (looped) {
         setRunId((r) => r + 1);
         setThroughput(Math.floor(15000 + Math.random() * 7000));
-        startedAt.current = t;
+        lastThroughputAt = t;
+      } else if (t - lastThroughputAt > 120) {
+        setThroughput((th) => th + Math.floor(3 + Math.random() * 8));
+        lastThroughputAt = t;
       }
-      setThroughput((th) => th + Math.floor(3 + Math.random() * 8));
+
       raf = requestAnimationFrame(tickRAF);
     };
     raf = requestAnimationFrame(tickRAF);
@@ -230,7 +272,7 @@ function TilePipeline({ paused, tick }: { paused: boolean; tick: number }) {
           </span>
         </div>
 
-        <div className="nlg-pipe" aria-hidden="true">
+        <div className="nlg-pipe" aria-hidden="true" data-paused={paused ? "true" : "false"}>
           <div className="nlg-pipe-fill" style={{ width: `${(progress * 100).toFixed(2)}%` }}></div>
           <div className="nlg-pipe-ticks">
             {STAGES.map((_, i) => (
@@ -371,27 +413,64 @@ function TileAgent({ paused }: { paused: boolean }) {
   );
 }
 
+const REP_POINTS = 28;
+
+function buildReportingFrame(time: number): number[] {
+  // Slowly drifting baseline so the chart never sits in one band.
+  const baseline = 0.5 + Math.sin(time * 0.08) * 0.06 + Math.cos(time * 0.13) * 0.025;
+  // 0..1 envelope alternating between calm and pronounced waves over ~38s.
+  const phaseMod = (Math.sin(time * 0.165) + 1) / 2;
+  const calmFactor = 0.32 + phaseMod * 0.68;
+  const tilt = phaseMod * 0.05; // very gentle directional bias when "active"
+  const out: number[] = new Array(REP_POINTS);
+  for (let i = 0; i < REP_POINTS; i++) {
+    const x = i / (REP_POINTS - 1);
+    const slow = Math.sin(time * 0.55 + i * 0.42) * 0.105;
+    const med  = Math.sin(time * 1.10 + i * 0.78 + 1.2) * 0.055;
+    const fast = Math.sin(time * 2.15 + i * 1.30) * 0.018;
+    const v = baseline + (x - 0.5) * tilt + (slow + med) * calmFactor + fast;
+    out[i] = Math.max(0.18, Math.min(0.92, v));
+  }
+  return out;
+}
+
 function TileReporting({ paused }: { paused: boolean }) {
-  const [data, setData] = useState<number[]>(() => {
-    const r = seededRand(42);
-    return Array.from({ length: 24 }, (_, i) => 0.3 + r() * 0.5 + Math.sin(i * 0.35) * 0.1);
-  });
+  const [data, setData] = useState<number[]>(() => buildReportingFrame(0));
   const [delta, setDelta] = useState(12.4);
   const [refreshAge, setRefreshAge] = useState(31);
   const [refreshing, setRefreshing] = useState(false);
+  // Phase advances only while active so pause holds the chart and resume continues smoothly.
+  const phaseRef = useRef(0);
+  const lastFrameRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (paused) {
+      lastFrameRef.current = null;
+      return;
+    }
+    let raf = 0;
+    let lastSampleAt = 0;
+    const animate = (t: number) => {
+      if (lastFrameRef.current == null) {
+        lastFrameRef.current = t;
+        lastSampleAt = t;
+      }
+      const dt = t - lastFrameRef.current;
+      lastFrameRef.current = t;
+      phaseRef.current += dt;
+      // Sample at ~33Hz — visually fluid without overrendering.
+      if (t - lastSampleAt >= 30) {
+        lastSampleAt = t;
+        setData(buildReportingFrame(phaseRef.current / 1000));
+      }
+      raf = requestAnimationFrame(animate);
+    };
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  }, [paused]);
 
   useEffect(() => {
     if (paused) return;
-    const pointId = setInterval(() => {
-      setData((prev) => {
-        const r = seededRand(prev.length * 100 + Date.now());
-        const last = prev[prev.length - 1] ?? 0.5;
-        const drift = (r() - 0.45) * 0.12;
-        const next = Math.max(0.15, Math.min(0.95, last + drift));
-        return [...prev.slice(1), next];
-      });
-    }, 1500);
-
     const ageId = setInterval(() => {
       setRefreshAge((a) => {
         if (a >= 60) {
@@ -405,11 +484,7 @@ function TileReporting({ paused }: { paused: boolean }) {
         return a + 1;
       });
     }, 1000);
-
-    return () => {
-      clearInterval(pointId);
-      clearInterval(ageId);
-    };
+    return () => clearInterval(ageId);
   }, [paused]);
 
   const next = 60 - refreshAge;
@@ -438,7 +513,7 @@ function TileReporting({ paused }: { paused: boolean }) {
         </div>
 
         <div className="nlg-rep-chart">
-          <Sparkline data={data} stroke="var(--brand-hi)" fill={true} height={34} />
+          <Sparkline data={data} stroke="var(--brand-hi)" fill={true} height={34} smooth />
         </div>
 
         <div className="nlg-run-foot">
