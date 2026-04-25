@@ -430,7 +430,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: linear-gradient(90deg, var(--brand) 0%, var(--brand-hi) 100%);
   border-radius: 2px;
   box-shadow: 0 0 12px rgba(0, 235, 244, 0.45);
-  transition: width 200ms linear;
+  will-change: width;
 }
 .nlg-pipe-fill::after {
   content: "";
@@ -438,6 +438,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   inset: 0;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
   animation: nlg-shimmer 1.6s linear infinite;
+}
+.nlg-pipe[data-paused="true"] .nlg-pipe-fill::after {
+  animation-play-state: paused;
 }
 .nlg-pipe-ticks { position: absolute; inset: 0; }
 .nlg-pipe-tick { position: absolute; top: -2px; width: 1px; height: 10px; background: rgba(255, 255, 255, 0.12); }
@@ -450,7 +453,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: radial-gradient(circle, var(--brand-hi) 0%, rgba(0, 235, 244, 0) 70%);
   transform: translateX(-6px);
   pointer-events: none;
-  transition: left 200ms linear;
+  will-change: left;
 }
 
 .nlg-stage-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: 10.5px; }
