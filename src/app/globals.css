@@ -1560,6 +1560,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   color: var(--brand-hi);
   text-transform: uppercase;
   text-shadow: 0 0 22px rgba(0, 235, 244, 0.24);
+  white-space: pre-line;
+}
+.nlg-attestation-metric.nlg-metric-multi-line {
+  max-width: 28ch;
+}
+@media (min-width: 1024px) {
+  .nlg-attestation-metric.nlg-metric-single-line {
+    max-width: none;
+    white-space: nowrap;
+    font-size: clamp(20px, 2vw, 30px);
+  }
 }
 .nlg-attestation-quote {
   min-height: 328px;

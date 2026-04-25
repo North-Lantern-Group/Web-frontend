@@ -16,6 +16,7 @@ type Attestation = {
   practiceArea: PracticeArea;
   pullQuote: string;
   outcomeMetric: string;
+  metricSingleLine?: boolean;
   fullQuote: string;
   engagementType: string;
   durationWeeks: number;
@@ -30,7 +31,7 @@ const ATTESTATIONS: Attestation[] = [
     initials: "TH",
     practiceArea: "ATLASSIAN SYSTEMS",
     pullQuote: "Our agents actually want to use the system. That had not been true in years.",
-    outcomeMetric: "40% MORE TICKETS, SAME TEAM",
+    outcomeMetric: "EIGHT YEARS OF DEBT,\nCLEARED IN FOURTEEN WEEKS.",
     fullQuote:
       "The North Lantern Group team rebuilt our Jira Service Management instance from the ground up after we had inherited eight years of accumulated customizations from a previous provider. What I appreciated most was their discipline around scope. They told us upfront which problems they would solve in the engagement and which ones we would need to address ourselves with their guidance. Six months later, our service desk handles roughly forty percent more tickets per quarter with the same team size, and our agents actually want to use the system. That had not been true in years.",
     engagementType: "JSM REBUILD",
@@ -58,7 +59,7 @@ const ATTESTATIONS: Attestation[] = [
     initials: "SK",
     practiceArea: "GOVERNED DELIVERY",
     pullQuote: "The documentation has held up.",
-    outcomeMetric: "PERMISSIONS YOUR TEAM CAN RUN",
+    outcomeMetric: "ACCESS GOVERNANCE MODEL,\nFINALLY UNDER CONTROL.",
     fullQuote:
       "North Lantern Group has been our partner on Atlassian governance for the past year. We came to them with a specific problem: our access controls had drifted significantly across multiple client tenants. They delivered a permission architecture that closed the gaps and a runbook our internal admins can maintain without external help. The engagement lead stayed close to the work and was responsive throughout. The work was completed far ahead of schedule and the documentation has held up. We have since expanded the relationship to include our reporting and analytics workstream.",
     engagementType: "ATLASSIAN GOVERNANCE",
@@ -86,7 +87,8 @@ const ATTESTATIONS: Attestation[] = [
     initials: "AB",
     practiceArea: "REPORTING AND KNOWLEDGE",
     pullQuote: "The foundation underneath is what makes this engagement stand out.",
-    outcomeMetric: "ONE TRUSTED METRIC FOUNDATION",
+    outcomeMetric: "CLEAR NUMBERS. BETTER DECISIONS.",
+    metricSingleLine: true,
     fullQuote:
       "We engaged North Lantern Group to help us design and build out reporting capabilities across our operations. The team approached the work as a true business intelligence engagement rather than a dashboard delivery. They worked with our finance and operations leads to define our metrics consistently, built the semantic layer that ensures our numbers tell the same story regardless of which dashboard you open, and trained our internal analysts to extend the model themselves. The dashboards are excellent, but the foundation underneath is what makes this engagement stand out.",
     engagementType: "BI FOUNDATION",
@@ -100,7 +102,8 @@ const ATTESTATIONS: Attestation[] = [
     initials: "MA",
     practiceArea: "GOVERNED DELIVERY",
     pullQuote: "That kind of judgment is what we look for in our consulting partners.",
-    outcomeMetric: "CLEAR SCOPE. FAIR TRADEOFFS.",
+    outcomeMetric: "CLEAR SCOPE. STRAIGHT ANSWERS.",
+    metricSingleLine: true,
     fullQuote:
       "Our company runs lean, and engaging an outside firm was not a decision we took lightly. North Lantern Group was recommended to us by a peer in our industry and they exceeded our expectations. The engagement was scoped tightly, delivered on schedule, and priced fairly. More importantly, the engagement lead was direct and transparent throughout. When we asked for additions to scope, the team was clear about the tradeoffs and helped us decide rather than just selling us more work. That kind of judgment is what we look for in our consulting partners.",
     engagementType: "OPERATING SYSTEM REVIEW",
@@ -170,7 +173,8 @@ const ATTESTATIONS: Attestation[] = [
     initials: "AO",
     practiceArea: "REPORTING AND KNOWLEDGE",
     pullQuote: "They proposed a phased approach that matched our internal change capacity.",
-    outcomeMetric: "PHASED TO MATCH CHANGE CAPACITY",
+    outcomeMetric: "BUILT AROUND HOW WE ACTUALLY WORK",
+    metricSingleLine: true,
     fullQuote:
       "When we set out to modernize our reporting, we evaluated four firms and selected North Lantern Group based on the quality of their initial proposal. They had clearly read our materials, understood our specific challenges, and proposed a phased approach that matched our internal change capacity rather than overloading us. The engagement delivered everything they committed to and the relationship has been excellent throughout. The engagement lead is a thoughtful operator and the team is one of the strongest I have worked with on Atlassian and BI projects.",
     engagementType: "REPORTING MODERNIZATION",
@@ -212,7 +216,7 @@ function useDecodedText(text: string, active: boolean, reducedMotion: boolean) {
         text
           .split("")
           .map((char, index) => {
-            if (char === " ") return " ";
+            if (char === " " || char === "\n") return char;
             const startFrame = Math.floor((index * 15) / 30);
             if (frame < startFrame) return "";
             if (frame > startFrame + 7) return char;
@@ -557,7 +561,16 @@ export default function Testimonials() {
             <div className="nlg-sr-only">
               {displayed.name}, {displayed.title}. {displayed.fullQuote}
             </div>
-            <div className="nlg-attestation-metric" aria-hidden="true">
+            <div
+              className={`nlg-attestation-metric${
+                displayed.metricSingleLine
+                  ? " nlg-metric-single-line"
+                  : displayed.outcomeMetric.includes("\n")
+                    ? " nlg-metric-multi-line"
+                    : ""
+              }`}
+              aria-hidden="true"
+            >
               {decodedMetric}
             </div>
             <blockquote className="nlg-attestation-quote" aria-hidden="true">
