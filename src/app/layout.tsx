@@ -26,7 +26,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.northlanterngroup.com"),
   title: "North Lantern Group | Results that endure.",
-  description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
+  description: "North Lantern Group designs, improves and implements Atlassian, business intelligence, and automation systems so teams can see the work clearly, own it internally, and scale without piling on manual effort.",
   alternates: {
     canonical: "https://www.northlanterngroup.com/",
   },
@@ -35,13 +35,13 @@ export const metadata: Metadata = {
     url: "https://www.northlanterngroup.com/",
     siteName: "North Lantern Group",
     title: "North Lantern Group | Results that endure.",
-    description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
+    description: "North Lantern Group designs, improves and implements Atlassian, business intelligence, and automation systems so teams can see the work clearly, own it internally, and scale without piling on manual effort.",
     locale: "en_CA",
   },
   twitter: {
     card: "summary_large_image",
     title: "North Lantern Group | Results that endure.",
-    description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
+    description: "North Lantern Group designs, improves and implements Atlassian, business intelligence, and automation systems so teams can see the work clearly, own it internally, and scale without piling on manual effort.",
   },
   robots: {
     index: true,
@@ -68,7 +68,7 @@ const professionalServiceJsonLd = {
   name: "North Lantern Group Inc.",
   url: "https://www.northlanterngroup.com/",
   logo: "https://www.northlanterngroup.com/logo.png",
-  description: "Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.",
+  description: "North Lantern Group designs, improves and implements Atlassian, business intelligence, and automation systems so teams can see the work clearly, own it internally, and scale without piling on manual effort.",
   email: "hello@northlanterngroup.com",
   address: {
     "@type": "PostalAddress",

@@ -28,10 +28,10 @@ export default function Header() {
             <a href="#practices">Practices</a>
           </li>
           <li>
-            <a href="#how-we-work">How we work</a>
+            <a href="#work">Work</a>
           </li>
           <li>
-            <a href="#writing">Writing</a>
+            <a href="#how-we-work">How we work</a>
           </li>
           <li>
             <a href="#belief">About</a>
@@ -78,10 +78,10 @@ export default function Header() {
                 <a href="#practices" onClick={() => setMobileMenuOpen(false)}>Practices</a>
               </li>
               <li>
-                <a href="#how-we-work" onClick={() => setMobileMenuOpen(false)}>How we work</a>
+                <a href="#work" onClick={() => setMobileMenuOpen(false)}>Work</a>
               </li>
               <li>
-                <a href="#writing" onClick={() => setMobileMenuOpen(false)}>Writing</a>
+                <a href="#how-we-work" onClick={() => setMobileMenuOpen(false)}>How we work</a>
               </li>
               <li>
                 <a href="#belief" onClick={() => setMobileMenuOpen(false)}>About</a>

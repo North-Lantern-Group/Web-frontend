@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 export const alt =
-  "North Lantern Group — Senior operators for Atlassian, BI, and operational automation.";
+  "North Lantern Group — Fix the workflows, reports, and systems your team has outgrown.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -182,7 +182,7 @@ export default async function Image() {
               display: "flex",
             }}
           >
-            Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.
+            Fix the workflows, reports, and systems your team has outgrown.
           </div>
 
           <div

@@ -3,6 +3,7 @@ import HeroV2 from "@/components/sections/HeroV2";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Belief from "@/components/sections/Belief";
 import Practices from "@/components/sections/Practices";
+import Testimonials from "@/components/sections/Testimonials";
 import HowWeWork from "@/components/sections/HowWeWork";
 import Writing from "@/components/sections/Writing";
 import BuyerQualifier from "@/components/sections/BuyerQualifier";
@@ -20,6 +21,7 @@ export default function Home() {
         <TrustStrip />
         <Belief />
         <Practices />
+        <Testimonials />
         <HowWeWork />
         <Writing />
         <BuyerQualifier />
