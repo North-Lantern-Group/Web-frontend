@@ -306,6 +306,8 @@ function renderHighlightedQuote(fullQuote: string, pullQuote: string) {
   );
 }
 
+type TransitionSource = "auto" | "dot" | "roster" | "keyboard";
+
 export default function Testimonials() {
   const reducedMotion = useReducedMotion();
   const panelRef = useRef<HTMLElement | null>(null);
@@ -318,6 +320,7 @@ export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [displayIndex, setDisplayIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [phase, setPhase] = useState<"idle" | "out" | "decode">("decode");
 
   const displayed = getAttestation(displayIndex);
@@ -349,18 +352,22 @@ export default function Testimonials() {
     }
   }, []);
 
-  const scrollRosterToActive = useCallback((index: number) => {
+  // Scrolls only the roster container — never walks ancestors, never moves the document.
+  // No-op for `auto` source so the 7s auto-cycle cannot pull the viewport.
+  const scrollRosterToActive = useCallback((index: number, source: TransitionSource) => {
+    if (source === "auto") return;
     const roster = rosterRef.current;
     const row = rosterButtonRefs.current[index];
     if (!roster || !row) return;
 
     const behavior: ScrollBehavior = reducedMotion ? "auto" : "smooth";
+    const gutter = 12;
+
     if (window.matchMedia("(max-width: 767px)").matches) {
       const rowLeft = row.offsetLeft;
       const rowRight = rowLeft + row.offsetWidth;
       const viewLeft = roster.scrollLeft;
       const viewRight = viewLeft + roster.clientWidth;
-      const gutter = 12;
 
       if (rowLeft < viewLeft) {
         roster.scrollTo({ left: Math.max(0, rowLeft - gutter), behavior });
@@ -370,14 +377,21 @@ export default function Testimonials() {
       return;
     }
 
-    row.scrollIntoView({
-      block: "nearest",
-      inline: "nearest",
-      behavior,
-    });
+    const rowTop = row.offsetTop;
+    const rowBottom = rowTop + row.offsetHeight;
+    const viewTop = roster.scrollTop;
+    const viewBottom = viewTop + roster.clientHeight;
+
+    if (rowTop < viewTop) {
+      roster.scrollTo({ top: Math.max(0, rowTop - gutter), behavior });
+    } else if (rowBottom > viewBottom) {
+      roster.scrollTo({ top: rowBottom - roster.clientHeight + gutter, behavior });
+    }
   }, [reducedMotion]);
 
-  const scrollPrimaryIntoView = useCallback(() => {
+  // Mobile-only convenience after explicit user activation; never on auto-cycle.
+  const scrollPrimaryIntoView = useCallback((source: TransitionSource) => {
+    if (source === "auto") return;
     const primary = primaryRef.current;
     if (!primary || !window.matchMedia("(max-width: 767px)").matches) return;
 
@@ -388,18 +402,21 @@ export default function Testimonials() {
     });
   }, [reducedMotion]);
 
-  const runTransition = useCallback((nextIndex: number, revealPrimary = false) => {
+  const runTransition = useCallback((nextIndex: number, source: TransitionSource) => {
     const next = mod(nextIndex, ATTESTATIONS.length);
     if (next === activeIndex) return;
 
     clearTransitionTimers();
+    const userInitiated = source !== "auto";
 
     if (reducedMotion) {
       setActiveIndex(next);
       setDisplayIndex(next);
       setPhase("decode");
-      scrollRosterToActive(next);
-      if (revealPrimary) window.requestAnimationFrame(scrollPrimaryIntoView);
+      if (userInitiated) {
+        scrollRosterToActive(next, source);
+        if (source !== "keyboard") scrollPrimaryIntoView(source);
+      }
       return;
     }
 
@@ -410,8 +427,10 @@ export default function Testimonials() {
       window.setTimeout(() => {
         setDisplayIndex(next);
         setPhase("decode");
-        scrollRosterToActive(next);
-        if (revealPrimary) scrollPrimaryIntoView();
+        if (userInitiated) {
+          scrollRosterToActive(next, source);
+          if (source !== "keyboard") scrollPrimaryIntoView(source);
+        }
       }, 260),
     );
   }, [activeIndex, clearTransitionTimers, reducedMotion, scrollPrimaryIntoView, scrollRosterToActive]);
@@ -426,13 +445,35 @@ export default function Testimonials() {
     resumeTimerRef.current = window.setTimeout(() => setIsPaused(false), 1500);
   }, []);
 
+  // Pause auto-cycle when the section is not meaningfully on screen,
+  // so a 7s timer cannot fire while the visitor is reading something else.
+  useEffect(() => {
+    const node = panelRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        setIsVisible(entry.intersectionRatio >= 0.3);
+      },
+      { threshold: [0, 0.1, 0.2, 0.3, 0.5, 0.75, 1] },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     clearAutoTimer();
-    if (!isPaused) {
-      autoTimerRef.current = window.setTimeout(() => runTransition(activeIndex + 1), 7000);
+    if (!isPaused && isVisible) {
+      autoTimerRef.current = window.setTimeout(() => runTransition(activeIndex + 1, "auto"), 7000);
     }
     return clearAutoTimer;
-  }, [activeIndex, clearAutoTimer, isPaused, runTransition]);
+  }, [activeIndex, clearAutoTimer, isPaused, isVisible, runTransition]);
 
   useEffect(() => () => {
     clearAutoTimer();
@@ -443,15 +484,19 @@ export default function Testimonials() {
   const handleRosterKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (event.key === "ArrowDown" || event.key === "ArrowRight") {
       event.preventDefault();
-      rosterButtonRefs.current[mod(index + 1, ATTESTATIONS.length)]?.focus();
+      const nextIdx = mod(index + 1, ATTESTATIONS.length);
+      rosterButtonRefs.current[nextIdx]?.focus({ preventScroll: true });
+      scrollRosterToActive(nextIdx, "keyboard");
     }
     if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
       event.preventDefault();
-      rosterButtonRefs.current[mod(index - 1, ATTESTATIONS.length)]?.focus();
+      const prevIdx = mod(index - 1, ATTESTATIONS.length);
+      rosterButtonRefs.current[prevIdx]?.focus({ preventScroll: true });
+      scrollRosterToActive(prevIdx, "keyboard");
     }
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      runTransition(index, true);
+      runTransition(index, "keyboard");
     }
     if (event.key === "Escape") {
       event.currentTarget.blur();
@@ -493,7 +538,7 @@ export default function Testimonials() {
                   data-active={index === activeIndex}
                   data-tooltip={`${attestation.practiceArea} // ${attestation.name}`}
                   key={attestation.id}
-                  onClick={() => runTransition(index, true)}
+                  onClick={() => runTransition(index, "dot")}
                   role="tab"
                   type="button"
                 />
@@ -543,7 +588,7 @@ export default function Testimonials() {
                   className="nlg-attestation-row"
                   data-active={index === activeIndex}
                   key={attestation.id}
-                  onClick={() => runTransition(index, true)}
+                  onClick={() => runTransition(index, "roster")}
                   onKeyDown={(event) => handleRosterKeyDown(event, index)}
                   ref={(node) => {
                     rosterButtonRefs.current[index] = node;
