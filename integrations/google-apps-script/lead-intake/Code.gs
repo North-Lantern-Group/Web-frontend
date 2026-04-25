@@ -9,6 +9,26 @@
 const RAW_SHEET_NAME_DEFAULT = 'Raw Leads';
 const INDEX_SHEET_NAME_DEFAULT = 'Lead Index';
 const EVENTS_SHEET_NAME_DEFAULT = 'Integration Events';
+const DASHBOARD_LATEST_LEADS_LIMIT = 12;
+const RAW_LEADS_FORMAT_ROWS = 1000;
+const INDEX_FORMAT_ROWS = 1000;
+const EVENTS_FORMAT_ROWS = 1000;
+
+const LEAD_STATUS_VALUES = [
+  'new',
+  'reviewing',
+  'contacted',
+  'qualified',
+  'proposal',
+  'won',
+  'lost',
+  'not_fit',
+  'archived',
+];
+
+const EMAIL_STATUS_VALUES = ['sent', 'failed', 'skipped'];
+const BACKUP_STATUS_VALUES = ['stored'];
+const YES_NO_VALUES = ['yes', 'no'];
 
 const RAW_HEADERS = [
   'created_at_utc',
@@ -104,6 +124,7 @@ function applyLeadIntakeWorkbookDesign() {
   applyIndexDesign_(indexSheet);
   applyEventsDesign_(eventsSheet);
   arrangeLeadWorkbookSheets_(ss, dashboardSheet, rawSheet, indexSheet, eventsSheet);
+  ss.toast('NLG lead workbook design applied. Dashboard is a fixed latest-12 view; Raw Leads remains the full register.', 'NLG Lead Intake', 7);
 }
 
 function appendLead_(payload) {
@@ -456,7 +477,7 @@ function applyDashboardDesign_(sheet) {
 
   sheet.getRange('B12:I12')
     .merge()
-    .setValue('Latest leads')
+    .setValue(`Latest ${DASHBOARD_LATEST_LEADS_LIMIT} leads`)
     .setBackground(theme.bg2)
     .setFontColor(theme.fg1)
     .setFontWeight('bold')
@@ -472,7 +493,7 @@ function applyDashboardDesign_(sheet) {
     .setHorizontalAlignment('left');
 
   sheet.getRange('B14')
-    .setFormula('=IFERROR(SORT(FILTER({\'Raw Leads\'!A2:A,\'Raw Leads\'!F2:F,\'Raw Leads\'!H2:H,\'Raw Leads\'!J2:J,\'Raw Leads\'!Q2:Q,\'Raw Leads\'!U2:U,\'Raw Leads\'!V2:V,\'Raw Leads\'!W2:W},\'Raw Leads\'!B2:B<>""),1,FALSE),"No leads yet")');
+    .setFormula(`=IFERROR(SORTN(FILTER({'Raw Leads'!A2:A,'Raw Leads'!F2:F,'Raw Leads'!H2:H,'Raw Leads'!J2:J,'Raw Leads'!Q2:Q,'Raw Leads'!U2:U,'Raw Leads'!V2:V,'Raw Leads'!W2:W},'Raw Leads'!B2:B<>""),${DASHBOARD_LATEST_LEADS_LIMIT},0,1,FALSE),"No leads yet")`);
   sheet.getRange('B14:I25')
     .setBackground(theme.bg1)
     .setFontColor(theme.fg2)
@@ -493,8 +514,9 @@ function applyDashboardDesign_(sheet) {
       '1. Raw Leads is the source register for valid website submissions.',
       '2. Lead Index supports dedupe and should normally stay unchanged.',
       '3. Integration Events records storage, duplicate, and rejection events.',
-      '4. Use owner, next_action, lead_status, and notes for lightweight follow-up.',
-      '5. Retain no-engagement leads for 24 months unless policy changes.',
+      `4. Dashboard intentionally shows the latest ${DASHBOARD_LATEST_LEADS_LIMIT} leads only; use Raw Leads for the full register.`,
+      '5. Use owner, next_action, lead_status, and notes for lightweight follow-up.',
+      '6. Retain no-engagement leads for 24 months unless policy changes.',
     ].join('\n'))
     .setBackground(theme.tile)
     .setFontColor(theme.fg2)
@@ -522,7 +544,8 @@ function applyDashboardDesign_(sheet) {
 function applyRawLeadsDesign_(sheet) {
   const theme = NLG_SHEET_THEME;
   const lastColumn = RAW_HEADERS.length;
-  const lastRow = Math.max(sheet.getLastRow(), 200);
+  ensureSheetSize_(sheet, RAW_LEADS_FORMAT_ROWS, lastColumn);
+  const lastRow = Math.max(sheet.getLastRow(), RAW_LEADS_FORMAT_ROWS);
 
   sheet.setHiddenGridlines(true);
   sheet.setTabColor(theme.cyan);
@@ -558,14 +581,16 @@ function applyRawLeadsDesign_(sheet) {
   const widths = [155, 280, 80, 120, 120, 210, 130, 250, 130, 170, 150, 360, 130, 130, 260, 220, 120, 170, 240, 120, 120, 130, 220, 130, 260];
   widths.forEach((width, index) => sheet.setColumnWidth(index + 1, width));
 
-  ensureFilter_(sheet, 1, 1, Math.max(sheet.getLastRow(), 2), lastColumn);
+  ensureFilter_(sheet, 1, 1, lastRow, lastColumn);
+  applyRawDataValidation_(sheet, lastRow);
   applyRawConditionalRules_(sheet, lastRow);
 }
 
 function applyIndexDesign_(sheet) {
   const theme = NLG_SHEET_THEME;
   const lastColumn = INDEX_HEADERS.length;
-  const lastRow = Math.max(sheet.getLastRow(), 100);
+  ensureSheetSize_(sheet, INDEX_FORMAT_ROWS, lastColumn);
+  const lastRow = Math.max(sheet.getLastRow(), INDEX_FORMAT_ROWS);
 
   sheet.setHiddenGridlines(true);
   sheet.setTabColor(theme.chathams);
@@ -586,13 +611,14 @@ function applyIndexDesign_(sheet) {
   sheet.setColumnWidths(1, lastColumn, 170);
   sheet.setColumnWidth(1, 280);
   sheet.setColumnWidth(4, 250);
-  ensureFilter_(sheet, 1, 1, Math.max(sheet.getLastRow(), 2), lastColumn);
+  ensureFilter_(sheet, 1, 1, lastRow, lastColumn);
 }
 
 function applyEventsDesign_(sheet) {
   const theme = NLG_SHEET_THEME;
   const lastColumn = EVENT_HEADERS.length;
-  const lastRow = Math.max(sheet.getLastRow(), 100);
+  ensureSheetSize_(sheet, EVENTS_FORMAT_ROWS, lastColumn);
+  const lastRow = Math.max(sheet.getLastRow(), EVENTS_FORMAT_ROWS);
 
   sheet.setHiddenGridlines(true);
   sheet.setTabColor(theme.warning);
@@ -615,7 +641,7 @@ function applyEventsDesign_(sheet) {
   sheet.setColumnWidth(2, 290);
   sheet.setColumnWidth(3, 135);
   sheet.setColumnWidth(4, 520);
-  ensureFilter_(sheet, 1, 1, Math.max(sheet.getLastRow(), 2), lastColumn);
+  ensureFilter_(sheet, 1, 1, lastRow, lastColumn);
   applyEventConditionalRules_(sheet, lastRow);
 }
 
@@ -640,6 +666,40 @@ function ensureFilter_(sheet, row, column, numRows, numColumns) {
   const existingFilter = sheet.getFilter();
   if (existingFilter) existingFilter.remove();
   sheet.getRange(row, column, numRows, numColumns).createFilter();
+}
+
+function ensureSheetSize_(sheet, minRows, minColumns) {
+  if (sheet.getMaxRows() < minRows) {
+    sheet.insertRowsAfter(sheet.getMaxRows(), minRows - sheet.getMaxRows());
+  }
+
+  if (sheet.getMaxColumns() < minColumns) {
+    sheet.insertColumnsAfter(sheet.getMaxColumns(), minColumns - sheet.getMaxColumns());
+  }
+}
+
+function applyRawDataValidation_(sheet, lastRow) {
+  const emailStatusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(EMAIL_STATUS_VALUES, true)
+    .setAllowInvalid(true)
+    .build();
+  const backupStatusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(BACKUP_STATUS_VALUES, true)
+    .setAllowInvalid(true)
+    .build();
+  const leadStatusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(LEAD_STATUS_VALUES, true)
+    .setAllowInvalid(true)
+    .build();
+  const yesNoRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(YES_NO_VALUES, true)
+    .setAllowInvalid(true)
+    .build();
+
+  sheet.getRange(2, 13, lastRow - 1, 2).setDataValidation(yesNoRule);
+  sheet.getRange(2, 17, lastRow - 1, 1).setDataValidation(emailStatusRule);
+  sheet.getRange(2, 20, lastRow - 1, 1).setDataValidation(backupStatusRule);
+  sheet.getRange(2, 21, lastRow - 1, 1).setDataValidation(leadStatusRule);
 }
 
 function applyRawConditionalRules_(sheet, lastRow) {

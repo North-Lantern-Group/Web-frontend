@@ -144,8 +144,9 @@ Google Sheet row.
 
 The Google Sheet contains:
 
-- `Dashboard`: branded operating view with lead counts, latest leads, data
-  health, and usage notes.
+- `Dashboard`: branded operating view with lead counts, the latest 12 leads,
+  data health, and usage notes. It is intentionally bounded so it never grows
+  into the lower operating blocks.
 - `Raw Leads`: one row per accepted lead.
 - `Lead Index`: dedupe/index data keyed by lead ID.
 - `Integration Events`: storage, duplicate, rejection, and fallback-alert
@@ -237,7 +238,8 @@ Use this only when rebuilding the integration or moving ownership.
 8. Run `setupLeadIntakeWorkbook()` once from Apps Script.
 9. Complete Google's authorization flow as the Workspace owner.
 10. Run `applyLeadIntakeWorkbookDesign()` once from Apps Script to create the
-    branded `Dashboard`, reorder tabs, and apply formatting.
+    branded `Dashboard`, reorder tabs, apply formatting, pre-format operating
+    rows, and add lightweight dropdown validation for operational status fields.
 11. Confirm the Sheet has `Dashboard`, `Raw Leads`, `Lead Index`, and
     `Integration Events`.
 12. Deploy as a Web App:
@@ -306,8 +308,8 @@ For normal operations:
 1. Monitor `leads@northlanterngroup.com` for new submissions.
 2. Check the `Raw Leads` Sheet when a lead email seems missing or when doing
    weekly lead review.
-3. Use `Dashboard` as the normal first view for counts, latest leads, and data
-   health.
+3. Use `Dashboard` as the normal first view for counts, the latest 12 leads,
+   and data health. Use `Raw Leads` for the full history.
 4. Use `lead_status`, `owner`, `next_action`, and `notes` in the Sheet for light
    follow-up tracking until a dedicated CRM exists.
 5. Treat the Sheet as a backup/lightweight intake register, not as a permanent

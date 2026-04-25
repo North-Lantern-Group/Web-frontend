@@ -36,4 +36,4 @@ The public URL is safe to expose only because every write must include a signed 
 Admin helpers:
 
 - `setupLeadIntakeWorkbook()`: creates/repairs the required functional tabs and headers.
-- `applyLeadIntakeWorkbookDesign()`: applies the NLG dashboard, tab order, column widths, filters, freeze panes, and conditional formatting. This is visual/operational polish only; it does not change the intake endpoint behavior.
+- `applyLeadIntakeWorkbookDesign()`: applies the NLG dashboard, tab order, column widths, filters, freeze panes, conditional formatting, pre-formatted operating rows, and status dropdown validation. This is visual/operational polish only; it does not change the intake endpoint behavior. The dashboard intentionally shows the latest 12 leads; `Raw Leads` remains the full register.
