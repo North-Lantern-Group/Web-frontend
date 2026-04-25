@@ -25,11 +25,11 @@ export default function HeroV2() {
           <div className="nlg-hero-eyebrow nlg-eyebrow">Results that endure.</div>
 
           <h1 className="nlg-h1">
-            The <span className="accent">senior team</span> your Atlassian, BI, and automation work deserves.
+            Fix the workflows, reports, and systems your team has <span className="accent">outgrown.</span>
           </h1>
 
           <p className="nlg-hero-sub">
-            Senior operators for Atlassian, BI, and operational automation. Same team from first call to handover.
+            North Lantern Group designs and improves Atlassian, business intelligence, and automation systems so teams can see the work clearly, own it internally, and scale without piling on manual effort.
           </p>
 
           <div className="nlg-hero-actions">
