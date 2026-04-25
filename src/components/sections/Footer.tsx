@@ -42,6 +42,9 @@ export default function Footer() {
             <h4>Firm</h4>
             <ul>
               <li>
+                <a href="#work">Work</a>
+              </li>
+              <li>
                 <a href="#how-we-work">How we work</a>
               </li>
               <li>
@@ -62,7 +65,7 @@ export default function Footer() {
             </ul>
           </div>
           <div className="nlg-footer-col">
-            <h4>Writing</h4>
+            <h4>Field notes</h4>
             <ul>
               <li>
                 <a href="#writing">Essays coming 2026</a>

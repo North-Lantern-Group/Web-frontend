@@ -24,7 +24,7 @@ export default function HowWeWork() {
       <div className="nlg-wrap">
         <div className="nlg-section-head nlg-reveal">
           <div className="nlg-eyebrow-col">
-            <div className="nlg-eyebrow-muted">03 / Process</div>
+            <div className="nlg-eyebrow-muted">04 / Process</div>
           </div>
           <div>
             <h2>How engagements run.</h2>
