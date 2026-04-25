@@ -224,7 +224,7 @@ Preview deployment URLs can be found in:
 
 ## Environment Variables
 
-The website requires 4 environment variables. These are stored in Vercel (not in GitHub) and are configured in the NLG team Vercel project (`hello@northlanterngroup.com`). All 4 variables are set for Production, Preview, and Development environments.
+The website requires 4 environment variables for the primary contact-form path. It also supports an optional Google Sheets lead backup through a Google Apps Script Web App. These values are stored in Vercel (not in GitHub) and are configured in the NLG team Vercel project (`hello@northlanterngroup.com`).
 
 | Variable                         | Type        | Required | Purpose                              |
 |----------------------------------|-------------|----------|--------------------------------------|
@@ -232,6 +232,10 @@ The website requires 4 environment variables. These are stored in Vercel (not in
 | `ZEROBOUNCE_API_KEY`             | Server-side | Yes      | Validates email addresses            |
 | `RECAPTCHA_SECRET_KEY`           | Server-side | Yes      | Server-side reCAPTCHA verification   |
 | `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Client-side | Yes      | Renders reCAPTCHA widget in browser  |
+| `LEAD_BACKUP_ENABLED`            | Server-side | No       | Enables Google Sheets lead backup when set to `true` |
+| `LEAD_BACKUP_WEB_APP_URL`        | Server-side | No       | Google Apps Script Web App endpoint for signed lead backup writes |
+| `LEAD_BACKUP_HMAC_SECRET`        | Server-side | No       | Shared HMAC secret used to sign backup payloads |
+| `LEAD_BACKUP_TIMEOUT_MS`         | Server-side | No       | Backup request timeout; default `4000` |
 
 ### Impact When Missing
 
@@ -246,7 +250,8 @@ To run with contact form functionality locally, create a `.env.local` file:
 
 ```bash
 cp .env.example .env.local
-# Then add the 4 variables listed above
+# Then add the required variables listed above.
+# Add LEAD_BACKUP_* only when testing the Google Sheets backup.
 ```
 
 The `.env.local` file is git-ignored and will not be committed.
@@ -530,6 +535,17 @@ email delivery for `@northlanterngroup.com` addresses.
 - **Implementation:** Server-side API call before processing the form
 - **Account owner:** Osaed (to be confirmed)
 
+### Google Sheets Lead Backup
+
+- **Purpose:** Stores a durable, company-owned backup row for each valid website contact submission
+- **Implementation:** Server-side API route signs a payload with HMAC-SHA256 and posts it to a Google Apps Script Web App. Apps Script verifies the signature, deduplicates by `lead_id`, and writes to a restricted Google Sheet.
+- **Source copy:** `integrations/google-apps-script/lead-intake/Code.gs`
+- **Operating SOP:** `docs/operations/lead-intake-backup-architecture-and-sop.md`
+- **Primary owner:** `hamza@northlanterngroup.com`
+- **Backup access:** `hello@northlanterngroup.com` should have editor/admin access to the Sheet and Apps Script project
+- **Vercel env owner:** `hello@northlanterngroup.com` Vercel team project
+- **Failure behavior:** Resend email and Sheets backup are independent. If email succeeds and backup fails, the form still succeeds and logs the backup failure. If email fails but backup succeeds, the form still succeeds and the Sheet row is marked `email_status=failed`.
+
 ### GitHub for Jira (GitHub for Atlassian)
 
 - **Purpose:** Syncs development activity (branches, commits, PRs) from GitHub into Jira
@@ -644,8 +660,9 @@ npm run dev
 ```
 
 **Contact form not submitting locally**
-- Ensure `.env.local` exists with all 4 environment variables
+- Ensure `.env.local` exists with the 4 required contact-form environment variables
 - Check that API keys are valid and not expired
+- If testing lead backup, also configure the optional `LEAD_BACKUP_*` values
 - Without env vars, the form will fail silently or show an error message
 
 **Vercel CLI not authenticated**

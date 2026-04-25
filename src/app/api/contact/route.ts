@@ -1,6 +1,9 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { createLeadId, persistLeadBackup } from '@/lib/leadBackup';
 // Contact form API with CAPTCHA and email verification
+
+export const runtime = 'nodejs';
 
 // Map service values to display names for email
 const serviceDisplayNames: Record<string, string> = {
@@ -33,6 +36,43 @@ function escapeHtml(value: string) {
 
 function cleanHeaderValue(value: string) {
   return value.replace(/[\r\n]+/g, ' ').trim();
+}
+
+const allowedAttributionParams = new Set([
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+]);
+
+function cleanUrlForLeadMetadata(value: string) {
+  const trimmed = cleanHeaderValue(value).slice(0, 1000);
+  if (!trimmed) return '';
+
+  try {
+    const url = new URL(trimmed);
+    const allowedParams = new URLSearchParams();
+
+    for (const [key, paramValue] of url.searchParams.entries()) {
+      if (allowedAttributionParams.has(key.toLowerCase())) {
+        allowedParams.append(key, paramValue.slice(0, 160));
+      }
+    }
+
+    url.search = allowedParams.toString();
+    url.hash = '';
+
+    return url.toString().slice(0, 500);
+  } catch {
+    const [urlWithoutQuery] = trimmed.split(/[?#]/);
+    return (urlWithoutQuery || '').slice(0, 500);
+  }
+}
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message.slice(0, 300);
+  return 'Unknown error';
 }
 
 // Verify email exists using ZeroBounce
@@ -162,12 +202,15 @@ export async function POST(request: Request) {
       captchaToken: string;
       website?: string;
       marketingConsent?: boolean;
+      privacyAccepted?: boolean;
+      sourcePage?: string;
+      referrer?: string;
     }
 
-    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken, website: honeypot, marketingConsent }: ContactFormData = await request.json();
+    const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken, website: honeypot, marketingConsent, privacyAccepted, sourcePage, referrer }: ContactFormData = await request.json();
 
     // Validate required fields
-    if (!company || !email || !service || !message || message.trim().length < 30) {
+    if (!company || !email || !service || !message || message.trim().length < 30 || !privacyAccepted) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -209,6 +252,8 @@ export async function POST(request: Request) {
 
     const fullName = `${firstName || ''} ${lastName || ''}`.trim() || email;
     const serviceDisplay = serviceDisplayNames[service] || service;
+    const leadId = createLeadId();
+    const submittedAt = new Date().toISOString();
     const safeFullName = escapeHtml(fullName);
     const safeCompany = escapeHtml(company || 'Not provided');
     const safeCompanySize = escapeHtml(companySize || 'Not provided');
@@ -285,31 +330,85 @@ Message: ${message || 'No message provided'}
         <p class="label">Message:</p>
         <p class="value">${safeMessage}</p>
       </div>
+      <div class="field">
+        <p class="label">Lead ID:</p>
+        <p class="value">${escapeHtml(leadId)}</p>
+      </div>
     </div>
   </div>
 </body>
 </html>
     `.trim();
 
-    const resend = getResendClient();
-    const { data, error } = await resend.emails.send({
-      from: 'North Lantern Group <noreply@northlanterngroup.com>',
-      to: ['leads@northlanterngroup.com'],
-      replyTo: cleanHeaderValue(email),
-      subject: cleanHeaderValue(`New inquiry from ${fullName} - ${serviceDisplay}`),
-      text: emailContent,
-      html: htmlContent,
+    let resendMessageId = '';
+    let emailStatus: 'sent' | 'failed' = 'failed';
+    let emailError = '';
+
+    try {
+      const resend = getResendClient();
+      const { data, error } = await resend.emails.send(
+        {
+          from: 'North Lantern Group <noreply@northlanterngroup.com>',
+          to: ['leads@northlanterngroup.com'],
+          replyTo: cleanHeaderValue(email),
+          subject: cleanHeaderValue(`New inquiry from ${fullName} - ${serviceDisplay}`),
+          text: `${emailContent}\nLead ID: ${leadId}`,
+          html: htmlContent,
+        },
+        { idempotencyKey: leadId }
+      );
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      emailStatus = 'sent';
+      resendMessageId = data?.id || '';
+    } catch (error) {
+      emailError = getErrorMessage(error);
+      console.error('Resend error:', emailError);
+    }
+
+    const backupResult = await persistLeadBackup({
+      leadId,
+      submittedAt,
+      firstName: firstName || '',
+      lastName: lastName || '',
+      company,
+      companySize: companySize || '',
+      email,
+      phone: phone || '',
+      service,
+      serviceDisplay,
+      message,
+      marketingConsent: Boolean(marketingConsent),
+      privacyAccepted: true,
+      sourcePage: cleanUrlForLeadMetadata(sourcePage || request.headers.get('referer') || ''),
+      referrer: cleanUrlForLeadMetadata(referrer || ''),
+      emailStatus,
+      resendMessageId,
+      emailError,
     });
 
-    if (error) {
-      console.error('Resend error:', error);
+    if (backupResult.enabled && !backupResult.ok) {
+      console.error('Lead backup error:', backupResult.error || 'Unknown lead backup error');
+    }
+
+    const hasStoredBackup = backupResult.enabled && backupResult.ok && backupResult.status !== 'disabled';
+
+    if (emailStatus === 'failed' && !hasStoredBackup) {
       return NextResponse.json(
-        { error: 'Failed to send email', details: error.message },
+        { error: 'Failed to send email' },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({
+      success: true,
+      leadId,
+      emailStatus,
+      backupStatus: backupResult.status,
+    });
   } catch (error) {
     console.error('API error:', error);
     return NextResponse.json(

@@ -29,7 +29,7 @@ approved." All of those require human sign-off.
 | 1.6 | Marketing consent — separate, optional, unchecked by default (CASL express-consent capture, not bundled with service consent) | ✅ Done | `Contact.tsx` |
 | 1.7 | reCAPTCHA v3 use disclosed on the form with links to Google privacy and terms | ✅ Done | `Contact.tsx` |
 | 1.8 | ZeroBounce email validation disclosed on the form | ✅ Done | `Contact.tsx` |
-| 1.9 | Honeypot + server-side reCAPTCHA verification + ZeroBounce in the API route | ✅ Done | `src/app/api/contact/route.ts` |
+| 1.9 | Honeypot + server-side reCAPTCHA verification + ZeroBounce + signed Google Sheets backup in the API route | ✅ Done in code; deployment pending | `src/app/api/contact/route.ts`, `integrations/google-apps-script/lead-intake/Code.gs` |
 | 1.10 | No advertising cookies, no analytics trackers, no third-party marketing pixels | ✅ Verified | Repo grep: clean |
 | 1.11 | External links use `rel="noopener noreferrer"` | ✅ Verified | Footer, Contact |
 | 1.12 | Working legal nav in the footer: /privacy, /terms, privacy contact | ✅ Done | `Footer.tsx` |
@@ -142,7 +142,7 @@ relying on them for a procurement response.
 | Resend | Transactional email delivery (contact form) | Submitter name, email, phone (if provided), company, message body | US | Resend DPA (TODO: confirm acceptance) |
 | ZeroBounce | Email address validation | Submitter email address only | US | ZeroBounce DPA (TODO: confirm acceptance) |
 | Google reCAPTCHA v3 | Bot-score risk signal | IP, browser signals, request context | Global (Google infrastructure) | Google Terms & Privacy |
-| Google Workspace | Corporate email (receives submissions, privacy requests) | Full submission contents | Global (Google infrastructure) | Google Workspace MSA + DPA |
+| Google Workspace | Corporate email and restricted Google Sheets lead backup | Full submission contents, source page/referrer with arbitrary query strings stripped, delivery status | Global (Google infrastructure) | Google Workspace MSA + DPA |
 
 **TODOs:**
 - [ ] Confirm executed DPA (data processing agreement) is on file for Vercel, Resend, ZeroBounce.
@@ -163,6 +163,7 @@ What personal information the website actually handles.
 | Phone (optional) | Visitor | Contact form | Respond | Consent | 24 months if no engagement |
 | Area of interest, message body | Visitor | Contact form | Respond, route | Consent | 24 months if no engagement |
 | Marketing consent flag | Visitor | Contact form | CASL proof of consent if we later begin sending CEMs | Consent | As long as consent remains valid (plus 3 years for evidentiary retention once withdrawn) |
+| Source page / referrer with arbitrary query strings stripped | Visitor browser | Contact form metadata | Submission provenance and troubleshooting | Legitimate operational interest | 24 months if no engagement |
 | IP address, user agent, request metadata | Visitor | Automatic (server logs) | Security, abuse prevention | Legitimate operational interest | Rolling 30–90 days depending on provider |
 | reCAPTCHA signals | Visitor | Automatic (Google SDK) | Spam prevention | Legitimate operational interest | Retained by Google per their policy |
 
@@ -177,6 +178,7 @@ long the received submission email actually lives in `leads@` and
 | Record type | Retention | Trigger for deletion / review |
 |-------------|-----------|-------------------------------|
 | Contact form email, no engagement | 24 months | Age out + quarterly inbox review |
+| Google Sheets lead backup, no engagement | 24 months | Age out + quarterly Sheet review |
 | Contact form email, became engagement | Per engagement agreement + CRA records retention (6 years for tax-relevant business records) | End of retention window |
 | Marketing consent record | Until consent is withdrawn + 3 years | Evidence of compliance with CASL |
 | Suppression / unsubscribe list | Indefinitely | Required to honor opt-outs |
@@ -369,7 +371,8 @@ time material content changes.
 - [ ] `npm run lint` passes
 - [ ] `npm run build` passes
 - [ ] Manual QA: submit the contact form from a real email, confirm
-      delivery to `leads@`, confirm Privacy Policy + Terms links open,
+      delivery to `leads@`, confirm a Google Sheets backup row exists,
+      confirm Privacy Policy + Terms links open,
       confirm marketing-consent checkbox renders and is unchecked by
       default
 - [ ] Confirm `privacy@northlanterngroup.com` is a live inbox monitored

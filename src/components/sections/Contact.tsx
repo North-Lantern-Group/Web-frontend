@@ -110,6 +110,9 @@ const ContactForm = memo(function ContactForm() {
           captchaToken,
           website: honeypot,
           marketingConsent,
+          privacyAccepted,
+          sourcePage: window.location.href,
+          referrer: document.referrer,
         }),
       });
       const data = await response.json();
