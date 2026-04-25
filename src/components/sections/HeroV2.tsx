@@ -29,7 +29,7 @@ export default function HeroV2() {
           </h1>
 
           <p className="nlg-hero-sub">
-            North Lantern Group designs and improves Atlassian, business intelligence, and automation systems so teams can see the work clearly, own it internally, and scale without piling on manual effort.
+            North Lantern Group designs, improves and implements Atlassian, business intelligence, and automation systems so teams can see the work clearly, own it internally, and scale without piling on manual effort.
           </p>
 
           <div className="nlg-hero-actions">
