@@ -10,6 +10,11 @@ import "react-phone-number-input/style.css";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { IconArrow, IconCalendar, IconLinkedIn, IconMail } from "@/components/icons/PracticeIcons";
 import { BOOKING_URL, LINKEDIN_URL, EMAIL_GENERAL } from "@/config/site";
+import {
+  CONTACT_MESSAGE_MIN_LENGTH,
+  type ContactFieldErrors,
+  validateContactSubmission,
+} from "@/lib/contactValidation";
 
 function getPhoneFormatHint(country: Country | undefined): string {
   if (!country) return "";
@@ -38,6 +43,7 @@ const ContactForm = memo(function ContactForm() {
   const [phoneError, setPhoneError] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<Country>("CA");
   const [emailError, setEmailError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [honeypot, setHoneypot] = useState("");
@@ -72,23 +78,31 @@ const ContactForm = memo(function ContactForm() {
     setFormMessage("");
     setEmailError("");
     setPhoneError("");
+    setFieldErrors({});
 
     const emailErr = validateEmail(formData.email);
+    const phoneErr = validatePhone(phoneValue);
+
+    const nextFieldErrors = validateContactSubmission({
+      company: formData.company,
+      email: formData.email,
+      service: formData.service,
+      message: formData.message,
+      privacyAccepted,
+    });
+
     if (emailErr) {
       setEmailError(emailErr);
-      setFormStatus("idle");
-      return;
+      delete nextFieldErrors.email;
     }
 
-    const phoneErr = validatePhone(phoneValue);
     if (phoneErr) {
       setPhoneError(phoneErr);
-      setFormStatus("idle");
-      return;
     }
 
-    if (!privacyAccepted) {
-      setFormMessage("Please accept the privacy statement to continue.");
+    if (Object.keys(nextFieldErrors).length > 0 || emailErr || phoneErr) {
+      setFieldErrors(nextFieldErrors);
+      setFormMessage("Please correct the highlighted fields.");
       setFormStatus("error");
       return;
     }
@@ -132,6 +146,12 @@ const ContactForm = memo(function ContactForm() {
         setPrivacyAccepted(false);
         setMarketingConsent(false);
       } else {
+        if (data.fieldErrors) {
+          setFieldErrors(data.fieldErrors);
+          if (data.fieldErrors.email) {
+            setEmailError(data.fieldErrors.email);
+          }
+        }
         setFormStatus("error");
         setFormMessage(data.error || "Something went wrong. Please try again.");
       }
@@ -176,9 +196,20 @@ const ContactForm = memo(function ContactForm() {
             type="text"
             required
             value={formData.company}
-            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, company: e.target.value });
+              setFieldErrors((errors) => ({ ...errors, company: undefined }));
+            }}
+            aria-invalid={!!fieldErrors.company}
+            aria-describedby={fieldErrors.company ? "company-error" : undefined}
+            className={fieldErrors.company ? "nlg-input-error" : ""}
             placeholder="Company"
           />
+          {fieldErrors.company && (
+            <p id="company-error" className="nlg-field-error">
+              {fieldErrors.company}
+            </p>
+          )}
         </div>
         <div className="nlg-field">
           <label htmlFor="companySize">Company size</label>
@@ -210,6 +241,7 @@ const ContactForm = memo(function ContactForm() {
           onChange={(e) => {
             setFormData({ ...formData, email: e.target.value });
             setEmailError("");
+            setFieldErrors((errors) => ({ ...errors, email: undefined }));
           }}
           aria-invalid={!!emailError}
           aria-describedby={emailError ? "email-error" : undefined}
@@ -257,7 +289,13 @@ const ContactForm = memo(function ContactForm() {
           id="service"
           required
           value={formData.service}
-          onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+          onChange={(e) => {
+            setFormData({ ...formData, service: e.target.value });
+            setFieldErrors((errors) => ({ ...errors, service: undefined }));
+          }}
+          aria-invalid={!!fieldErrors.service}
+          aria-describedby={fieldErrors.service ? "service-error" : undefined}
+          className={fieldErrors.service ? "nlg-input-error" : ""}
         >
           <option value="" disabled>
             Pick a practice
@@ -268,6 +306,11 @@ const ContactForm = memo(function ContactForm() {
           <option value="consultant-recovery">Our last consultant left us worse off</option>
           <option value="general">General inquiry</option>
         </select>
+        {fieldErrors.service && (
+          <p id="service-error" className="nlg-field-error">
+            {fieldErrors.service}
+          </p>
+        )}
       </div>
 
       <div className="nlg-field">
@@ -278,11 +321,22 @@ const ContactForm = memo(function ContactForm() {
           id="message"
           rows={5}
           required
-          minLength={30}
+          minLength={CONTACT_MESSAGE_MIN_LENGTH}
           value={formData.message}
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          onChange={(e) => {
+            setFormData({ ...formData, message: e.target.value });
+            setFieldErrors((errors) => ({ ...errors, message: undefined }));
+          }}
+          aria-invalid={!!fieldErrors.message}
+          aria-describedby={fieldErrors.message ? "message-error" : undefined}
+          className={fieldErrors.message ? "nlg-input-error" : ""}
           placeholder="What is broken, what changed, what a useful first conversation needs to cover."
         />
+        {fieldErrors.message && (
+          <p id="message-error" className="nlg-field-error">
+            {fieldErrors.message}
+          </p>
+        )}
       </div>
 
       <div className="nlg-field nlg-privacy">
@@ -290,7 +344,12 @@ const ContactForm = memo(function ContactForm() {
           <input
             type="checkbox"
             checked={privacyAccepted}
-            onChange={(e) => setPrivacyAccepted(e.target.checked)}
+            onChange={(e) => {
+              setPrivacyAccepted(e.target.checked);
+              setFieldErrors((errors) => ({ ...errors, privacyAccepted: undefined }));
+            }}
+            aria-invalid={!!fieldErrors.privacyAccepted}
+            aria-describedby={fieldErrors.privacyAccepted ? "privacy-error" : undefined}
           />
           <span>
             I have read the North Lantern Group{" "}
@@ -300,6 +359,11 @@ const ContactForm = memo(function ContactForm() {
             inquiry. <span className="nlg-req">*</span>
           </span>
         </label>
+        {fieldErrors.privacyAccepted && (
+          <p id="privacy-error" className="nlg-field-error nlg-checkbox-error">
+            {fieldErrors.privacyAccepted}
+          </p>
+        )}
       </div>
 
       <div className="nlg-field nlg-privacy">

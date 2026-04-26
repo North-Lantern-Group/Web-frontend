@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { validateContactSubmission } from '@/lib/contactValidation';
 import { createLeadId, persistLeadBackup } from '@/lib/leadBackup';
 // Contact form API with CAPTCHA and email verification
 
@@ -209,10 +210,17 @@ export async function POST(request: Request) {
 
     const { firstName, lastName, company, companySize, email, phone, service, message, captchaToken, website: honeypot, marketingConsent, privacyAccepted, sourcePage, referrer }: ContactFormData = await request.json();
 
-    // Validate required fields
-    if (!company || !email || !service || !message || message.trim().length < 30 || !privacyAccepted) {
+    const fieldErrors = validateContactSubmission({
+      company,
+      email,
+      service,
+      message,
+      privacyAccepted,
+    });
+
+    if (Object.keys(fieldErrors).length > 0) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Please correct the highlighted fields.', fieldErrors },
         { status: 400 }
       );
     }
