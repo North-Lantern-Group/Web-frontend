@@ -80,7 +80,7 @@ function renderLinkedValue(field: EmailField) {
   const href = safeHref(field.href);
   if (!href) return safeValue;
 
-  return `<a href="${escapeHtml(href)}" style="color:#007EA7;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;word-break:break-word;overflow-wrap:anywhere;">${safeValue}</a>`;
+  return `<a href="${escapeHtml(href)}" style="color:#006F8F;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;word-break:break-word;overflow-wrap:anywhere;">${safeValue}</a>`;
 }
 
 function renderFieldRows(fields: EmailField[]) {
@@ -88,11 +88,11 @@ function renderFieldRows(fields: EmailField[]) {
     .map(
       (field) => `
         <tr>
-          <td style="padding:15px 0;border-top:1px solid #E1E7EE;vertical-align:top;">
-            <div style="color:#667789;font:700 11px/1.4 Arial, sans-serif;text-transform:uppercase;letter-spacing:0.11em;">
+          <td style="padding:16px 0;border-top:1px solid #DEE7EF;vertical-align:top;">
+            <div style="color:#53687A;font:700 11px/1.4 Arial, sans-serif;text-transform:uppercase;letter-spacing:0.11em;">
               ${escapeHtml(field.label)}
             </div>
-            <div style="margin-top:6px;color:#142238;font:500 15px/1.55 Arial, sans-serif;word-break:break-word;overflow-wrap:anywhere;">
+            <div style="margin-top:6px;color:#0A1628;font:500 16px/1.55 Arial, sans-serif;word-break:break-word;overflow-wrap:anywhere;">
               ${renderLinkedValue(field)}
             </div>
           </td>
@@ -164,62 +164,71 @@ ${textLine("Referrer", data.referrer)}
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light">
-    <meta name="supported-color-schemes" content="light">
+    <style>
+      @media only screen and (max-width: 480px) {
+        .nlg-email-shell { padding: 20px 0 !important; }
+        .nlg-email-panel { width: 100% !important; max-width: 100% !important; border-left: 0 !important; border-right: 0 !important; border-radius: 0 !important; }
+        .nlg-email-section { padding-left: 24px !important; padding-right: 24px !important; }
+        .nlg-email-title { font-size: 28px !important; line-height: 1.18 !important; }
+        .nlg-email-card-cell { padding-left: 20px !important; padding-right: 20px !important; }
+      }
+    </style>
     <title>New website inquiry from ${safeFullName}</title>
   </head>
-  <body style="margin:0;padding:0;background:#05101F;color:#142238;font-family:Arial, Helvetica, sans-serif;-webkit-font-smoothing:antialiased;word-break:break-word;overflow-wrap:anywhere;">
+  <body style="margin:0;padding:0;background:#EDF4FA;color:#0A1628;font-family:Arial, Helvetica, sans-serif;-webkit-font-smoothing:antialiased;word-break:break-word;overflow-wrap:anywhere;">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
       New inquiry from ${safeFullName} at ${safeCompany} about ${safeService}.
     </div>
 
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background:#05101F;table-layout:fixed;">
-      <tr>
-        <td align="center" style="padding:34px 16px;">
-          <div style="width:100%;max-width:680px;margin:0 auto;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:separate;border-spacing:0;background:#F5F7FA;border:1px solid #D8E2EA;border-radius:14px;overflow:hidden;table-layout:fixed;">
+    <div class="nlg-email-shell" style="background:#EDF4FA;padding:28px 12px;">
+      <div style="width:100%;max-width:680px;margin:0 auto;box-sizing:border-box;">
+          <table class="nlg-email-panel" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="width:100%;max-width:680px;border-collapse:separate;border-spacing:0;background:#FFFFFF;border:1px solid #D7E2EA;border-radius:14px;overflow:hidden;table-layout:fixed;box-sizing:border-box;">
             <tr>
-              <td style="padding:30px 34px;background:#0A1628;background-image:linear-gradient(135deg,#00455F 0%,#0A1628 58%,#05101F 100%);">
+              <td style="height:6px;line-height:6px;font-size:0;background:#0096B4;background-image:linear-gradient(90deg,#0096B4 0%,#00AEEF 48%,#1B4965 100%);">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td class="nlg-email-section" style="padding:30px 34px 28px;background:#FFFFFF;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;table-layout:fixed;">
                   <tr>
                     <td style="vertical-align:middle;width:50px;">
                       <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
                         <tr>
-                          <td align="center" valign="middle" style="width:42px;height:42px;border:1px solid rgba(255,255,255,0.55);border-radius:10px;color:#FFFFFF;font:700 22px/42px Arial, sans-serif;">
+                          <td align="center" valign="middle" style="width:42px;height:42px;border:1px solid #B8CAD8;border-radius:10px;background:#F5F9FC;color:#00304B;font:700 22px/42px Arial, sans-serif;">
                             N
                           </td>
                         </tr>
                       </table>
                     </td>
                     <td style="vertical-align:middle;">
-                      <div style="color:#FFFFFF;font:700 17px/1.2 Arial, sans-serif;letter-spacing:-0.01em;">North Lantern Group</div>
-                      <div style="padding-top:5px;color:#9CEBFF;font:600 11px/1.4 Arial, sans-serif;text-transform:uppercase;letter-spacing:0.14em;">Website lead intake</div>
+                      <div style="color:#0A1628;font:700 18px/1.2 Arial, sans-serif;letter-spacing:-0.01em;">North Lantern Group</div>
+                      <div style="padding-top:5px;color:#007EA7;font:700 11px/1.4 Arial, sans-serif;text-transform:uppercase;letter-spacing:0.14em;">Website lead intake</div>
                     </td>
                   </tr>
                 </table>
 
-                <h1 style="margin:28px 0 0;color:#FFFFFF;font:700 30px/1.18 Arial, sans-serif;letter-spacing:-0.02em;">
+                <h1 class="nlg-email-title" style="margin:28px 0 0;color:#0A1628;font:700 30px/1.18 Arial, sans-serif;letter-spacing:-0.02em;">
                   New website inquiry
                 </h1>
-                <p style="margin:10px 0 0;color:#C7D2DB;font:400 15px/1.6 Arial, sans-serif;">
+                <p style="margin:10px 0 0;color:#3D4F60;font:500 16px/1.6 Arial, sans-serif;">
                   Reply directly to this email to reach the lead. A backup copy has also been sent to the lead intake log.
                 </p>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:28px 34px 0;background:#F5F7FA;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate;border-spacing:0;background:#FFFFFF;border:1px solid #DDE6EE;border-radius:12px;table-layout:fixed;">
+              <td class="nlg-email-section" style="padding:0 34px 0;background:#FFFFFF;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#F6FAFD" style="border-collapse:separate;border-spacing:0;background:#F6FAFD;border:1px solid #D7E2EA;border-radius:12px;table-layout:fixed;">
                   <tr>
-                    <td style="padding:22px 24px 0;">
-                      <div style="color:#667789;font:700 11px/1.4 Arial, sans-serif;text-transform:uppercase;letter-spacing:0.12em;">Lead snapshot</div>
+                    <td class="nlg-email-card-cell" style="padding:22px 24px 0;">
+                      <div style="color:#53687A;font:700 11px/1.4 Arial, sans-serif;text-transform:uppercase;letter-spacing:0.12em;">Lead snapshot</div>
                       <div style="margin-top:8px;color:#0A1628;font:700 22px/1.25 Arial, sans-serif;letter-spacing:-0.02em;">${safeFullName}</div>
-                      <div style="margin-top:6px;color:#4A5B6D;font:500 14px/1.55 Arial, sans-serif;">${safeCompany} · ${safeService}</div>
+                      <div style="margin-top:6px;color:#3D4F60;font:500 15px/1.55 Arial, sans-serif;">${safeCompany} &middot; ${safeService}</div>
                     </td>
                   </tr>
                   <tr>
-                    <td style="padding:18px 24px 22px;">
-                      <a href="${escapeHtml(replyHref)}" style="display:block;background:#00AEEF;color:#04141E;border-radius:7px;padding:13px 18px;font:700 14px/1 Arial, sans-serif;text-decoration:none;text-align:center;">Reply to lead</a>
+                    <td class="nlg-email-card-cell" style="padding:18px 24px 22px;">
+                      <a href="${escapeHtml(replyHref)}" style="display:block;background:#E5F6FB;color:#00304B;border:1px solid #91D7E9;border-radius:7px;padding:14px 18px;font:700 15px/1 Arial, sans-serif;text-decoration:none;text-align:center;">Reply to lead</a>
                     </td>
                   </tr>
                 </table>
@@ -227,7 +236,7 @@ ${textLine("Referrer", data.referrer)}
             </tr>
 
             <tr>
-              <td style="padding:26px 34px 0;background:#F5F7FA;">
+              <td class="nlg-email-section" style="padding:28px 34px 0;background:#FFFFFF;">
                 <h2 style="margin:0 0 12px;color:#0A1628;font:700 16px/1.35 Arial, sans-serif;letter-spacing:-0.01em;">Contact details</h2>
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;table-layout:fixed;">
                   ${renderFieldRows(leadFields)}
@@ -236,16 +245,16 @@ ${textLine("Referrer", data.referrer)}
             </tr>
 
             <tr>
-              <td style="padding:26px 34px 0;background:#F5F7FA;">
+              <td class="nlg-email-section" style="padding:28px 34px 0;background:#FFFFFF;">
                 <h2 style="margin:0 0 12px;color:#0A1628;font:700 16px/1.35 Arial, sans-serif;letter-spacing:-0.01em;">Message</h2>
-                <div style="background:#FFFFFF;border:1px solid #DDE6EE;border-left:4px solid #00AEEF;border-radius:10px;padding:20px 22px;color:#142238;font:500 15px/1.7 Arial, sans-serif;word-break:break-word;">
+                <div style="background:#F6FAFD;border:1px solid #D7E2EA;border-left:4px solid #0096B4;border-radius:10px;padding:20px 22px;color:#0A1628;font:500 16px/1.7 Arial, sans-serif;word-break:break-word;overflow-wrap:anywhere;">
                   ${safeMessage}
                 </div>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:26px 34px 30px;background:#F5F7FA;">
+              <td class="nlg-email-section" style="padding:28px 34px 30px;background:#FFFFFF;">
                 <h2 style="margin:0 0 12px;color:#0A1628;font:700 16px/1.35 Arial, sans-serif;letter-spacing:-0.01em;">Operational details</h2>
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;table-layout:fixed;">
                   ${renderFieldRows(metadataFields)}
@@ -254,15 +263,13 @@ ${textLine("Referrer", data.referrer)}
             </tr>
 
             <tr>
-              <td style="padding:18px 34px 24px;background:#EAF0F5;border-top:1px solid #D8E2EA;color:#667789;font:500 12px/1.6 Arial, sans-serif;word-break:break-word;overflow-wrap:anywhere;">
+              <td class="nlg-email-section" style="padding:18px 34px 24px;background:#F1F6F9;border-top:1px solid #D7E2EA;color:#53687A;font:500 12px/1.6 Arial, sans-serif;word-break:break-word;overflow-wrap:anywhere;">
                 This internal notification was generated by northlanterngroup.com. Keep lead details inside approved NLG systems.
               </td>
             </tr>
           </table>
-          </div>
-        </td>
-      </tr>
-    </table>
+      </div>
+    </div>
   </body>
 </html>
   `.trim();
