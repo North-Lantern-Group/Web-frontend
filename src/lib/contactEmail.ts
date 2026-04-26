@@ -21,6 +21,7 @@ interface EmailField {
 }
 
 const NOT_PROVIDED = "Not provided";
+const NLG_ICON_URL = "https://www.northlanterngroup.com/brand/icons/primary/png/NLG-Icon.png";
 
 function escapeHtml(value: string) {
   return value
@@ -180,7 +181,7 @@ ${textLine("Referrer", data.referrer)}
       New inquiry from ${safeFullName} at ${safeCompany} about ${safeService}.
     </div>
 
-    <div class="nlg-email-shell" style="background:#EDF4FA;padding:28px 12px;">
+    <div class="nlg-email-shell" style="background:#EDF4FA;padding:28px 12px;box-sizing:border-box;width:100%;">
       <div style="width:100%;max-width:680px;margin:0 auto;box-sizing:border-box;">
           <table class="nlg-email-panel" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" style="width:100%;max-width:680px;border-collapse:separate;border-spacing:0;background:#FFFFFF;border:1px solid #D7E2EA;border-radius:14px;overflow:hidden;table-layout:fixed;box-sizing:border-box;">
             <tr>
@@ -191,14 +192,8 @@ ${textLine("Referrer", data.referrer)}
               <td class="nlg-email-section" style="padding:30px 34px 28px;background:#FFFFFF;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;table-layout:fixed;">
                   <tr>
-                    <td style="vertical-align:middle;width:50px;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
-                        <tr>
-                          <td align="center" valign="middle" style="width:42px;height:42px;border:1px solid #B8CAD8;border-radius:10px;background:#F5F9FC;color:#00304B;font:700 22px/42px Arial, sans-serif;">
-                            N
-                          </td>
-                        </tr>
-                      </table>
+                    <td style="vertical-align:middle;width:66px;">
+                      <img src="${NLG_ICON_URL}" width="54" height="54" alt="North Lantern Group" style="display:block;width:54px;height:54px;border:0;outline:none;text-decoration:none;">
                     </td>
                     <td style="vertical-align:middle;">
                       <div style="color:#0A1628;font:700 18px/1.2 Arial, sans-serif;letter-spacing:-0.01em;">North Lantern Group</div>
@@ -228,7 +223,7 @@ ${textLine("Referrer", data.referrer)}
                   </tr>
                   <tr>
                     <td class="nlg-email-card-cell" style="padding:18px 24px 22px;">
-                      <a href="${escapeHtml(replyHref)}" style="display:block;background:#E5F6FB;color:#00304B;border:1px solid #91D7E9;border-radius:7px;padding:14px 18px;font:700 15px/1 Arial, sans-serif;text-decoration:none;text-align:center;">Reply to lead</a>
+                      <a href="${escapeHtml(replyHref)}" style="display:block;background:#00304B;background-image:linear-gradient(135deg,#00304B 0%,#00455F 42%,#006F8F 72%,#0096B4 100%);color:#FFFFFF !important;-webkit-text-fill-color:#FFFFFF;border:1px solid #00455F;border-radius:7px;padding:16px 20px;font:800 17px/1 Arial, sans-serif;text-decoration:none;text-align:center;letter-spacing:0.01em;">Reply to lead</a>
                     </td>
                   </tr>
                 </table>
