@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { renderContactLeadEmail } from '@/lib/contactEmail';
 import { validateContactSubmission } from '@/lib/contactValidation';
 import { createLeadId, persistLeadBackup } from '@/lib/leadBackup';
 // Contact form API with CAPTCHA and email verification
@@ -24,15 +25,6 @@ function getResendClient() {
     throw new Error('RESEND_API_KEY is not configured');
   }
   return new Resend(apiKey);
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
 
 function cleanHeaderValue(value: string) {
@@ -262,91 +254,25 @@ export async function POST(request: Request) {
     const serviceDisplay = serviceDisplayNames[service] || service;
     const leadId = createLeadId();
     const submittedAt = new Date().toISOString();
-    const safeFullName = escapeHtml(fullName);
-    const safeCompany = escapeHtml(company || 'Not provided');
-    const safeCompanySize = escapeHtml(companySize || 'Not provided');
-    const safeEmail = escapeHtml(email);
-    const safePhone = phone ? escapeHtml(phone) : '';
-    const safeServiceDisplay = escapeHtml(serviceDisplay);
-    const safeMessage = escapeHtml(message || 'No message provided');
     const marketingConsentLabel = marketingConsent ? 'Yes (marketing updates opt-in)' : 'No';
-    const safeMarketingConsent = escapeHtml(marketingConsentLabel);
+    const safeSourcePage = cleanUrlForLeadMetadata(sourcePage || request.headers.get('referer') || '');
+    const safeReferrer = cleanUrlForLeadMetadata(referrer || '');
 
-    const emailContent = `
-New Contact Form Submission
-
-Name: ${fullName}
-Company: ${company || 'Not provided'}
-Company Size: ${companySize || 'Not provided'}
-Email: ${email}
-Phone: ${phone || 'Not provided'}
-Area of Interest: ${serviceDisplay}
-Marketing consent: ${marketingConsentLabel}
-Message: ${message || 'No message provided'}
-    `.trim();
-
-    const htmlContent = `
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: 'Open Sans', Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background-color: #0891b2; padding: 30px; border-radius: 8px 8px 0 0; }
-    .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; }
-    .field { margin-bottom: 15px; }
-    .label { font-weight: 600; color: #0a1628; }
-    .value { color: #374151; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header" style="background-color: #0891b2 !important;">
-      <h1 style="margin: 0; font-size: 24px; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;">New Contact Form Submission</h1>
-      <p style="margin: 10px 0 0 0; color: #e0f7fa !important; -webkit-text-fill-color: #e0f7fa !important;">North Lantern Group Website</p>
-    </div>
-    <div class="content">
-      <div class="field">
-        <p class="label">Name:</p>
-        <p class="value">${safeFullName}</p>
-      </div>
-      <div class="field">
-        <p class="label">Company:</p>
-        <p class="value">${safeCompany}</p>
-      </div>
-      <div class="field">
-        <p class="label">Company Size:</p>
-        <p class="value">${safeCompanySize}</p>
-      </div>
-      <div class="field">
-        <p class="label">Email:</p>
-        <p class="value"><a href="mailto:${safeEmail}">${safeEmail}</a></p>
-      </div>
-      <div class="field">
-        <p class="label">Phone:</p>
-        <p class="value">${safePhone ? `<a href="tel:${safePhone}">${safePhone}</a>` : 'Not provided'}</p>
-      </div>
-      <div class="field">
-        <p class="label">Area of Interest:</p>
-        <p class="value">${safeServiceDisplay}</p>
-      </div>
-      <div class="field">
-        <p class="label">Marketing consent:</p>
-        <p class="value">${safeMarketingConsent}</p>
-      </div>
-      <div class="field">
-        <p class="label">Message:</p>
-        <p class="value">${safeMessage}</p>
-      </div>
-      <div class="field">
-        <p class="label">Lead ID:</p>
-        <p class="value">${escapeHtml(leadId)}</p>
-      </div>
-    </div>
-  </div>
-</body>
-</html>
-    `.trim();
+    const { text: emailText, html: emailHtml } = renderContactLeadEmail({
+      leadId,
+      submittedAt,
+      fullName,
+      company,
+      companySize,
+      email,
+      phone,
+      serviceDisplay,
+      message,
+      marketingConsentLabel,
+      privacyAccepted: true,
+      sourcePage: safeSourcePage,
+      referrer: safeReferrer,
+    });
 
     let resendMessageId = '';
     let emailStatus: 'sent' | 'failed' = 'failed';
@@ -360,8 +286,8 @@ Message: ${message || 'No message provided'}
           to: ['leads@northlanterngroup.com'],
           replyTo: cleanHeaderValue(email),
           subject: cleanHeaderValue(`New inquiry from ${fullName} - ${serviceDisplay}`),
-          text: `${emailContent}\nLead ID: ${leadId}`,
-          html: htmlContent,
+          text: emailText,
+          html: emailHtml,
         },
         { idempotencyKey: leadId }
       );
@@ -391,8 +317,8 @@ Message: ${message || 'No message provided'}
       message,
       marketingConsent: Boolean(marketingConsent),
       privacyAccepted: true,
-      sourcePage: cleanUrlForLeadMetadata(sourcePage || request.headers.get('referer') || ''),
-      referrer: cleanUrlForLeadMetadata(referrer || ''),
+      sourcePage: safeSourcePage,
+      referrer: safeReferrer,
       emailStatus,
       resendMessageId,
       emailError,
