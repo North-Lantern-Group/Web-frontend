@@ -166,6 +166,8 @@ The `Dashboard` latest-leads block is capped at 12 rows by design. When a 13th
 lead arrives, the oldest dashboard row drops out of the dashboard view, but it
 remains in `Raw Leads`. The dashboard table is bounded to the latest-leads area
 and should not spill into the lower operating notes or data-health blocks.
+Dashboard lead metrics count only rows with a non-empty `lead_id`; this keeps
+status values left behind during manual cleanup from inflating lead totals.
 
 The workbook design helper pre-formats the operating tabs through 1000 rows and
 adds dropdown validation to the `Raw Leads` consent/status columns. If the Sheet
@@ -382,7 +384,9 @@ from all places where it was written:
 5. Confirm the selected rows are only smoke-test data and not real submissions.
 6. Ask for explicit action-time confirmation before deleting any Sheet rows.
 7. After confirmation, delete the matched rows from `Raw Leads`, `Lead Index`,
-   and relevant `Integration Events` rows.
+   and relevant `Integration Events` rows. Prefer deleting the entire fake row
+   over clearing selected cells, because partial cleanup can leave operational
+   status values behind.
 8. Recheck `Dashboard` and `Raw Leads` to confirm the fake lead no longer
    appears and no unrelated lead was removed.
 

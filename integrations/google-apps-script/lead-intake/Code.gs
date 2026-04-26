@@ -369,6 +369,12 @@ function ensureDashboardSheet_(ss) {
 
 function applyDashboardDesign_(sheet) {
   const theme = NLG_SHEET_THEME;
+  const rawLeadIdRange = rawColumnRange_('lead_id');
+  const rawEmailStatusRange = rawColumnRange_('email_status');
+  const rawBackupStatusRange = rawColumnRange_('backup_status');
+  const rawLeadStatusRange = rawColumnRange_('lead_status');
+  const rawMarketingConsentRange = rawColumnRange_('marketing_consent');
+  const eventTypeRange = eventsColumnRange_('event');
 
   sheet.clear();
   sheet.getRange('A1:J38').breakApart();
@@ -434,10 +440,10 @@ function applyDashboardDesign_(sheet) {
     .setHorizontalAlignment('left');
 
   const cards = [
-    ['B7:C10', 'TOTAL LEADS', '=MAX(COUNTA(\'Raw Leads\'!B2:B),0)', 'accepted submissions'],
-    ['D7:E10', 'NEW', '=COUNTIF(\'Raw Leads\'!U2:U,"new")', 'not yet triaged'],
-    ['F7:G10', 'EMAIL SENT', '=COUNTIF(\'Raw Leads\'!Q2:Q,"sent")', 'Resend accepted'],
-    ['H7:I10', 'BACKUP STORED', '=COUNTIF(\'Raw Leads\'!T2:T,"stored")', 'Sheet durable rows'],
+    ['B7:C10', 'TOTAL LEADS', `=COUNTIFS(${rawLeadIdRange},"<>")`, 'accepted submissions'],
+    ['D7:E10', 'NEW', `=COUNTIFS(${rawLeadIdRange},"<>",${rawLeadStatusRange},"new")`, 'not yet triaged'],
+    ['F7:G10', 'EMAIL SENT', `=COUNTIFS(${rawLeadIdRange},"<>",${rawEmailStatusRange},"sent")`, 'Resend accepted'],
+    ['H7:I10', 'BACKUP STORED', `=COUNTIFS(${rawLeadIdRange},"<>",${rawBackupStatusRange},"stored")`, 'Sheet durable rows'],
   ];
 
   cards.forEach(([rangeA1, label, formula, caption]) => {
@@ -533,12 +539,47 @@ function applyDashboardDesign_(sheet) {
     .setFontWeight('bold');
   sheet.getRange('G28:I34')
     .merge()
-    .setFormula('="Failed email rows: "&COUNTIF(\'Raw Leads\'!Q2:Q,"failed")&CHAR(10)&"Rejected events: "&COUNTIF(\'Integration Events\'!C2:C,"rejected")&CHAR(10)&"Duplicate events: "&COUNTIF(\'Integration Events\'!C2:C,"duplicate")&CHAR(10)&"Marketing opt-ins: "&COUNTIF(\'Raw Leads\'!M2:M,"yes")')
+    .setFormula(`="Failed email rows: "&COUNTIFS(${rawLeadIdRange},"<>",${rawEmailStatusRange},"failed")&CHAR(10)&"Rejected events: "&COUNTIF(${eventTypeRange},"rejected")&CHAR(10)&"Duplicate events: "&COUNTIF(${eventTypeRange},"duplicate")&CHAR(10)&"Marketing opt-ins: "&COUNTIFS(${rawLeadIdRange},"<>",${rawMarketingConsentRange},"yes")`)
     .setBackground(theme.tile)
     .setFontColor(theme.fg2)
     .setFontSize(10)
     .setWrap(true)
     .setBorder(true, true, true, true, false, false, theme.line, SpreadsheetApp.BorderStyle.SOLID);
+}
+
+function rawColumnRange_(headerName) {
+  return sheetColumnRange_(getRawSheetName_(), RAW_HEADERS, headerName);
+}
+
+function eventsColumnRange_(headerName) {
+  return sheetColumnRange_(getEventsSheetName_(), EVENT_HEADERS, headerName);
+}
+
+function sheetColumnRange_(sheetName, headers, headerName) {
+  const columnIndex = headers.indexOf(headerName) + 1;
+  if (columnIndex < 1) {
+    throw new Error(`Unknown column header: ${headerName}`);
+  }
+
+  const column = columnLetter_(columnIndex);
+  return `${formulaSheetName_(sheetName)}!${column}2:${column}`;
+}
+
+function formulaSheetName_(sheetName) {
+  return `'${String(sheetName).replace(/'/g, "''")}'`;
+}
+
+function columnLetter_(columnIndex) {
+  let index = columnIndex;
+  let letters = '';
+
+  while (index > 0) {
+    const remainder = (index - 1) % 26;
+    letters = String.fromCharCode(65 + remainder) + letters;
+    index = Math.floor((index - 1) / 26);
+  }
+
+  return letters;
 }
 
 function applyRawLeadsDesign_(sheet) {
