@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const CONTACT_MESSAGE_MIN_LENGTH = 30;
+export const CAPTCHA_TOKEN_MAX_LENGTH = 4096;
 
 const serviceValues = [
   "atlassian-platform",
@@ -49,7 +50,7 @@ export const contactSubmissionSchema = z
         `Please add at least ${CONTACT_MESSAGE_MIN_LENGTH} characters so we have enough context.`
       )
       .max(5000),
-    captchaToken: z.string().trim().min(1).max(2048),
+    captchaToken: z.string().trim().min(1).max(CAPTCHA_TOKEN_MAX_LENGTH),
     website: optionalBoundedString(200),
     marketingConsent: z.boolean().optional().default(false),
     privacyAccepted: z.literal(true, {

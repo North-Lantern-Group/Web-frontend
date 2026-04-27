@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  CAPTCHA_TOKEN_MAX_LENGTH,
   contactSubmissionSchema,
   getContactFieldErrors,
   validateContactSubmission,
@@ -45,7 +46,7 @@ describe("contactSubmissionSchema", () => {
     ["email", `${"a".repeat(250)}@x.com`],
     ["phone", "1".repeat(31)],
     ["message", "a".repeat(5001)],
-    ["captchaToken", "a".repeat(2049)],
+    ["captchaToken", "a".repeat(CAPTCHA_TOKEN_MAX_LENGTH + 1)],
     ["website", "a".repeat(201)],
     ["sourcePage", "a".repeat(1001)],
     ["referrer", "a".repeat(1001)],
@@ -101,6 +102,15 @@ describe("contactSubmissionSchema", () => {
     });
 
     expect(result.success).toBe(false);
+  });
+
+  it("accepts a real-world reCAPTCHA token length", () => {
+    const result = contactSubmissionSchema.safeParse({
+      ...validSubmission,
+      captchaToken: "a".repeat(2212),
+    });
+
+    expect(result.success).toBe(true);
   });
 
   it("keeps the frontend helper limited to visible contact fields", () => {
