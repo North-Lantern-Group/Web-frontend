@@ -25,7 +25,7 @@ export default function HeroV2() {
           <div className="nlg-hero-eyebrow nlg-eyebrow">Results that endure.</div>
 
           <h1 className="nlg-h1">
-            Fix the workflows, reports, and systems your team has <span className="accent">outgrown.</span>
+            Fix the Atlassian, analytics and automation systems your team has <span className="accent">outgrown.</span>
           </h1>
 
           <p className="nlg-hero-sub">
@@ -41,7 +41,7 @@ export default function HeroV2() {
             >
               Book a call <IconArrow size={16} />
             </a>
-            <a className="nlg-btn nlg-btn-secondary nlg-btn-lg" href="#how-we-work">
+            <a className="nlg-btn nlg-btn-secondary nlg-btn-lg" href="#process">
               How we work
             </a>
           </div>

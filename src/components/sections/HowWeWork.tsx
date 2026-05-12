@@ -20,7 +20,7 @@ const STEPS = [
 
 export default function HowWeWork() {
   return (
-    <section className="nlg-section" id="how-we-work" style={{ paddingTop: 40 }}>
+    <section className="nlg-section" id="process" style={{ paddingTop: 40 }}>
       <div className="nlg-wrap">
         <div className="nlg-section-head nlg-reveal">
           <div className="nlg-eyebrow-col">

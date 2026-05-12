@@ -24,14 +24,19 @@ export default function Header() {
         </Link>
 
         <ul className="nlg-nav-links" aria-label="Primary">
-          <li>
+          <li className="nlg-nav-item nlg-nav-has-menu">
             <a href="#practices">Practices</a>
+            <div className="nlg-nav-submenu" aria-label="Practice areas">
+              <a href="#atlassian">Atlassian Platform</a>
+              <a href="#bi">BI and Analytics</a>
+              <a href="#automation">Automation and Integration</a>
+            </div>
           </li>
           <li>
-            <a href="#work">Work</a>
+            <a href="#engagements">Engagements</a>
           </li>
           <li>
-            <a href="#how-we-work">How we work</a>
+            <a href="#process">Process</a>
           </li>
           <li>
             <a href="#belief">About</a>
@@ -39,9 +44,6 @@ export default function Header() {
         </ul>
 
         <div className="nlg-nav-right">
-          <a className="nlg-btn nlg-btn-ghost" href="#contact">
-            Contact
-          </a>
           <a
             className="nlg-btn nlg-btn-primary"
             href={BOOKING_URL}
@@ -76,20 +78,26 @@ export default function Header() {
             <ul>
               <li>
                 <a href="#practices" onClick={() => setMobileMenuOpen(false)}>Practices</a>
+                <ul className="nlg-mobile-subnav" aria-label="Practice areas">
+                  <li>
+                    <a href="#atlassian" onClick={() => setMobileMenuOpen(false)}>Atlassian Platform</a>
+                  </li>
+                  <li>
+                    <a href="#bi" onClick={() => setMobileMenuOpen(false)}>BI and Analytics</a>
+                  </li>
+                  <li>
+                    <a href="#automation" onClick={() => setMobileMenuOpen(false)}>Automation and Integration</a>
+                  </li>
+                </ul>
               </li>
               <li>
-                <a href="#work" onClick={() => setMobileMenuOpen(false)}>Work</a>
+                <a href="#engagements" onClick={() => setMobileMenuOpen(false)}>Engagements</a>
               </li>
               <li>
-                <a href="#how-we-work" onClick={() => setMobileMenuOpen(false)}>How we work</a>
+                <a href="#process" onClick={() => setMobileMenuOpen(false)}>Process</a>
               </li>
               <li>
                 <a href="#belief" onClick={() => setMobileMenuOpen(false)}>About</a>
-              </li>
-              <li>
-                <a href="#contact" onClick={() => setMobileMenuOpen(false)}>
-                  Contact
-                </a>
               </li>
               <li className="nlg-mobile-cta">
                 <a

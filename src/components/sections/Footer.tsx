@@ -13,6 +13,9 @@ export default function Footer() {
             <p className="nlg-footer-tag">
               Senior-led consulting. Atlassian, BI, and automation work that sticks after we leave.
             </p>
+            <p className="nlg-footer-reach">
+              Engagements across North America, Latin America, Europe, and the Middle East.
+            </p>
             <a
               href="https://www.linkedin.com/company/northlanterngroup/"
               target="_blank"
@@ -42,10 +45,10 @@ export default function Footer() {
             <h4>Firm</h4>
             <ul>
               <li>
-                <a href="#work">Work</a>
+                <a href="#engagements">Engagements</a>
               </li>
               <li>
-                <a href="#how-we-work">How we work</a>
+                <a href="#process">Process</a>
               </li>
               <li>
                 <a href="#belief">About</a>
@@ -64,18 +67,10 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          <div className="nlg-footer-col">
-            <h4>Field notes</h4>
-            <ul>
-              <li>
-                <a href="#writing">Essays coming 2026</a>
-              </li>
-            </ul>
-          </div>
         </div>
         <div className="nlg-legal">
           <span>
-            North Lantern Group Inc. · Ontario, Canada ·{" "}
+            North Lantern Group Inc. · 400 Slater St., Ottawa, ON K1R 7S7 ·{" "}
             <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> ·
             Privacy requests:{" "}
             <a href="mailto:privacy@northlanterngroup.com">

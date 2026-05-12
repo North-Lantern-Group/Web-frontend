@@ -5,7 +5,6 @@ import Belief from "@/components/sections/Belief";
 import Practices from "@/components/sections/Practices";
 import Testimonials from "@/components/sections/Testimonials";
 import HowWeWork from "@/components/sections/HowWeWork";
-import Writing from "@/components/sections/Writing";
 import BuyerQualifier from "@/components/sections/BuyerQualifier";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
@@ -23,7 +22,6 @@ export default function Home() {
         <Practices />
         <Testimonials />
         <HowWeWork />
-        <Writing />
         <BuyerQualifier />
         <Contact />
       </main>

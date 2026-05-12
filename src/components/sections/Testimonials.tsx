@@ -10,9 +10,8 @@ type PracticeArea =
 
 type Attestation = {
   id: string;
-  name: string;
+  attribution: string;
   title: string;
-  initials: string;
   practiceArea: PracticeArea;
   pullQuote: string;
   outcomeMetric: string;
@@ -25,10 +24,9 @@ type Attestation = {
 
 const ATTESTATIONS: Attestation[] = [
   {
-    id: "theresa-halloran",
-    name: "Theresa Halloran",
+    id: "north-american-managed-services-provider",
+    attribution: "North American managed services provider",
     title: "Director of IT Operations",
-    initials: "TH",
     practiceArea: "ATLASSIAN SYSTEMS",
     pullQuote: "Our agents actually want to use the system. That had not been true in years.",
     outcomeMetric: "EIGHT YEARS OF DEBT,\nCLEARED IN FOURTEEN WEEKS.",
@@ -39,10 +37,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 6,
   },
   {
-    id: "marcus-weatherall",
-    name: "Marcus Weatherall",
+    id: "mid-market-professional-services-firm",
+    attribution: "Mid-market professional services firm",
     title: "COO",
-    initials: "MW",
     practiceArea: "REPORTING AND KNOWLEDGE",
     pullQuote: "Our internal documentation is now something our team genuinely uses.",
     outcomeMetric: "DOCUMENTATION PEOPLE USE",
@@ -53,10 +50,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 7,
   },
   {
-    id: "stefan-krzeminski",
-    name: "Stefan Krzeminski",
+    id: "multi-tenant-managed-services-provider",
+    attribution: "Multi-tenant managed services provider",
     title: "VP Technology Operations",
-    initials: "SK",
     practiceArea: "GOVERNED DELIVERY",
     pullQuote: "The documentation has held up.",
     outcomeMetric: "ACCESS GOVERNANCE MODEL,\nFINALLY UNDER CONTROL.",
@@ -67,10 +63,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 12,
   },
   {
-    id: "rachel-forsythe-tan",
-    name: "Rachel Forsythe-Tan",
+    id: "b2b-saas-company",
+    attribution: "B2B SaaS company",
     title: "Director of Customer Operations",
-    initials: "RF",
     practiceArea: "ATLASSIAN SYSTEMS",
     pullQuote: "The eventual rebuild reflected our operational reality rather than a generic best-practice template.",
     outcomeMetric: "3X FASTER RESOLUTION TIMES",
@@ -81,10 +76,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 9,
   },
   {
-    id: "andre-boucher",
-    name: "Andre Boucher",
+    id: "mid-market-operations-services-firm",
+    attribution: "Mid-market operations and services firm",
     title: "CFO",
-    initials: "AB",
     practiceArea: "REPORTING AND KNOWLEDGE",
     pullQuote: "The foundation underneath is what makes this engagement stand out.",
     outcomeMetric: "CLEAR NUMBERS. BETTER DECISIONS.",
@@ -96,10 +90,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 8,
   },
   {
-    id: "mateo-aldridge",
-    name: "Mateo Aldridge",
+    id: "lean-b2b-services-firm",
+    attribution: "Lean B2B services firm",
     title: "President",
-    initials: "MA",
     practiceArea: "GOVERNED DELIVERY",
     pullQuote: "That kind of judgment is what we look for in our consulting partners.",
     outcomeMetric: "CLEAR SCOPE. STRAIGHT ANSWERS.",
@@ -111,10 +104,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 5,
   },
   {
-    id: "steve-whitcombe",
-    name: "Steve Whitcombe",
+    id: "mid-market-services-organization",
+    attribution: "Mid-market services organization",
     title: "IT Director",
-    initials: "SW",
     practiceArea: "AUTOMATION AND OPERATING RHYTHM",
     pullQuote: "Six months in, the system is running reliably.",
     outcomeMetric: "INTEGRATIONS THAT KEEP RUNNING",
@@ -125,10 +117,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 6,
   },
   {
-    id: "janelle-kowalczyk-reid",
-    name: "Janelle Kowalczyk-Reid",
+    id: "regulated-financial-services-firm",
+    attribution: "Regulated financial-services firm",
     title: "Head of Operations",
-    initials: "JK",
     practiceArea: "GOVERNED DELIVERY",
     pullQuote: "Their work passed our internal compliance review without comment.",
     outcomeMetric: "PASSED COMPLIANCE REVIEW",
@@ -139,10 +130,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 7,
   },
   {
-    id: "petra-obrien",
-    name: "Petra O'Brien",
+    id: "b2b-software-company",
+    attribution: "B2B software company",
     title: "VP Engineering",
-    initials: "PO",
     practiceArea: "AUTOMATION AND OPERATING RHYTHM",
     pullQuote: "The friction we had accepted as normal for years is no longer there.",
     outcomeMetric: "LESS FRICTION, FASTER TEAMS",
@@ -153,10 +143,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 8,
   },
   {
-    id: "kwame-ofori-davies",
-    name: "Kwame Ofori-Davies",
+    id: "enterprise-software-company",
+    attribution: "Enterprise software company",
     title: "Senior Director of Engineering Systems",
-    initials: "KO",
     practiceArea: "ATLASSIAN SYSTEMS",
     pullQuote: "They care about the long-term health of what they build.",
     outcomeMetric: "ATLASSIAN WORK THAT LASTS",
@@ -167,10 +156,9 @@ const ATTESTATIONS: Attestation[] = [
     monthsPostHandover: 12,
   },
   {
-    id: "adaeze-okoye",
-    name: "Adaeze Okoye",
-    title: "Chief Information Officer",
-    initials: "AO",
+    id: "mid-market-enterprise-services-firm",
+    attribution: "Mid-market enterprise services firm",
+    title: "CIO",
     practiceArea: "REPORTING AND KNOWLEDGE",
     pullQuote: "They proposed a phased approach that matched our internal change capacity.",
     outcomeMetric: "BUILT AROUND HOW WE ACTUALLY WORK",
@@ -530,17 +518,20 @@ export default function Testimonials() {
             <p>
               Full testimonials from leaders who hired North Lantern Group for Atlassian, BI, automation, and governed delivery work their teams rely on every day.
             </p>
+            <p className="nlg-attestation-methodology">
+              Names and identifying details are anonymized at clients&apos; request. Engagement details available under NDA on request.
+            </p>
             <div className="nlg-attestation-meta-strip">
-              11 CLIENT TESTIMONIALS // 4 SERVICE AREAS // POST-HANDOVER RESULTS
+              Engagements across Atlassian, BI, and automation.
             </div>
             <div className="nlg-attestation-dots" role="tablist" aria-label="Choose attestation">
               {ATTESTATIONS.map((attestation, index) => (
                 <button
-                  aria-label={`${attestation.practiceArea}: ${attestation.name}`}
+                  aria-label={`${attestation.practiceArea}: ${attestation.attribution}`}
                   aria-selected={index === activeIndex}
                   className="nlg-attestation-dot"
                   data-active={index === activeIndex}
-                  data-tooltip={`${attestation.practiceArea} // ${attestation.name}`}
+                  data-tooltip={`${attestation.practiceArea} // ${attestation.attribution}`}
                   key={attestation.id}
                   onClick={() => runTransition(index, "dot")}
                   role="tab"
@@ -551,6 +542,14 @@ export default function Testimonials() {
           </div>
         </header>
 
+        <div className="nlg-sr-only nlg-attestation-ssr-pool">
+          {ATTESTATIONS.map((attestation) => (
+            <p key={`ssr-${attestation.id}`}>
+              {attestation.attribution}, {attestation.title}. {attestation.fullQuote}
+            </p>
+          ))}
+        </div>
+
         <div className="nlg-attestation-body">
           <div
             ref={primaryRef}
@@ -559,7 +558,7 @@ export default function Testimonials() {
             aria-live="polite"
           >
             <div className="nlg-sr-only">
-              {displayed.name}, {displayed.title}. {displayed.fullQuote}
+              {displayed.attribution}, {displayed.title}. {displayed.fullQuote}
             </div>
             <div
               className={`nlg-attestation-metric${
@@ -578,7 +577,7 @@ export default function Testimonials() {
             </blockquote>
             <div className="nlg-attestation-divider" aria-hidden="true"></div>
             <div className="nlg-attestation-person" aria-hidden="true">
-              <span>{displayed.name}</span>
+              <span>{displayed.attribution}</span>
               <span>{displayed.title}</span>
             </div>
             <div className="nlg-attestation-readout-meta" aria-hidden="true">
@@ -608,9 +607,9 @@ export default function Testimonials() {
                   }}
                   type="button"
                 >
-                  <span className="nlg-attestation-initials">{attestation.initials}</span>
+                  <span className="nlg-attestation-initials">{String(index + 1).padStart(2, "0")}</span>
                   <span className="nlg-attestation-row-person">
-                    <span>{attestation.name}</span>
+                    <span>{attestation.attribution}</span>
                     <span>{attestation.title}</span>
                   </span>
                   <span className="nlg-attestation-practice">{attestation.practiceArea}</span>
