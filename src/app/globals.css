@@ -160,7 +160,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .nlg-hero-grid { grid-template-columns: 1fr; gap: 48px; }
   .nlg-hero { padding: 56px 0 32px; }
 }
-.nlg-hero-left { max-width: 620px; }
+.nlg-hero-left {
+  max-width: 620px;
+  padding-top: clamp(28px, 3vw, 48px);
+}
 .nlg-hero-eyebrow { display: inline-block; margin-bottom: 28px; }
 
 .nlg-h1 {
