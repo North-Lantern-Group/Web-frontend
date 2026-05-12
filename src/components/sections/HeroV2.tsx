@@ -25,11 +25,11 @@ export default function HeroV2() {
           <div className="nlg-hero-eyebrow nlg-eyebrow">Results that endure.</div>
 
           <h1 className="nlg-h1">
-            Fix the Atlassian, analytics and automation systems your team has <span className="accent">outgrown.</span>
+            Fix the systems your team has <span className="accent">outgrown.</span>
           </h1>
 
           <p className="nlg-hero-sub">
-            North Lantern Group designs, improves and implements Atlassian, business intelligence, and automation systems so teams can see the work clearly, own it internally, and scale without piling on manual effort.
+            North Lantern Group is a full-cycle operations and implementation consulting firm that designs, improves, and implements Atlassian platforms, business intelligence systems, and workflow automations that reduce manual work, create reporting leaders can trust, and make operations easier to scale.
           </p>
 
           <div className="nlg-hero-actions">
