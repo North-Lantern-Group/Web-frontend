@@ -10,6 +10,5 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: "https://www.northlanterngroup.com/sitemap.xml",
-    host: "https://www.northlanterngroup.com",
   };
 }

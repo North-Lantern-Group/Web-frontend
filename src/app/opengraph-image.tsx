@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
 export const alt =
   "North Lantern Group — Fix the workflows, reports, and systems your team has outgrown.";
 export const size = { width: 1200, height: 630 };

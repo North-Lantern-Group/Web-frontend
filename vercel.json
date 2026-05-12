@@ -1,0 +1,16 @@
+{
+  "buildCommand": "npm run build && npm run check:production-indexability",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "northlanterngroup.com"
+        }
+      ],
+      "destination": "https://www.northlanterngroup.com/$1",
+      "permanent": true
+    }
+  ]
+}

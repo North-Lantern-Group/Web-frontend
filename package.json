@@ -5,14 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "check:production-indexability": "node scripts/check-production-indexability.mjs",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
-    "cobe": "^2.0.1",
-    "framer-motion": "^12.38.0",
     "lucide-react": "^0.554.0",
     "next": "^15.5.15",
     "react": "^18.3.1",
@@ -27,6 +26,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
+    "baseline-browser-mapping": "^2.10.29",
     "eslint": "^8",
     "eslint-config-next": "^15.5.15",
     "postcss": "^8.4.49",
