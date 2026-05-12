@@ -186,7 +186,8 @@ Component:  src/components/brand/NLGLogo.tsx
 Architecture: Split lockup — icon SVG (h-full, square) + HTML text (Montserrat SemiBold)
 Icon viewBox: 25 25 150 150 (captures frame + N + sparkle)
 Text sizes:   text-[0.9375rem] md:text-lg (15px / 18px)
-Header sizes: h-14 md:h-[4.5rem] (default) → h-11 md:h-14 (scrolled)
+Header sizes: logo h-9 md:h-10 inside a 78px attached bar that transitions to a 64px floating bar
+Header layout: attached state uses full-width bar with max-container content; scrolled state uses a 94% floating pill with edge-aligned brand, nav, and CTA
 Glow:         drop-shadow(0 0 24px rgba(0,150,180,0.3)) on dark mode
 Transition:   500ms opacity crossfade between variants on mode toggle
 Sparkle:      always visible (minimum rendered size is 44px)
@@ -361,3 +362,9 @@ Icons:        lucide-react
 - Jira epic WEB-45 created for broader premium polish pass (WEB-46 through WEB-53)
 - Reference site: igloo.inc — took the premium dark-mode philosophy,
   rejected the crypto aesthetic. NLG tone = authoritative + refined.
+
+### Session — May 12, 2026 (Header Motion Refinement)
+- Header motion pattern is attached-at-top, then detaches after minimal scroll into a glass floating pill.
+- Desktop header uses grid placement so the primary nav stays visually paired with the CTA instead of centered between brand and button.
+- On wide screens, the scrolled header expands its usable internal width so the brand lockup glides left toward the floating bar edge while nav and CTA hold the right edge.
+- Anchor targets should use real section IDs plus global scroll padding and section scroll margins so fixed-header jumps land cleanly.

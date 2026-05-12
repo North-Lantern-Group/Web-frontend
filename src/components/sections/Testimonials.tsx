@@ -499,7 +499,7 @@ export default function Testimonials() {
     <section
       ref={panelRef}
       className="nlg-section nlg-attestation-console nlg-reveal"
-      id="work"
+      id="engagements"
       aria-label="Client attestations console"
       onPointerEnter={pausePanel}
       onPointerLeave={resumePanel}
